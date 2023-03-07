@@ -1,0 +1,10 @@
+fichier ag-theme-alpine.pm.css
+- ligne 197: passage de 24px à 14px.
+- lignes 205 et 206: passage de 4px à 1px
+- ligne 242: passage de 24px à 14px
+- ligne 247: passage de 24px à 14px
+- ligne 820: passage de 42px à 20px
+- ligne 867: passage de 40px à 22px	//	c'est ce paramètre
+- lignes 868 et 869: 1px au lieu de 17.
+//- ligne 221: passage de white-space: nowrap; à white-space: wrap;
+//- ligne 236: passage de white-space: nowrap; à white-space: wrap;

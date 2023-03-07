@@ -1,0 +1,61 @@
+<div *ngIf="m_phase_connexion">
+	<!--form [formGroup]="formServeur">
+		<div class="form-group">
+			<label style="width: 50px;" for="lblmdp"> Serveur BD: </label>
+			<input style="width: 200px;" type="text" id="m_serveur_bd" class="form-control" class="{{m_classe_fonte}}" name="m_serveur_bd" formControlName="m_serveur_bd" >
+			<button (click)="onDefServeur()"><label class="{{m_classe_fonte}}">Valider</label></button>
+		</div>
+	</form-->
+	<form [formGroup]="formConnexion">
+		<div class="form-group">
+			<label style="width: 50px;" for="lblnom_prs">Nom: </label>
+			<select formControlName="m_cbo_prs" id="m_cbo_prs" class="{{m_classe_fonte}}">
+				<option *ngFor="let item of m_cbo_prs.m_liste_items; let i = index" [value]="m_cbo_prs.m_liste_items[i].m_id">{{m_cbo_prs.m_liste_items[i].m_lib}}</option>
+			</select>
+			<label style="width: 50px;" for="lblmdp"> Mot de passe: </label>
+			<input style="width: 50px;" type="password" id="m_mdp" class="form-control" class="{{m_classe_fonte}}" name="m_mdp" formControlName="m_mdp" autocomplete="on" >
+			<label style="width: 50px;" for="lblnom_prs">Taille des textes: </label>
+			<select formControlName="m_cbo_fonte" id="m_cbo_fonte" class="{{m_classe_fonte}}">
+				<option *ngFor="let item of m_cbo_fonte.m_liste_items; let i = index" [value]="m_cbo_fonte.m_liste_items[i].m_id">{{m_cbo_fonte.m_liste_items[i].m_lib}}</option>
+			</select>
+			<!--button (click)="onConnexion()">Connexion</button-->
+			<button (click)="onConnexion()"><label class="{{m_classe_fonte}}">Connexion</label></button>
+			<label>{{m_msg_err}}</label>
+		</div>
+	</form>
+	<!--h4>{{m_msg_err}}</h4-->
+</div>
+<div id="wrap" *ngIf="!m_phase_connexion">
+	<ul class="navbar">
+		<li>
+			<label class="{{m_classe_fonte}}">Dev</label>
+			<ul>
+				<li class="{{m_classe_fonte}}"><a routerLink="/dbdict">DBDict</a></li><br>
+			</ul>
+		</li>
+		<li>
+			<label class="{{m_classe_fonte}}">Références</label>
+			<ul>
+				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','cmpt']">Comptines</a></li><br>
+				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','instr']">Instruments</a></li><br>
+				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','lieu']">Lieux</a></li><br>
+				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','ville']">Villes</a></li><br>
+			</ul>
+		</li>
+		<!--li>__</li-->
+		<li>
+			<label class="{{m_classe_fonte}}">Comptines</label>
+			<ul>
+				<li class="{{m_classe_fonte}}"><a routerLink="/seance">Séances</a></li><br>
+				<li class="{{m_classe_fonte}}"><a routerLink="/interv">Interventions</a></li><br>
+				<li class="{{m_classe_fonte}}"><a routerLink="fic">Fichiers</a></li>
+				<li class="{{m_classe_fonte}}"><a routerLink="req">SQL</a></li>
+				<li class="{{m_classe_fonte}}"><a routerLink="carte">Carte</a></li>
+			</ul>
+		</li>
+		<!--label class="{{m_classe_fonte}}">{{m_compteur}}</label-->
+		<button (click)="onDeConnexion()"><label class="{{m_classe_fonte}}">Déconnexion</label></button>
+		<!--label class="[[m_classe_compteur}}">{{m_compteur}}</label-->
+		<label class="compteur">{{m_compteur}}</label>
+	</ul>
+</div>

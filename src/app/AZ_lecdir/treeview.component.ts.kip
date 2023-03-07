@@ -1,0 +1,309 @@
+import { Component, Input } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { formatDate } from '@angular/common';
+import * as FileSaver from 'file-saver';
+import { TypeNd } from '../common/dir.model';
+import { AccesDir } from '../services/acces_dir.service';
+import { AccesBdService } from '../services/acces_bd.service';
+import { Ecran } from '../services/ecran.service';
+export class TvNd
+{
+	m_ouvert:boolean=false;
+	m_repertoire:string;
+	m_nd_fils:Array<TvNd>=[];
+	m_nom_nd:string="";
+	m_type_nd:TypeNd;
+	m_ecran:Ecran;
+	public m_classe_nd:string;
+	constructor(public httpClient:HttpClient,ecran:Ecran,nom?:string,type?:TypeNd,repertoire?:string)
+	{
+		this.m_ecran=ecran;
+		this.m_nom_nd = nom?nom:'node';
+		this.m_type_nd=type?type:TypeNd.Rep;
+		this.m_repertoire=repertoire?repertoire:'';
+		if(this.m_type_nd==TypeNd.Rep)
+			this.m_classe_nd='dir';
+		else
+			this.m_classe_nd='fic';
+console.log('m_classe_nd='+this.m_classe_nd);
+//		this.m_nd_pere=nd_pere?nd_pere:undefined;
+	}
+	ajouterNd(childNode:TvNd)
+	{
+		this.m_nd_fils.push(childNode);
+	}
+	Ouvrir():string
+	{
+		var ret:string='OK';
+		this.m_ouvert = true;
+		if(this.m_type_nd==TypeNd.Rep)
+		{
+			var ad: AccesDir=new AccesDir(this.httpClient);
+console.log('nd.Ouvrir('+this.m_repertoire+')');
+			ad.LireDir(this.m_repertoire)
+			.then
+			(res=>
+			{
+				var i:number;
+				this.m_nd_fils=new Array(ad.m_tab_nd.length);
+//console.log('onBtnRecherche: apres LecDir: nb nd='+this.m_tab_nd.length);
+				for(i=0;i<ad.m_tab_nd.length;i++)
+				{
+					var nom=ad.m_tab_nd[i].m_nom_nd;
+					var type=ad.m_tab_nd[i].m_type_nd;
+					var rep=this.m_repertoire+'/'+ad.m_tab_nd[i].m_nom_nd;
+					var it:TvNd=new TvNd(this.httpClient,this.m_ecran,nom,type,rep);
+					this.m_nd_fils[i]=it;
+//console.log('nd['+i+']');
+				}
+//console.log('fin de la boucle: length='+this.m_nd_fils.length);
+			},
+			err=>
+			{
+				ret=err;
+			});
+		}
+		else
+		{
+			
+			var ab=new AccesBdService(this.httpClient);
+			ab.LireFic(this.m_repertoire)
+			.then
+			(
+				res =>
+				{
+					var str_res:string=""+res;
+					if(str_res.startsWith('Erreur'))
+						this.m_ecran.MessageErreur(str_res);
+					else
+					{
+						var tab_car=this.m_repertoire.split('');
+//console.log('tab_car='+tab_car);
+						var i:number=tab_car.length;
+						var type_fic:string="";
+						for(i=tab_car.length-1;i>0;i--)
+						{
+							if(tab_car[i]==".")
+							{
+								type_fic=this.m_repertoire.substring(i);
+							}
+						}
+//console.log('type_fic='+type_fic);
+						var type_mime: string="";
+						switch(type_fic)
+						{
+							case '.bmp':
+								type_mime="image/bmp";
+								break;
+							case '.csv':
+								type_mime="text/csv";
+								break;
+							case '.doc':
+								type_mime="application/msword";
+								break;
+							case '.docx':
+								type_mime="application/vndopenxmlformats-officedocument.wordprocessingml.document";
+								break;
+							case '.gif':
+								type_mime="image/gif";
+								break;
+							case '.htm':
+							case '.html':
+								type_mime="text/html";
+								break;
+							case '.jpeg':
+							case '.jpg':
+								type_mime="image/jpeg";
+								break;
+							case '.pdf':
+								type_mime="application/pdf";
+								break;
+							default:
+								break;
+						}
+						if(type_mime.length>0)
+						{
+//console.log('retour_brut='+ab.m_retour_brut);
+							const byteArray = new Uint8Array(atob(ab.m_retour_brut).split('').map(char => char.charCodeAt(0)));
+							const data: Blob = new Blob([byteArray], {type: type_mime});
+							var maintenant=formatDate(new Date(),'yyyyMMddHHmmss', 'en');
+							FileSaver.saveAs(data, this.m_repertoire + '_export_' + maintenant + type_fic);
+//						this.m_ecran.MessageBox('OK');
+						}
+						else
+						{
+							this.m_ecran.MessageErreur('Erreur: type de fichier inconnu: '+type_fic);
+						}
+					}
+//console.log('contenu='+contenu);
+				},
+				err =>
+				{
+					this.m_ecran.MessageErreur(err);
+				}
+			);
+		}
+		return ret;
+	}
+	Fermer()
+	{
+		this.m_ouvert = false;
+	}
+}
+@Component({
+  selector: 'treeview',
+  templateUrl: `./treeview.component.html`,
+  styleUrls: [`./treeview.component.css`]
+})
+export class TreeViewComponent
+{
+	@Input() m_nd: TvNd;
+	m_ouvert:boolean=false;
+	m_repertoire:string;
+	m_nd_fils:Array<TvNd>=[];
+	m_nom_nd:string="";
+	m_type_nd:TypeNd;
+	m_ecran:Ecran;
+	public m_classe_nd:string;
+	constructor(public httpClient:HttpClient,ecran:Ecran,nom?:string,type?:TypeNd,repertoire?:string)
+	{
+		this.m_ecran=ecran;
+		this.m_nom_nd = nom?nom:'node';
+		this.m_type_nd=type?type:TypeNd.Rep;
+		this.m_repertoire=repertoire?repertoire:'';
+		if(this.m_type_nd==TypeNd.Rep)
+			this.m_classe_nd='dir';
+		else
+			this.m_classe_nd='fic';
+console.log('m_classe_nd='+this.m_classe_nd);
+//		this.m_nd_pere=nd_pere?nd_pere:undefined;
+	}
+	ajouterNd(childNode:TvNd)
+	{
+		this.m_nd_fils.push(childNode);
+	}
+	Ouvrir():string
+	{
+		var ret:string='OK';
+		this.m_ouvert = true;
+		if(this.m_type_nd==TypeNd.Rep)
+		{
+			var ad: AccesDir=new AccesDir(this.httpClient);
+console.log('nd.Ouvrir('+this.m_repertoire+')');
+			ad.LireDir(this.m_repertoire)
+			.then
+			(res=>
+			{
+				var i:number;
+				this.m_nd_fils=new Array(ad.m_tab_nd.length);
+//console.log('onBtnRecherche: apres LecDir: nb nd='+this.m_tab_nd.length);
+				for(i=0;i<ad.m_tab_nd.length;i++)
+				{
+					var nom=ad.m_tab_nd[i].m_nom_nd;
+					var type=ad.m_tab_nd[i].m_type_nd;
+					var rep=this.m_repertoire+'/'+ad.m_tab_nd[i].m_nom_nd;
+					var it:TvNd=new TvNd(this.httpClient,this.m_ecran,nom,type,rep);
+					this.m_nd_fils[i]=it;
+//console.log('nd['+i+']');
+				}
+//console.log('fin de la boucle: length='+this.m_nd_fils.length);
+			},
+			err=>
+			{
+				ret=err;
+			});
+		}
+		else
+		{
+			
+			var ab=new AccesBdService(this.httpClient);
+			ab.LireFic(this.m_repertoire)
+			.then
+			(
+				res =>
+				{
+					var str_res:string=""+res;
+					if(str_res.startsWith('Erreur'))
+						this.m_ecran.MessageErreur(str_res);
+					else
+					{
+						var tab_car=this.m_repertoire.split('');
+//console.log('tab_car='+tab_car);
+						var i:number=tab_car.length;
+						var type_fic:string="";
+						for(i=tab_car.length-1;i>0;i--)
+						{
+							if(tab_car[i]==".")
+							{
+								type_fic=this.m_repertoire.substring(i);
+							}
+						}
+//console.log('type_fic='+type_fic);
+						var type_mime: string="";
+						switch(type_fic)
+						{
+							case '.bmp':
+								type_mime="image/bmp";
+								break;
+							case '.csv':
+								type_mime="text/csv";
+								break;
+							case '.doc':
+								type_mime="application/msword";
+								break;
+							case '.docx':
+								type_mime="application/vndopenxmlformats-officedocument.wordprocessingml.document";
+								break;
+							case '.gif':
+								type_mime="image/gif";
+								break;
+							case '.htm':
+							case '.html':
+								type_mime="text/html";
+								break;
+							case '.jpeg':
+							case '.jpg':
+								type_mime="image/jpeg";
+								break;
+							case '.pdf':
+								type_mime="application/pdf";
+								break;
+							default:
+								break;
+						}
+						if(type_mime.length>0)
+						{
+//console.log('retour_brut='+ab.m_retour_brut);
+							const byteArray = new Uint8Array(atob(ab.m_retour_brut).split('').map(char => char.charCodeAt(0)));
+							const data: Blob = new Blob([byteArray], {type: type_mime});
+							var maintenant=formatDate(new Date(),'yyyyMMddHHmmss', 'en');
+							FileSaver.saveAs(data, this.m_repertoire + '_export_' + maintenant + type_fic);
+//						this.m_ecran.MessageBox('OK');
+						}
+						else
+						{
+							this.m_ecran.MessageErreur('Erreur: type de fichier inconnu: '+type_fic);
+						}
+					}
+//console.log('contenu='+contenu);
+				},
+				err =>
+				{
+					this.m_ecran.MessageErreur(err);
+				}
+			);
+		}
+		return ret;
+	}
+	Fermer()
+	{
+		this.m_ouvert = false;
+	}
+	OuvrirFermer()
+	{
+		if(this.m_nd.m_ouvert)
+			this.m_nd.Fermer();
+		else
+			this.m_nd.Ouvrir();
+	}
+}

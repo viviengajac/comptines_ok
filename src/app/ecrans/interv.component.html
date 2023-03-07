@@ -1,0 +1,98 @@
+<div class="row" style="width: 100%; height: 100%;" flex class="{{ m_classe_fonte }} ">
+<div style="border:2px solid #000;width: 100%;height: 50%; box-sizing: border-box;overflow: auto;padding: 2px; min-height: 80px;resize:vertical;">
+	<jw-modal id="erreur">
+		<h4>Erreur</h4>
+		<h4>{{m_msg_err}}</h4>
+		<h5>{{m_sql_err}}</h5>
+		<h5>{{m_data_err}}</h5>
+		<h5>{{m_pile_err}}</h5>
+		<button (click)="closeModal('erreur');">OK</button>
+	</jw-modal>
+	<jw-modal id="info">
+		<h4>Message</h4>
+		<h4>{{m_msg_info}}</h4>
+		<button (click)="closeModalbis('info','OK');">OK</button>
+		<button (click)="closeModalbis('info','Cancel');">Cancel</button>
+	</jw-modal>
+	<form [formGroup]="formRecherche">
+		<div class="form-group" >
+			<label class=" {{m_classe_entete}} "> Les interventions:</label>
+			<label >Date mini: </label>
+			<input style="width: 100px;" type="date" id="m_filtre_date_interv_mini" name="m_filtre_date_interv_mini" formControlName="m_filtre_date_interv_mini" class=" {{ m_classe_fonte }} ">
+			<label >Date maxi: </label>
+			<input style="width: 100px;" type="date" id="m_filtre_date_interv_maxi" name="m_filtre_date_interv_maxi" formControlName="m_filtre_date_interv_maxi" class=" {{ m_classe_fonte }} ">
+			<!-- <label> Numéro: </label>
+			<input style="width: 50px;" type="text" id="m_filtre_num_interv" name="m_filtre_num_interv" formControlName="m_filtre_num_interv" class=" {{ m_classe_fonte }} "> -->
+			<label>Séance: </label>
+			<select formControlName="m_filtre_seance" id="m_filtre_seance" name="m_filtre_seance" class=" {{ m_classe_fonte }} ">
+				<option *ngFor="let item of m_cbo_seance.m_liste_items; let i = index" [value]="m_cbo_seance.m_liste_items[i].m_id">{{m_cbo_seance.m_liste_items[i].m_lib}}</option>
+			</select>
+			<label>Lieu: </label>
+			<select formControlName="m_filtre_lieu" id="m_filtre_lieu" name="m_filtre_lieu" class=" {{ m_classe_fonte }} ">
+				<option *ngFor="let item of m_cbo_lieu.m_liste_items; let i = index" [value]="m_cbo_lieu.m_liste_items[i].m_id">{{m_cbo_lieu.m_liste_items[i].m_lib}}</option>
+			</select>
+		</div>
+	</form>
+	<button (click)="onBtnRecherche()" class=" {{ m_classe_fonte }} ">Rechercher</button>
+	<label style="width: 25px;" for="lblnb"> {{m_nb_lignes_maitre}} </label>
+	<button (click)="onViderCriteres()" class=" {{ m_classe_fonte }} ">Vider critères</button>
+	<button (click)="onExcelMaitre()" class=" {{ m_classe_fonte }} " [disabled]="m_interdit_exp">Excel</button>
+	<ag-grid-angular style="width: 100%; height: calc(100% - 52px);" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options_maitre" rowSelection='single' enableColResize (gridReady)="onGridMaitreReady($event)" [frameworkComponents]="frameworkComponents" (rowClicked)="onRowClickMaitre($event)" (columnResized)="onColumnMaitreResized($event)" [headerHeight]="m_hauteur_entete"></ag-grid-angular>
+</div>
+<div style="border:2px solid #000;width: 100%; height: 50%; box-sizing: border-box; overflow: auto;padding: 2px;">
+	<!--div class="resizer" id="splitter_prs" style="width:100%;height:10px;border:1px solid #000;"></div-->
+	<button class="{{m_classe_boutons[1]}}" (click)="onBtnDetail('interv')" >{{m_blocs[1].m_lib_bloc}}</button>
+	<button class="{{m_classe_boutons[2]}}" (click)="onBtnDetail('seance_cmpt')" >{{m_blocs[2].m_lib_bloc}}</button>
+	<button class="{{m_classe_boutons[3]}}" (click)="onBtnDetail('interv_cmpt')" >{{m_blocs[3].m_lib_bloc}}</button>
+	<label style="width: 50px;" > / </label>
+	<button class=" {{ m_classe_fonte }} " (click)="onExcelDetails()" [disabled]="m_interdit_exp">Excel</button>
+	<button class=" {{ m_classe_fonte }} " (click)="onCreer()" id="btnCreer" [disabled]="m_interdit_ecr">Créer</button>
+	<button class=" {{ m_classe_fonte }} " (click)="onSupprimer()" id="btnSupprimer" [disabled]="m_interdit_ecr">Supprimer</button>
+	<button class=" {{ m_classe_fonte }} " (click)="onSauver()" id="btnSauver" [disabled]="m_interdit_ecr">Sauver</button>
+	<!--button class=" {{ m_classe_fonte }} " (click)="onAugmenterTaille()">V</button>
+	<button class=" {{ m_classe_fonte }} " (click)="onDiminuerTaille()">A</button-->
+	<div *ngIf="m_onglet_principal">
+		<form [formGroup]="formOngletPrincipal">
+			<div class="form-group">
+				<div class="column">
+					<div class="row">
+						<label class=" {{m_classe_label_onglet_principal}} ">Date: </label>
+						<input type="date" formControlName="m_date_interv" name="date_interv" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} ">
+					</div>
+					<div class="row">
+						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Séance: </label>
+						<select formControlName="m_id_seance" name="id_seance" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} ">
+							<option *ngFor="let item of m_cbo_seance.m_liste_items; let i = index" [value]="m_cbo_seance.m_liste_items[i].m_id">{{m_cbo_seance.m_liste_items[i].m_lib}}</option>
+						</select>
+					</div>
+					<div class="row">
+						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Lieu: </label>
+						<select formControlName="m_id_lieu" name="id_lieu" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} ">
+							<option *ngFor="let item of m_cbo_lieu.m_liste_items; let i = index" [value]="m_cbo_lieu.m_liste_items[i].m_id">{{m_cbo_lieu.m_liste_items[i].m_lib}}</option>
+						</select>
+					</div>
+					<div class="row">
+						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Commentaire: </label>
+						<input type="text" formControlName="m_comm_interv" name="comm_interv" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+					</div>
+					<div class="row">
+						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Tarif: </label>
+						<input type="number" step="0.01" formControlName="m_tarif_interv" name="tarif_interv" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+					</div>
+					<div class="row">
+						<label class=" {{m_classe_label_onglet_principal}} ">Facturé: </label>
+						<input type="checkbox" formControlName="m_fact_interv" name="fact_interv" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+					</div>
+					<div class="row">
+						<label class=" {{m_classe_label_onglet_principal}} ">Numéro: </label>
+						<input type="text" formControlName="m_num_interv" name="num_interv" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div *ngIf="!m_onglet_principal" name="detail" style="height: calc(100% - 25px);">
+		<ag-grid-angular style="width: 100%; height: 100%;" name="detail" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options_detail" rowSelection='single' enableColResize (gridReady)="onGridDetailReady($event)" [frameworkComponents]="frameworkComponents" (cellValueChanged)="onCellValueDetailChanged($event)" (focusin)="onFocusIn($event)" (rowClicked)="onRowClickDetail($event)" (columnResized)="onColumnDetailResized($event)" [headerHeight]="m_hauteur_entete" [undoRedoCellEditing]="m_undoRedoCellEditing" [undoRedoCellEditingLimit]="m_undoRedoCellEditingLimit"></ag-grid-angular>
+	</div>
+</div>
+</div>

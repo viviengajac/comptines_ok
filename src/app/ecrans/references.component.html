@@ -1,0 +1,24 @@
+<div class="row" style="width: 100%; height: 100%;" flex class=" {{ m_classe_fonte }} ">
+	<jw-modal id="erreur">
+		<h4>Erreur</h4>
+		<h4>{{m_msg_err}}</h4>
+		<h5>{{m_sql_err}}</h5>
+		<h5>{{m_data_err}}</h5>
+		<h5>{{m_pile_err}}</h5>
+		<button (click)="closeModal('erreur');">OK</button>
+	</jw-modal>
+	<jw-modal id="info">
+		<h4>Message</h4>
+		<h4>{{m_msg_info}}</h4>
+		<button (click)="closeModalbis('info','OK');">OK</button>
+		<button (click)="closeModalbis('info','Cancel');">Cancel</button>
+	</jw-modal>
+	<label class=" {{m_classe_entete}} ">{{m_titre}}</label>
+	<button class=" {{ m_classe_fonte }} {{m_classe_bouton_actif}}" (click)="onBtnRecherche()">Rechercher</button>
+	<label style="width: 25px;" for="lblnb"> {{m_nb_lignes}} </label>
+	<button class=" {{ m_classe_fonte }} " (click)="onExcel()" [disabled]="m_interdit_exp">Excel</button>
+	<button class=" {{ m_classe_fonte }} " (click)="onCreer()" [disabled]="m_interdit_ecr">Créer</button>
+	<button class=" {{ m_classe_fonte }} " (click)="onSupprimer()" [disabled]="m_interdit_ecr">Supprimer</button>
+	<button class=" {{ m_classe_fonte }} " (click)="onSauver()" [disabled]="m_interdit_ecr">Sauver</button>
+	<ag-grid-angular style="width: 100%; height: calc(100% - 25px);" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options" rowSelection='single' enableColResize (gridReady)="onGridReady($event)" [frameworkComponents]="frameworkComponents" (cellValueChanged)="onCellValueChanged($event)" (focusin)="onFocusIn($event)" (rowClicked)="onRowClick($event)" (columnResized)="onColumnResized($event)" [headerHeight]="m_hauteur_entete"></ag-grid-angular>
+</div>

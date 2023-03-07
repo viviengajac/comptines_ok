@@ -1,0 +1,7 @@
+<div>
+  <button (click)="OuvrirFermer()" class=" {{m_nd.m_classe_nd}} ">+</button>
+  <label>{{m_nd.m_nom_nd}}</label>
+  <div id="childNode" *ngIf="m_nd.m_ouvert">
+    <treeview *ngFor="let n of m_nd.m_nd_fils" [m_nd]=n></treeview>
+  </div>
+</div>

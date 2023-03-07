@@ -1,0 +1,74 @@
+<!--app-menu></app-menu-->
+<div class="row" style="width: 100%; height: 100%" class=" {{ m_classe_fonte }} ">
+<!--div style="border:2px solid #000;width: 100%; overflow: auto;padding: 2px; min-height: 200px;resize:vertical;"-->
+<div style="border:2px solid #000;width: 100%;height: 50%; overflow: auto;padding: 1px; min-height: 80px; resize:vertical; box-sizing: border-box;">
+	<jw-modal id="erreur">
+		<h4>Erreur</h4>
+		<h4>{{m_msg_err}}</h4>
+		<h5>{{m_sql_err}}</h5>
+		<h5>{{m_data_err}}</h5>
+		<h5>{{m_pile_err}}</h5>
+		<button (click)="closeModal('erreur');">OK</button>
+	</jw-modal>
+	<jw-modal id="info">
+		<h4>Message</h4>
+		<h4>{{m_msg_info}}</h4>
+		<button (click)="closeModalbis('info','OK');">OK</button>
+		<button (click)="closeModalbis('info','Cancel');">Cancel</button>
+	</jw-modal>
+	<form [formGroup]="formRecherche">
+		<div class="form-group">
+			<label class=" {{m_classe_entete}} "> Les séances:</label>
+			<label> Nom: </label>
+			<select formControlName="m_filtre_seance" id="m_filtre_seance" name="m_filtre_seance" class=" {{ m_classe_fonte }} ">
+				<option *ngFor="let item of m_cbo_seance.m_liste_items; let i = index" [value]="m_cbo_seance.m_liste_items[i].m_id">{{m_cbo_seance.m_liste_items[i].m_lib}}</option>
+			</select>
+			<!-- <label>Nom: </label>
+			<input style="width: 150px;" type="text" id="m_filtre_nom_seance" class=" {{ m_classe_fonte }} " name="m_filtre_nom_seance" formControlName="m_filtre_nom_seance"> -->  <!-- ngModel -->
+		</div>
+	</form>
+	<button (click)="onBtnRecherche()" class=" {{ m_classe_fonte }} ">Rechercher</button>
+	<label style="width: 25px;" for="lblnb"> {{m_nb_lignes_maitre}} </label>
+	<button (click)="onViderCriteres()" class=" {{ m_classe_fonte }} ">Vider critères</button>
+	<button (click)="onExcelMaitre()" class=" {{ m_classe_fonte }} " [disabled]="m_interdit_exp">Excel</button>
+	<ag-grid-angular style="width: 100%; height: calc(100% - 51px);" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options_maitre" rowSelection='single' enableColResize (gridReady)="onGridMaitreReady($event)" (rowClicked)="onRowClickMaitre($event)" [frameworkComponents]="frameworkComponents" (columnResized)="onColumnMaitreResized($event)" [headerHeight]="m_hauteur_entete"></ag-grid-angular>
+</div>
+<div style="border:2px solid #000;width: 100%; height: 50%;overflow: auto;padding: 1px; box-sizing: border-box;">
+	<!--div class="resizer" id="splitter_loge" style="width:100%;height:10px;border:1px solid #000;"></div-->
+	<button class="{{m_classe_boutons[1]}}" (click)="onBtnDetail('seance')">{{m_blocs[1].m_lib_bloc}}</button>
+	<button class="{{m_classe_boutons[2]}}" (click)="onBtnDetail('comptines')">{{m_blocs[2].m_lib_bloc}}</button>
+	<label style="width: 50px;" > / </label>
+	<button class=" {{ m_classe_fonte }} " (click)="onExcelDetails()" [disabled]="m_interdit_exp">Excel</button>
+	<button class=" {{ m_classe_fonte }} " (click)="onCreer()" [disabled]="m_interdit_ecr">Créer</button>
+	<button class=" {{ m_classe_fonte }} " (click)="onSupprimer()" [disabled]="m_interdit_ecr">Supprimer</button>
+	<button class=" {{ m_classe_fonte }} " (click)="onSauver()" [disabled]="m_interdit_ecr">Sauver</button>
+	<!--button class=" {{ m_classe_fonte }} " (click)="onAugmenterTaille()">V</button>
+	<button class=" {{ m_classe_fonte }} " (click)="onDiminuerTaille()">A</button-->
+	<div *ngIf="m_onglet_principal">
+		<form [formGroup]="formOngletPrincipal">
+			<div class="form-group">
+				<div class="column">
+					<!-- <div class="row">
+						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Id: </label>
+						<input type="text" formControlName="m_id_seance" name="id_seance" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+					</div> -->
+					<div class="row">
+						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Nom: </label>
+						<input type="text" formControlName="m_nom_seance" name="nom_seance" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+					</div>
+					<div class="row">
+						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Numéro: </label>
+						<input type="number" formControlName="m_num_seance" name="num_seance" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+					</div>
+					<!--button type="submit">Rechercher</button-->
+				</div>
+			</div>
+		</form>
+	</div>
+	<div  *ngIf="!m_onglet_principal" name="detail" style="height: calc(100% - 25px);">
+		<ag-grid-angular style="width: 100%; height: 100%;" name="detail" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options_detail" rowSelection='single' enableColResize (gridReady)="onGridDetailReady($event)" [frameworkComponents]="frameworkComponents" (cellValueChanged)="onCellValueDetailChanged($event)" (focusin)="onFocusIn($event)" (rowClicked)="onRowClickDetail($event)" (columnResized)="onColumnDetailResized($event)" [headerHeight]="m_hauteur_entete"></ag-grid-angular>
+	</div>
+		<!--ag-grid-angular style="width: 100%; height: 300px;" class="ag-theme-alpine" [rowData]="m_json_detail" [columnDefs]="m_col_detail" enableColResize (gridReady)="onGridDetailReady($event)" [frameworkComponents]="frameworkComponents"></ag-grid-angular-->
+	<!--/div-->
+</div>
+</div>

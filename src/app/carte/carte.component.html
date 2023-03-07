@@ -1,0 +1,35 @@
+<div class="row" style="width: 100%; height: calc(100% - 50px);" flex class="{{ m_classe_fonte }} ">
+	<jw-modal id="erreur">
+		<h4>Erreur</h4>
+		<h4>{{m_msg_err}}</h4>
+		<button (click)="closeModal('erreur');">OK</button>
+	</jw-modal>
+	<jw-modal id="info">
+		<h4>Message</h4>
+		<h4>{{m_msg_info}}</h4>
+		<button (click)="closeModalbis('info','OK');">OK</button>
+		<button (click)="closeModalbis('info','Cancel');">Cancel</button>
+	</jw-modal>
+	<form [formGroup]="formRecherche">
+		<div class="form-group">
+			<label style="width: 50px;" for="lblid_terr"> Adresse: </label>
+			<select formControlName="m_filtre_terr" id="m_filtre_terr" class=" {{ m_classe_fonte }} ">
+				<option *ngFor="let item of m_cbo_lieu.m_liste_items; let i = index" [value]="m_cbo_lieu.m_liste_items[i].m_id">{{m_cbo_lieu.m_liste_items[i].m_lib}}</option>
+			</select>
+<!-- 			<label style="width: 50px;" for="lblid_obed"> Loge: </label>
+			<select formControlName="m_filtre_loge" id="m_filtre_loge" class=" {{ m_classe_fonte }} ">
+				<option *ngFor="let item of m_cbo_loges.m_liste_items; let i = index" [value]="m_cbo_loges.m_liste_items[i].m_id">{{m_cbo_loges.m_liste_items[i].m_lib}}</option>
+			</select>
+			<label style="width: 50px;" for="lblid_terr"> Territoire: </label>
+			<select formControlName="m_filtre_terr" id="m_filtre_terr" class=" {{ m_classe_fonte }} ">
+				<option *ngFor="let item of m_cbo_terr.m_liste_items; let i = index" [value]="m_cbo_terr.m_liste_items[i].m_id">{{m_cbo_terr.m_liste_items[i].m_lib}}</option>
+			</select>
+			<label style="width: 50px;" for="lblid_orient"> Orient: </label>
+			<select formControlName="m_filtre_orient" id="m_filtre_orient" class=" {{ m_classe_fonte }} ">
+				<option *ngFor="let item of m_cbo_orients.m_liste_items; let i = index" [value]="m_cbo_orients.m_liste_items[i].m_id">{{m_cbo_orients.m_liste_items[i].m_lib}}</option>
+			</select> -->
+		</div>
+	</form>
+	<button (click)="onBtnRecherche()" class=" {{ m_classe_fonte }} ">Rechercher</button>
+	<div id="map" style="height: 100%; z-index: 98;" ></div>
+</div>

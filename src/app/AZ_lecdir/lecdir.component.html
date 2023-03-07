@@ -1,0 +1,26 @@
+<div class="row" style="width: 100%" class=" {{ m_classe_fonte }} ">
+	<jw-modal id="erreur">
+		<h4>Erreur</h4>
+		<h4>{{m_msg_err}}</h4>
+		<h5>{{m_sql_err}}</h5>
+		<h5>{{m_data_err}}</h5>
+		<h5>{{m_pile_err}}</h5>
+		<button (click)="closeModal('erreur');">OK</button>
+	</jw-modal>
+	<jw-modal id="info">
+		<h4>Message</h4>
+		<h4>{{m_msg_info}}</h4>
+		<button (click)="closeModalbis('info','OK');">OK</button>
+		<button (click)="closeModalbis('info','Cancel');">Cancel</button>
+	</jw-modal>
+	<!--form [formGroup]="formRecherche">
+		<div class="form-group">
+			<label class=" {{m_classe_entete}} "> Les fichiers:</label>
+			<label>Répertoire: </label>
+			<input style="width: 150px;" type="text" id="m_filtre_nom_dir" class=" {{ m_classe_fonte }} " name="m_filtre_nom_dir" formControlName="m_filtre_nom_dir">
+		</div>
+	</form>
+	<button (click)="onBtnRecherche()" class=" {{ m_classe_fonte }} ">Rechercher</button>
+	<button (click)="onViderCriteres()" class=" {{ m_classe_fonte }} ">Vider critères</button-->
+	<treeview [m_nd]=m_nd>  </treeview>
+</div>
