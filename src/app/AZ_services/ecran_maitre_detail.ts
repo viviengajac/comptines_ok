@@ -626,11 +626,11 @@ console.log('EcranMaitreDetail.AppelerHref: idx='+idx);
 				this.m_blocs[i].m_modif=false;
 				var sql=bloc.m_sql_select.replace("@id@",""+this.m_id_maitre);
 //console.log('EcranMaitreDetail.ChargerDetails: sql='+sql);
-//console.log("BBBB="+num_bloc);
+console.log("BBBB num_bloc="+num_bloc);
 				this.m_blocs[num_bloc].ChargerBloc(sql,supp_col_invisibles, remplacer_nom_col_par_header)
 				.then(res =>
 				{
-//console.log('apres then: nom_onglet='+onglet.m_lib_onglet);
+console.log('BBBB1 apres then: num_bloc='+num_bloc);
 					var str_res:string=""+res;
 //console.log('str_res='+str_res);
 					if(str_res.startsWith('Erreur'))

@@ -276,3 +276,11 @@ begin
     inner join lieu l on l.id_lieu=i.id_lieu
 	where i.id_interv=p_id_interv;
 end
+
+--AZcmptSelect
+begin
+	SELECT '' as etat,c.nom_cmpt,c.id_instr,c.id_cmpt,i.nom_instr as id_instrWITH,c.grands,c.moyens,c.petits
+    FROM `cmpt` as c
+    LEFT JOIN `instr` as i ON c.id_instr=i.id_instr
+    ORDER BY nom_cmpt;
+ end
