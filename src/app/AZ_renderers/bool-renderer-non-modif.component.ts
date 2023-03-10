@@ -11,12 +11,12 @@ import { GlobalConstantes } from '../AZ_common/global_cst';
 })
 export class BoolRendererNonModifComponent implements ICellRendererAngularComp
 {
-	params;
-	public bool_actif:string;
-	public bool_val:boolean;
-	m_classe_fonte:string;
+	params:any=null;
+	public bool_actif:string='';
+	public bool_val:boolean=false;
+	m_classe_fonte:string='';
 
-	agInit(parametres): void
+	agInit(parametres:any): void
 	{
 		this.params = parametres;
 		this.bool_val=this.params.value;
@@ -46,19 +46,20 @@ if(!this.bool_val)
 	  } */
 
 	//onCliquer($event,$checked)
-	onCliquer($event,$checked)
+	onCliquer($event:any,$checked:boolean)
 	{
 console.log('onClick dans btnrenderer');
 		if (this.params.onClick instanceof Function)
 		{
 console.log('test passé');
 			// put anything into params u want pass into parents component
-			
+			var v_nom_col:string=this.params.nom_col_cliquee;
 			const parametres =
 			{
 				event: $event,
 				checked:$checked,
-				detail: this.params.node.data
+				ligne_cliquee: this.params.node.data,
+				nom_col_cliquee: v_nom_col
 				// ...something
 			}
 console.log('avant appel');

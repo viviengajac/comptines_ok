@@ -15,10 +15,10 @@ import { AccesBdService } from '../AZ_services/acces_bd';
 @Injectable()
 export class DBDictComponent extends EcranMaitreDetail
 {
-	m_cbo_dbdictm1: Cbo;
-	m_cbo_dbdicttype: Cbo;
-	m_nom_table:string;
-	m_num_dbdict:number;
+	m_cbo_dbdictm1: any=null;	//Cbo;
+	m_cbo_dbdicttype: any=null;	//Cbo;
+	m_nom_table:string='';
+	m_num_dbdict:number=0;
 	constructor(public override httpClient: HttpClient, public override formBuilder:UntypedFormBuilder,public override modalService:ModalService)
 	{
 		super(httpClient, formBuilder,modalService);
@@ -65,9 +65,9 @@ export class DBDictComponent extends EcranMaitreDetail
 	ngOnInit(): void
 	{
 		this.m_cbo_dbdictm1=new Cbo(this.httpClient,'dbdict');
-		this.m_cbo_dbdictm1.GenererListeStd().then(res=>{},err=>{this.MessageErreur(err);});
+		this.m_cbo_dbdictm1.GenererListeStd().then((res:string)=>{},(err:string)=>{this.MessageErreur(err);});
 		this.m_cbo_dbdicttype=new Cbo(this.httpClient,'dbdicttype');
-		this.m_cbo_dbdicttype.GenererListeStd().then(res=>{},err=>{this.MessageErreur(err);});
+		this.m_cbo_dbdicttype.GenererListeStd().then((res:string)=>{},(err:string)=>{this.MessageErreur(err);});
 		this.InitColDefs();
 		this.Init();
 		this.m_grid_options_maitre.columnDefs=this.m_blocs[0].m_coldefs;
@@ -121,7 +121,7 @@ console.log("RECORD="+record); */
 				var bloc=this.m_blocs[i];
 				var sql=bloc.m_sql_select.replace("@id@",""+this.m_id_maitre);
 				
-				this.m_blocs[num_bloc].ChargerBlocPourGenererSQL(sql,false,false)
+//				this.m_blocs[num_bloc].ChargerBlocPourGenererSQL(sql,false,false)
 			}
 			
 			this.ReinitialiserCompteur();

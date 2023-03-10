@@ -21,17 +21,17 @@ import { ModalService } from '../AZ_modal/modal.service';
 @Injectable()
 export class IntervComponent extends EcranMaitreDetail
 {
-	m_cbo_cmpt: Cbo;
-	m_cbo_lieu: Cbo;
-	m_cbo_seance: Cbo;
-	m_id_interv:number;
-	m_date_interv_mini:Date;
-	m_date_interv_maxi:Date;
-	m_comm_interv:string;
-	m_tarif_interv:number;
-	m_fact_interv:number;
-	m_num_interv:string;
-	m_resizer;
+	m_cbo_cmpt: any=null;	//Cbo;
+	m_cbo_lieu: any=null;	//Cbo;
+	m_cbo_seance: any=null;	//Cbo;
+	m_id_interv:number=0;
+	m_date_interv_mini:Date | undefined;
+	m_date_interv_maxi:Date | undefined;
+	m_comm_interv:string='';
+	m_tarif_interv:number=0;
+	m_fact_interv:number=0;
+	m_num_interv:string='';
+//	m_resizer;
 	constructor(public override httpClient: HttpClient, public override formBuilder:UntypedFormBuilder,public override modalService:ModalService)
 	{
 		super(httpClient, formBuilder,modalService);
@@ -46,7 +46,8 @@ export class IntervComponent extends EcranMaitreDetail
 		cols[3]=new ColonneEcran("nom_lieu","Lieu",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,180);
 		cols[4]=new ColonneEcran("nom_seance","Séance",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,180);
 		cols[5]=new ColonneEcran("comm_interv","Commentaire",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,450);
-		cols[6]=new ColonneEcran("fact_interv","Facture",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
+//		cols[6]=new ColonneEcran("fact_interv","Facture",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
+		cols[6]=new ColonneEcran("fact_interv","Facture",TypeColEcran.Booleen,true,ModifCol.NonModifiable,true,true,80);
 		cols[7]=new ColonneEcran("tarif_interv","Tarif",TypeColEcran.Flottant,true,ModifCol.NonModifiable,true,true,100);
 		this.m_blocs[0]=new Bloc(httpClient,this,"interv__recherche","maitre","Maitre","G",300,"exec AZinterv__recherche","", "id_interv",cols);
 		cols=new Array(11);
@@ -109,11 +110,11 @@ export class IntervComponent extends EcranMaitreDetail
 	{
 console.log('debut de NgInit de Intervcomponent');
 		this.m_cbo_seance=new Cbo(this.httpClient,'seance');
-		this.m_cbo_seance.GenererListeStd().then(res=>{},err=>{this.MessageErreur(err);});
+		this.m_cbo_seance.GenererListeStd().then((res:string)=>{},(err:string)=>{this.MessageErreur(err);});
 		this.m_cbo_lieu=new Cbo(this.httpClient,'lieu');
-		this.m_cbo_lieu.GenererListeStd().then(res=>{},err=>{this.MessageErreur(err);});
+		this.m_cbo_lieu.GenererListeStd().then((res:string)=>{},(err:string)=>{this.MessageErreur(err);});
 		this.m_cbo_cmpt=new Cbo(this.httpClient,'cmpt');
-		this.m_cbo_cmpt.GenererListeStd().then(res=>{},err=>{this.MessageErreur(err);});
+		this.m_cbo_cmpt.GenererListeStd().then((res:string)=>{},(err:string)=>{this.MessageErreur(err);});
 		this.InitColDefs();
 		this.Init();
 		this.m_grid_options_maitre.columnDefs=this.m_blocs[0].m_coldefs;

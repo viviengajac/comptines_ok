@@ -14,12 +14,12 @@ import { ModalService } from '../AZ_modal/modal.service';
 @Injectable()
 export class SeanceComponent extends EcranMaitreDetail
 {
-	m_cbo_cmpt: Cbo;
-	m_cbo_seance: Cbo;
-	m_nom_seance:string;
-	m_id_cmpt:number;
-	m_id_seance:number;
-	m_num_seance:number;
+	m_cbo_cmpt: any=null;	//Cbo;
+	m_cbo_seance: any=null;	//Cbo;
+	m_nom_seance:string='';
+	m_id_cmpt:number=0;
+	m_id_seance:number=0;
+	m_num_seance:number=0;
 	constructor(public override httpClient: HttpClient, public override formBuilder:UntypedFormBuilder,public override modalService:ModalService)
 	{
 		super(httpClient, formBuilder,modalService);
@@ -55,9 +55,9 @@ export class SeanceComponent extends EcranMaitreDetail
 	ngOnInit(): void
 	{
 		this.m_cbo_cmpt=new Cbo(this.httpClient,'cmpt');
-		this.m_cbo_cmpt.GenererListeStd().then(res=>{},err=>{this.MessageErreur(err);});
+		this.m_cbo_cmpt.GenererListeStd().then((res:string)=>{},(err:string)=>{this.MessageErreur(err);});
 		this.m_cbo_seance=new Cbo(this.httpClient,'seance');
-		this.m_cbo_seance.GenererListeStd().then(res=>{},err=>{this.MessageErreur(err);});
+		this.m_cbo_seance.GenererListeStd().then((res:string)=>{},(err:string)=>{this.MessageErreur(err);});
 		this.InitColDefs();
 		this.Init();
 		this.m_grid_options_maitre.columnDefs=this.m_blocs[0].m_coldefs;

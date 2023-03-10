@@ -15,7 +15,7 @@ import { NavigationEnd,Router } from '@angular/router';
 })
 export class AppComponent implements OnInit, OnDestroy
 {
-	m_appel_par_href:boolean;
+	m_appel_par_href:boolean=false;
 	title = 'Comptines';
     constructor	(@Inject(DOCUMENT) private document: Document,private renderer: Renderer2,private router:Router,private loc_angular:Location)
 	{
@@ -54,7 +54,7 @@ console.log(this.url);
 			const tab_params:string[]=params.split('|');
 //console.log('app_component.ngOnInit: params tab='+tab_params);
 //console.log('app_component.ngOnInit: params[0]='+tab_params[0]);
-			GlobalConstantes.m_id_prs = +tab_params[0];
+			GlobalConstantes.m_id_prs_login = +tab_params[0];
 			GlobalConstantes.m_num_ecran_appele= +tab_params[1];
 			GlobalConstantes.m_num_bloc_appele= +tab_params[2];
 			GlobalConstantes.m_id_appele = +tab_params[3];

@@ -32,7 +32,7 @@
 		<button (click)="onViderCriteres()" class=" {{ m_classe_fonte }} ">Vider critères</button>
 		<button (click)="onExcelMaitre()" class=" {{ m_classe_fonte }} " [disabled]="m_interdit_exp">Excel</button>
 		<button (click)="onGenererSql()" class=" {{ m_classe_fonte }} ">Générer SQL</button>
-		<ag-grid-angular style="width: 100%; height: calc(100% - 51px);" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options_maitre" rowSelection='single' enableColResize (gridReady)="onGridMaitreReady($event)" (rowClicked)="onRowClickMaitre($event)" [frameworkComponents]="frameworkComponents" (columnResized)="onColumnMaitreResized($event)" [headerHeight]="m_hauteur_entete"></ag-grid-angular>
+		<ag-grid-angular style="width: 100%; height: calc(100% - 51px);" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options_maitre" rowSelection='single' enableColResize (gridReady)="onGridMaitreReady($event)" (rowClicked)="onRowClickMaitre($event)" (columnResized)="onColumnMaitreResized($event)" [headerHeight]="m_hauteur_entete"></ag-grid-angular>
 	</div>
 	<div style="border:2px solid #000;width: 100%; height: 50%;overflow: auto;padding: 1px; box-sizing: border-box;">
 		<!--div class="resizer" id="splitter_loge" style="width:100%;height:10px;border:1px solid #000;"></div-->
@@ -52,11 +52,11 @@
 					<div class="column">
 						<div class="row">
 							<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Nom table: </label>
-							<input type="text" formControlName="m_nom_dbdict" name="nom_dbdict" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+							<input type="text" formControlName="m_nom_dbdict" name="nom_dbdict" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
 						</div>
 						<div class="row">
 							<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Self desc: </label>
-							<input type="text" formControlName="m_selfdesc" name="selfdesc" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+							<input type="text" formControlName="m_selfdesc" name="selfdesc" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
 						</div>
 						<!--button type="submit">Rechercher</button-->
 					</div>
@@ -64,7 +64,7 @@
 			</form>
 		</div>
 		<div  *ngIf="!m_onglet_principal" name="detail" style="height: calc(100% - 25px);">
-			<ag-grid-angular style="width: 100%; height: 100%;" name="detail" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options_detail" rowSelection='single' enableColResize (gridReady)="onGridDetailReady($event)" [frameworkComponents]="frameworkComponents" (cellValueChanged)="onCellValueDetailChanged($event)" (focusin)="onFocusIn($event)" (rowClicked)="onRowClickDetail($event)" (columnResized)="onColumnDetailResized($event)" [headerHeight]="m_hauteur_entete"></ag-grid-angular>
+			<ag-grid-angular style="width: 100%; height: 100%;" name="detail" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options_detail" rowSelection='single' enableColResize (gridReady)="onGridDetailReady($event)" (cellValueChanged)="onCellValueDetailChanged($event)" (focusin)="onFocusIn($event)" (rowClicked)="onRowClickDetail($event)" (columnResized)="onColumnDetailResized($event)" [headerHeight]="m_hauteur_entete"></ag-grid-angular>
 		</div>
 			<!--ag-grid-angular style="width: 100%; height: 300px;" class="ag-theme-alpine" [rowData]="m_json_detail" [columnDefs]="m_col_detail" enableColResize (gridReady)="onGridDetailReady($event)" [frameworkComponents]="frameworkComponents"></ag-grid-angular-->
 		<!--/div-->

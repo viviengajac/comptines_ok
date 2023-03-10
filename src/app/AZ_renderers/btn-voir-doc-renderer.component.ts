@@ -11,12 +11,12 @@ import { GlobalConstantes } from '../AZ_common/global_cst';
 })
 export class BtnVoirDocRendererComponent implements ICellRendererAngularComp
 {
-	params;
-	label: string;
-	inactif:boolean;
-	m_classe_fonte:string;
+	params:any=null;
+	label: string='';
+	inactif:boolean=false;
+	m_classe_fonte:string='';
 
-	agInit(parametres): void
+	agInit(parametres:any): void
 	{
 		this.params = parametres;
 		if(parametres.value>0 && GlobalConstantes.m_nivo_exp==2)
@@ -33,7 +33,7 @@ export class BtnVoirDocRendererComponent implements ICellRendererAngularComp
 		return true;
 	}
 
-	onCliquer($event)
+	onCliquer($event:any)
 	{
 //console.log('onClick dans btnrenderer');
 		if (this.params.onClick instanceof Function)
@@ -43,7 +43,7 @@ export class BtnVoirDocRendererComponent implements ICellRendererAngularComp
 			const parametres =
 			{
 				event: $event,
-				detail: this.params.node.data
+				ligne_cliquee: this.params.node.data
 				// ...something
 			}
 //console.log('avant appel');

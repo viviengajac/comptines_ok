@@ -8,21 +8,20 @@ import { Ecran } from './ecran';
 @Injectable()
 export class AccesBdService
 {
-	m_json_decode:string;
-	m_retour_brut:string;
-	m_contenu_blob:string;
-	m_buffer_blob:Uint8Array;
-	m_colonnes_sql: ColonneSql[];
-	m_lignes: Ligne[];
-	m_fini:boolean;
-	m_etape_finie:boolean;
-	m_octet_debut:number;
-	m_taille_blob:number;
-	m_taille_bloc:number;
-	m_taille_lue:number;
-	m_ecran:Ecran=null;
-	m_pourcent_telechargement:number;
-	m_fin_telechargement:boolean;
+	m_retour_brut:string|undefined='';
+	m_contenu_blob:string='';
+	m_buffer_blob:any=null;	//Uint8Array;
+	m_colonnes_sql:any=null;	// ColonneSql[];
+	m_lignes:any=null;	// Ligne[];
+	m_fini:boolean=false;
+	m_etape_finie:boolean=false;
+	m_octet_debut:number=0;
+	m_taille_blob:number=0;
+	m_taille_bloc:number=0;
+	m_taille_lue:number=0;
+	m_ecran:any=null;	//	Ecran;
+	m_pourcent_telechargement:number=0;
+	m_fin_telechargement:boolean=false;
 //	url: string='https://bertrandgajac.hopto.org:9003/AccesBdPm/';
 //	url: string='http://bertrandgajac.hopto.org/AccesBdPm/';
 //	url: string='localhost/AccesBdPm/';
@@ -73,7 +72,7 @@ export class AccesBdService
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
 		const url=GlobalConstantes.FaireUrl();
-console.log('BBB acces_bd.LireTable: req='+req);
+//console.log('acces_bd.LireTable: url='+url);
 		let promise = new Promise((resolve, reject) =>
 		{
 			if(url==null)
@@ -81,7 +80,7 @@ console.log('BBB acces_bd.LireTable: req='+req);
 			else
 			{
 				var url_req: string=url+this.lire_ensemble_de_tables+req;
-//console.log('CCC AccesBd.LireTable: url_req='+url_req);
+//console.log('AccesBd.LireTable: url_req='+url_req);
 				this.httpClient.get(url_req, {responseType: 'text'} )
 				.toPromise()
 				.then
@@ -99,31 +98,24 @@ console.log('BBB acces_bd.LireTable: req='+req);
 						}
 						else
 						{
-console.log('CCC AccesBd.LireTable: lecture faite: res=' + res);
+//console.log('AccesBd.LireTable: lecture faite: ' + res);
 							var aj = new AccesJSon();
-							var ret: string = aj.DecoderTableJSon(res); //le JSon a été analysé et recopié dans m_colonnes_sql[] et m_lignes[] de l'objet aj
-//console.log('CC2 ret='+ret); ret=ok
+							var ret: string = aj.DecoderTableJSon(str_res);
 							var nb_col=aj.m_colonnes_sql.length;
 							this.m_colonnes_sql=new Array(nb_col);
 							var i;
-							//boucle pour recopier aj.m_colonnes_sql dans ab.m_colonnes_sql
-							//m_colonnes_sql contient le tableau nom_col:type_col pour toutes les colonnes
 							for(i=0;i<nb_col;i++)
 							{
 								this.m_colonnes_sql[i]=new ColonneSql(aj.m_colonnes_sql[i].m_nom_col,aj.m_colonnes_sql[i].m_type_col);
-//console.log("FFFF AccesBd.LireTable: colonnes:"+aj.m_colonnes_sql[i].m_nom_col);
 							}
 							var nb_lig=aj.m_lignes.length;
 							this.m_lignes=new Array(nb_lig);
 //console.log('AccesBd.LireTable: nb_lig=' + nb_lig);
 //console.log(aj);
-							//boucle pour recopier aj.m_lignes dans ab.m_lignes
-							//m_lignes contient pour chaque ligne le tableau num_col, val_col
 							for(i=0;i<nb_lig;i++)
 							{
 								this.m_lignes[i]=aj.m_lignes[i];
 							}
-							//on recopie le JSon dans m_retour_brut
 							this.m_retour_brut = res;
 //console.log('retour_brut='+this.m_retour_brut);
 							resolve('OK');
@@ -157,8 +149,16 @@ console.log('CCC AccesBd.LireTable: lecture faite: res=' + res);
 			(
 				res =>
 				{
-					this.m_taille_blob= +res;
-					resolve('OK');
+					if(res!=undefined)
+					{
+						this.m_taille_blob= +res;
+						resolve('OK');
+					}
+					else
+					{
+						var msg_err:string='Erreur: taille du BLOB non définie';
+						reject(msg_err);
+					}
 				},
 				(error) =>
 				{
@@ -339,27 +339,31 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 //console.log('LireBlob: lire partiel fait');
 					etape_finie=true;
 					this.m_retour_brut=res;
+					if(this.m_retour_brut!=undefined)
+					{
+						var retour_brut:string=this.m_retour_brut;
 //console.log('LireBlob: lire partiel fait 1');
-					const byteArrayTmp = new Uint8Array(atob(this.m_retour_brut).split('').map(char => char.charCodeAt(0)));
+						const byteArrayTmp = new Uint8Array(atob(retour_brut).split('').map(char => char.charCodeAt(0)));
 //console.log('LireBlob: lire partiel fait 2');
-					this.m_buffer_blob.set(byteArrayTmp,this.m_octet_debut);
+						this.m_buffer_blob.set(byteArrayTmp,this.m_octet_debut);
 //console.log('LireBlob: lire partiel fait 3');
-					this.m_octet_debut+=byteArrayTmp.length;
-					this.m_pourcent_telechargement=100.0*this.m_octet_debut/this.m_taille_blob;
+						this.m_octet_debut+=byteArrayTmp.length;
+						this.m_pourcent_telechargement=100.0*this.m_octet_debut/this.m_taille_blob;
 //console.log('pourcent telechargement='+this.m_pourcent_telechargement);
 //console.log(this.m_ecran);
-					if(this.m_ecran!=null)
-					{
-						this.m_ecran.m_pourcent_telechargement=this.m_pourcent_telechargement;
-					}
-//console.log('LireBlob: octet_debut='+this.m_octet_debut+', talle_blob='+this.m_taille_blob);
-					if(this.m_octet_debut>=this.m_taille_blob)
-					{
-						fini=true;
-						this.m_fin_telechargement=true;
 						if(this.m_ecran!=null)
 						{
-							this.m_ecran.m_fin_telechargement=true;
+							this.m_ecran.m_pourcent_telechargement=this.m_pourcent_telechargement;
+						}
+//console.log('LireBlob: octet_debut='+this.m_octet_debut+', talle_blob='+this.m_taille_blob);
+						if(this.m_octet_debut>=this.m_taille_blob)
+						{
+							fini=true;
+							this.m_fin_telechargement=true;
+							if(this.m_ecran!=null)
+							{
+								this.m_ecran.m_fin_telechargement=true;
+							}
 						}
 					}
 				},
@@ -389,9 +393,17 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 			(
 				res =>
 				{
-					this.m_taille_blob= +res;
+					if(res != undefined)
+					{
+						this.m_taille_blob= +res;
 //console.log('LireTailleFic('+nom_fic+')='+this.m_retour_brut);
-					resolve('OK');
+						resolve('OK');
+					}
+					else
+					{
+						var msg_err:string='Erreur: taille de fichier non définie';
+						reject(msg_err);
+					}
 				},
 				(error) =>
 				{
@@ -497,27 +509,31 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 					this.m_retour_brut=res;
 //console.log('LireFic: lire partiel fait 1');
 //console.log(this.m_retour_brut);
-					const byteArrayTmp = new Uint8Array(atob(this.m_retour_brut).split('').map(char => char.charCodeAt(0)));
+					if(this.m_retour_brut!=undefined)
+					{
+						var retour_brut:string=this.m_retour_brut;
+						const byteArrayTmp = new Uint8Array(atob(retour_brut).split('').map(char => char.charCodeAt(0)));
 //console.log('LireFic: lire partiel fait 2');
-					this.m_buffer_blob.set(byteArrayTmp,this.m_octet_debut);
+						this.m_buffer_blob.set(byteArrayTmp,this.m_octet_debut);
 //console.log('LireFic: lire partiel fait 3');
-					this.m_octet_debut+=byteArrayTmp.length;
+						this.m_octet_debut+=byteArrayTmp.length;
 //console.log('LireFic: lire partiel fait 4');
-					this.m_pourcent_telechargement=100.0*this.m_octet_debut/this.m_taille_blob;
+						this.m_pourcent_telechargement=100.0*this.m_octet_debut/this.m_taille_blob;
 //console.log('pourcent telechargement='+this.m_pourcent_telechargement);
 //console.log(this.m_ecran);
-					if(this.m_ecran!=null)
-					{
-						this.m_ecran.m_pourcent_telechargement=this.m_pourcent_telechargement;
-					}
-//console.log('LireFic: octet_debut='+this.m_octet_debut+', talle_blob='+this.m_taille_blob);
-					if(this.m_octet_debut>=this.m_taille_blob)
-					{
-						fini=true;
-						this.m_fin_telechargement=true;
 						if(this.m_ecran!=null)
 						{
-							this.m_ecran.m_fin_telechargement=true;
+							this.m_ecran.m_pourcent_telechargement=this.m_pourcent_telechargement;
+						}
+//console.log('LireFic: octet_debut='+this.m_octet_debut+', talle_blob='+this.m_taille_blob);
+						if(this.m_octet_debut>=this.m_taille_blob)
+						{
+							fini=true;
+							this.m_fin_telechargement=true;
+							if(this.m_ecran!=null)
+							{
+								this.m_ecran.m_fin_telechargement=true;
+							}
 						}
 					}
 				},
@@ -570,15 +586,15 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 		let promise = new Promise((resolve, reject) =>
 		{
 			var url_req: string=url+this.ecrire_table+sql;
-console.log("BBB acces_bd.ts fonction EcrireTable(sql:string, contenu: string): url_req='"+url_req+"' ;contenu='"+contenu+"'");
-//console.log('CCC EcrireTable: contenu=[[['+contenu+']]]');
+//console.log('EcrireTable: url_req='+url_req);
+//console.log('EcrireTable: contenu=[[['+contenu+']]]');
 			this.httpClient.post(url_req, contenu , {responseType: 'text'})
 			.toPromise()
 			.then
 			(
 				res =>
 				{
-console.log("CCC acces_bd.ts fonction EcrireTable(sql:string, contenu: string): retour de http='"+res+"'");
+//console.log('EcrireTable: retour de http='+res);
 					var str_res:string=""+res;
 					if(!str_res.startsWith('Erreur'))
 					{
@@ -700,87 +716,4 @@ console.log("CCC acces_bd.ts fonction EcrireTable(sql:string, contenu: string): 
 		});
 	}
 	*/
-	LireTablePourGenererSQL(req:string)
-	{
-//		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
-		const url=GlobalConstantes.FaireUrl();
-//console.log('BBB acces_bd.LireTablePourGenererSQL: req='+req);
-		let promise = new Promise((resolve, reject) =>
-		{
-			if(url==null)
-				reject('URL non défini');
-			else
-			{
-				var url_req: string=url+this.lire_ensemble_de_tables+req;
-//console.log('CCC AccesBd.LireTable: url_req='+url_req);
-				this.httpClient.get(url_req, {responseType: 'text'} )
-				.toPromise()
-				.then
-				(
-					res =>
-					{
-						var str_res:string=""+res;
-						if(!str_res.startsWith('{t:'))
-						{
-							if(!str_res.startsWith('Erreur'))
-							{
-								str_res='Erreur: '+res;
-							}
-							reject(str_res);
-						}
-						else
-						{
-console.log('AAA AccesBd.LireTablePourGenererSQL: lecture faite: res=' + res);
-console.log("res.lenght="+res.length);
-						var nom_champs=new Array;
-						var i:number;
-						var fin_nom_champs:number;
-						var aj = new AccesJSon();
-						var ret: string = aj.DecoderTableJSon(res);
-						if(ret=='OK') {
-							for(i=0;i<res.length;i++) {
-								if(res[i]==']') {
-									fin_nom_champs=i;
-								}
-							}
-						}							
-							//var testparse=JSON.parse(res);
-//console.log(testparse);
-							//var info3=testparse[0];
-							//var info4=testparse[1];
-							//var info5=testparse[2];
-							//var record=this.m_lignes[0].RecupererVal(0);
-//console.log(info0+" et "+info1+" et "+info2);
-							/* var aj = new AccesJSon();
-							var ret: string = aj.DecoderTableJSon(res); //le JSon a été analysé et recopié dans m_colonnes_sql[] et m_lignes[] de l'objet aj
-							var nb_col=aj.m_colonnes_sql.length;
-							this.m_colonnes_sql=new Array(nb_col);
-							var i;
-							for(i=0;i<nb_col;i++)
-							{
-								this.m_colonnes_sql[i]=new ColonneSql(aj.m_colonnes_sql[i].m_nom_col,aj.m_colonnes_sql[i].m_type_col);
-							}
-							var nb_lig=aj.m_lignes.length;
-							this.m_lignes=new Array(nb_lig);
-							for(i=0;i<nb_lig;i++)
-							{
-								this.m_lignes[i]=aj.m_lignes[i];
-							}
-							//on recopie le JSon dans m_retour_brut
-							this.m_retour_brut = res;
-							this.m_json_decode = ret;
-							resolve('OK'); */
-						}
-					},
-					(error) =>
-					{
-						var msg_err:string='Erreur: ' + error;
-//console.log("LireTable: ret en erreur: "+msg_err+'!!!')
-						reject(msg_err);
-					}
-				)
-			}
-		});	
-		return promise;
-	}
 }

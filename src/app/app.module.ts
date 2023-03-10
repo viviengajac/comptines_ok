@@ -11,7 +11,7 @@ import { BtnVoirDocRendererComponent } from './AZ_renderers/btn-voir-doc-rendere
 import { BtnDefDocRendererComponent } from './AZ_renderers/btn-def-doc-renderer.component';
 import { BtnDependancesRendererComponent } from './AZ_renderers/btn-dependances-renderer.component';
 import { BoolRendererComponent } from './AZ_renderers/bool-renderer.component';
-import { BoolRendererNonModifComponent } from './AZ_renderers/bool-renderer-non-modif.component';
+//import { BoolRendererNonModifComponent } from './AZ_renderers/bool-renderer-non-modif.component';
 import { DateEditorComponent } from './AZ_renderers/date-editor.component';
 import { DatetimeEditorComponent } from './AZ_renderers/datetime-editor.component';
 import { CboEditorComponent } from './AZ_renderers/cbo-editor.component';
@@ -26,7 +26,7 @@ import { SeanceComponent } from './ecrans/seance.component';
 import { DBDictComponent } from './ecrans/dbdict.component';
 import { LecDirComponent } from './AZ_lecdir/lecdir.component';
 import { ReqComponent } from './ecrans/req.component';
-import { DependancesComponent } from './dependances/dependances.component';
+import { DependancesComponent } from './AZ_dependances/dependances.component';
 import { CarteComponent } from './carte/carte.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
@@ -39,7 +39,7 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     BtnDefDocRendererComponent,
     BtnDependancesRendererComponent,
     BoolRendererComponent,
-    BoolRendererNonModifComponent,
+//    BoolRendererNonModifComponent,
     DateEditorComponent,
     DatetimeEditorComponent,
 	  CboEditorComponent,

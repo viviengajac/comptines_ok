@@ -5,7 +5,7 @@ import { GlobalConstantes } from '../AZ_common/global_cst';
 
 export class AccesDir
 {
-	m_retour_brut:string;
+	m_retour_brut:string='';
 	private m_start_object: string='{';
 	private m_end_object: string="}";
 	private m_start_array: string="[";
@@ -13,14 +13,14 @@ export class AccesDir
 //	url: string='https://bertrandgajac.hopto.org:9003/AccesBdPm/';
 	lire_dir='LireDir.php?nom_dir=';
 	constructor(private httpClient: HttpClient){}
-	m_nb_nd:number;
-	m_tab_nd: Nd[];
-	m_tampon_bd: string;
-	m_string_json: string;
-	m_tab_json:any[];
+	m_nb_nd:number=0;
+	m_tab_nd: Nd[]=new Array(0);
+	m_tampon_bd: string='';
+	m_string_json: string='';
+	m_tab_json:any[]=new Array(0);
 
-	m_tampon_dir: string;
-	m_ind: number;
+	m_tampon_dir: string='';
+	m_ind: number=0;
 	MessageException(msg: string): string
 	{
 		/*
@@ -72,6 +72,7 @@ export class AccesDir
 		}
 		return nom_prop;
 	}
+	/*
 	LireValPropriete(): string
 	{
 		var fini: number;
@@ -90,7 +91,7 @@ export class AccesDir
 		}
 		return val_prop;
 	}
-		
+	
 	LireEntier(): number
 	{
 		var fini_entier=0;
@@ -116,6 +117,7 @@ export class AccesDir
 //Tracer("retour de LireEntier: val_entier=($val_entier)");
 		return val_entier;
 	}
+	*/
 	Tabd(ind: number): string
 	{
 		return this.m_tampon_bd.substring(this.m_ind,this.m_ind+1);
@@ -136,9 +138,18 @@ export class AccesDir
 			(
 				res =>
 				{
-					this.m_retour_brut=res;
-					this.DecoderDir(res);
-					resolve('OK');
+					var str_res:string=""+res;
+//console.log('str_res='+str_res);
+					if(str_res.startsWith('Erreur'))
+					{
+						reject(str_res);
+					}
+					else
+					{
+						this.m_retour_brut= ""+res;
+						this.DecoderDir();
+						resolve('OK');
+					}
 				},
 				(error) =>
 				{
@@ -149,14 +160,14 @@ export class AccesDir
 		});
 		return promise;
 	}
-	DecoderDir(donnees:string):string
+	DecoderDir():string
 	{
 //console.log("Debut de DecoderDir("+donnees+")");
 //console.log("donnees.length="+donnees.length);
 //			this.m_tab_nom_col=new Array(0);
 		this.m_nb_nd=0;
 		this.m_tab_nd=new Array(0);
-		this.m_tampon_bd=donnees;	//str_split(donnees);
+		this.m_tampon_bd=this.m_retour_brut;	//str_split(donnees);
 		this.m_ind=0;
 		var c=this.m_tampon_bd[this.m_ind];
 //			Tracer("c=".$c);

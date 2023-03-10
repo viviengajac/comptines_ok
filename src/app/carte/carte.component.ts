@@ -8,7 +8,6 @@ import { Ecran } from '../AZ_services/ecran';
 import { UntypedFormBuilder } from '@angular/forms';
 import { ModalService } from '../AZ_modal/modal.service';
 import { Cbo } from '../AZ_common/cbo.model';
-import { stringToArray } from 'ag-grid-community';
 
 @Component({
   selector: 'app-carte',
@@ -17,11 +16,11 @@ import { stringToArray } from 'ag-grid-community';
 @Injectable()
 export class CarteComponent extends Ecran
 {
-	m_cbo_lieu: Cbo;
+	m_cbo_lieu: any=null;	// Cbo;
 /* 	m_cbo_orients: Cbo;
 	m_cbo_terr: Cbo;
 	m_cbo_loges: Cbo; */
-	private map;
+	private map:any=null;
 	constructor(public override httpClient: HttpClient, public override formBuilder:UntypedFormBuilder,public override modalService:ModalService)
 	{
 		super(httpClient, formBuilder,modalService);
@@ -30,7 +29,7 @@ export class CarteComponent extends Ecran
 	ngOnInit(): void
 	{
 		this.m_cbo_lieu=new Cbo(this.httpClient,'lieu');
-		this.m_cbo_lieu.GenererListeStd().then(res=>{},err=>{this.MessageErreur(err);});
+		this.m_cbo_lieu.GenererListeStd().then((res:string)=>{},(err:string)=>{this.MessageErreur(err);});
 /* 		this.m_cbo_orients=new Cbo(this.httpClient,'orient');
 		this.m_cbo_orients.GenererListeStd().then(res=>{},err=>{this.MessageErreur(err);});
 		this.m_cbo_terr=new Cbo(this.httpClient,'terr');
@@ -222,7 +221,7 @@ console.log('WWW interv['+j+']: vignette '+vignette+" date_interv="+date_interv+
 		}
 //console.log('fin ngAfterViewInit');
 	}
-	onBtnRecherche()
+	onAfficherCarte()
 	{
 		//var id_loge: any;
 		//id_loge=this.formRecherche.get('m_filtre_loge').value;

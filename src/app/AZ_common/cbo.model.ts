@@ -5,17 +5,14 @@ import { TypeColSql } from './ecran.model';
 //@Injectable()
 export class ItemCbo
 {
-	public m_id: number;
-	public m_lib: string;
-	public m_selected:boolean;
-	constructor(public id:number,public lib:string){this.m_id=id;this.m_lib=lib;this.m_selected=false;}
+	constructor(public m_id:number=0,public m_lib:string='',public m_selected:boolean=false){}
 }
 //@Injectable()
 export class Cbo
 {
-	public m_liste_items: ItemCbo[];
-	constructor(public httpClient: HttpClient,public m_nom_table:string)	{}
-	GenererListe(req)
+	public m_liste_items: ItemCbo[]=new Array(0);
+	constructor(public httpClient: HttpClient,public m_nom_table:string) {}
+	GenererListe(req:string)
 	{
 		var promise = new Promise((resolve, reject) =>
 		{
@@ -29,7 +26,7 @@ export class Cbo
 				(
 					res =>
 					{
-//console.log('BBBB CboInit: req='+req+', res='+res);
+//console.log('CboInit: req='+req+', res='+res);
 						var str_res=""+res;
 						if(str_res.startsWith('Erreur'))
 						{
@@ -44,7 +41,8 @@ export class Cbo
 							var i;
 							for(i=0;i<nb_lig;i++)
 							{
-//console.log('CCCC Cbo.GenererListe: ligne['+i+']');
+//console.log('Cbo.GenererListe: ligne['+i+']');
+//console.log(ab.m_lignes[i]);
 								var id=ab.m_lignes[i].m_cellules[0].m_val;
 								var lib=ab.m_lignes[i].m_cellules[1].m_val;
 								switch(ab.m_colonnes_sql[1].m_type_col)
@@ -55,7 +53,6 @@ export class Cbo
 								}
 								var tc: ItemCbo = new ItemCbo(id,lib);
 								this.m_liste_items[i+1]=new ItemCbo(id,lib);
-								//console.log("DDDD"+this.m_liste_items[i+1].m_id+" ; "+this.m_liste_items[i+1].m_lib);
 							}
 							resolve("OK");
 						}
@@ -77,6 +74,7 @@ export class Cbo
 	}
 	GenererListeStd()
 	{
+//console.log('Cbo.GenererListeStd');
 		var req:string="exec AZinit_cbo '"+this.m_nom_table+"'";
 		return this.GenererListe(req);
 	}
@@ -85,7 +83,7 @@ export class Cbo
 		var nb_lig=liste_items.length;
 		this.m_liste_items=new Array(nb_lig+1);
 		var tc: ItemCbo = new ItemCbo(0,'');
-		this.m_liste_items[0]=new ItemCbo(id,lib);
+		this.m_liste_items[0]=new ItemCbo(0,'');
 		var i;
 		for(i=0;i<nb_lig;i++)
 		{
@@ -96,7 +94,13 @@ export class Cbo
 		}
 	}
 }
+/*
 export class CboListeItems
 {
 	constructor(public m_liste_items: ItemCbo[])	{}
+}
+*/
+export class ParamsCbo
+{
+	constructor(public m_ecran:any=null,public m_liste_items:ItemCbo[]=new Array(0),public m_nom_table:string=''){}
 }

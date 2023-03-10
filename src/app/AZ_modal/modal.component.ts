@@ -10,8 +10,8 @@ import { ModalService } from './modal.service';
 })
 export class ModalComponent implements OnInit, OnDestroy
 {
-    @Input() id: string;
-    private element: any;
+    @Input() id: string='';
+    private element: any=null;
 
     constructor(private modalService: ModalService, private el: ElementRef)
 	{
@@ -29,13 +29,13 @@ export class ModalComponent implements OnInit, OnDestroy
         // move element to bottom of page (just before </body>) so it can be displayed above everything else
         document.body.appendChild(this.element);
         // close modal on background click
-        this.element.addEventListener('click', el =>
-		{
-            if (el.target.className === 'jw-modal')
-			{
-                this.close();
-            }
-        });
+        this.element.addEventListener('click', (el: { target: { className: string; }; }) =>
+				{
+					if (el.target.className === 'jw-modal')
+					{
+						this.close();
+					}
+				});
         // add self (this modal instance) to the modal service so it's accessible from controllers
         this.modalService.add(this);
     }

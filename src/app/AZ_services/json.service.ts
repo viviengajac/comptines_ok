@@ -27,15 +27,15 @@ export class AccesJSon
 	private m_end_object: string="}";
 	private m_start_array: string="[";
 	private m_end_array: string="]";
-	m_colonnes_sql: ColonneSql[];
+	m_colonnes_sql: ColonneSql[]=new Array(0);
 	m_nb_val: number=0;
-	m_tab_val: any[];
+	m_tab_val: any[]=new Array(0);
 	m_nb_lig: number=0;
-	m_lignes: Ligne[];
-	m_type_cnx: string;
-	m_tampon: string;
-	m_string_json: string;
-	m_tab_json:any[];
+	m_lignes: Ligne[]=new Array(0);
+	m_type_cnx: string='';
+	m_tampon: string='';
+	m_string_json: string='';
+	m_tab_json:any[]=new Array(0);
 
 	SpecifierTypeCnx(type_cnx: string)
 	{
@@ -76,7 +76,6 @@ export class AccesJSon
 	TranscrireEnJSonUneTable(cols: ColonneSql[],ligs:Ligne[])
 	{
 //Tracer("debut objet liste de tables");
-console.log("ABC json.service.ts début de TranscrireEnJSonUneTable()");
 		this.m_tampon="";
 		this.WriteStartObject();
 //Tracer("propriete tables");
@@ -169,8 +168,8 @@ console.log("ABC json.service.ts début de TranscrireEnJSonUneTable()");
 		this.WriteEndObject();
 		return this.m_tampon;
 	}
-	m_tampon_bd: string;
-	m_ind: number;
+	m_tampon_bd: string='';
+	m_ind: number=0;
 	MessageException(msg: string): string
 	{
 		var msg_err='Erreur: ' + msg + " à l'indice " + this.m_ind;
@@ -244,7 +243,7 @@ console.log("ABC json.service.ts début de TranscrireEnJSonUneTable()");
 	{
 		return this.m_tampon_bd.substring(this.m_ind,this.m_ind+1);
 	}
-	DecoderTableJSon(donnees):string
+	DecoderTableJSon(donnees:string):string
 	{
 		var nom_prop: string;
 		var fini_tables: number;
@@ -453,7 +452,7 @@ console.log("ABC json.service.ts début de TranscrireEnJSonUneTable()");
 	//	4: booleen
 	FormaterValeur(type_col:TypeColEcran,val_col:any):string
 	{
-		var val_format:string;
+		var val_format:string='';
 		switch(type_col)
 		{
 			case TypeColEcran.ClePrimaire:
@@ -509,9 +508,6 @@ console.log("ABC json.service.ts début de TranscrireEnJSonUneTable()");
 			case TypeColEcran.Booleen:
 				val_format=val_col;
 				break;
-			case TypeColEcran.BooleenNonModif:
-					val_format=val_col;
-					break;
 			case TypeColEcran.VoirDocDb:
 			case TypeColEcran.DefDocDb:
 			case TypeColEcran.VoirDocFs:
@@ -537,7 +533,7 @@ console.log("ABC json.service.ts début de TranscrireEnJSonUneTable()");
 		var header: string;
 		var nb_col_ecran:number;
 		var nb_col_sql:number;
-		var num_col_sql_etat:number;
+		var num_col_sql_etat:number= -1;
 		var ligne_supprimee:boolean;
 		var a_inserer:boolean;
 		if(tab_cols_sql===undefined)
@@ -597,8 +593,12 @@ console.log("ABC json.service.ts début de TranscrireEnJSonUneTable()");
 					if(pour_excel)
 						a_inserer=tab_cols_ecran[j].m_inser_excel;
 					else
+					{
+//console.log('j='+j);
+//console.log(tab_cols_ecran[j]);
 						a_inserer=tab_cols_ecran[j].m_inser_ecran;
 //console.log('json.DonnerStringJSon apres utilisation de m_inser_ecran');
+					}
 					header=tab_cols_ecran[j].m_lib_col;
 					num_col_sql=-1;
 //console.log('col('+j+')='+nom_col_ecran);
@@ -659,7 +659,7 @@ console.log("ABC json.service.ts début de TranscrireEnJSonUneTable()");
 	   }
 	   */
 //if(supp_col_invisibles)
-console.log("DDD json.service.ts DonnerStringJSon; m_string_json="+this.m_string_json);
+//console.log("m_string_json="+this.m_string_json);
 	   return this.m_string_json;
 	}
 	DonnerStringFormulaireJSon(tab_cols_ecran: ColonneEcran[],tab_cols_sql: ColonneSql[],tab_ligs: Ligne[],remplacer_nom_col_par_header: boolean,pour_excel:boolean): string
@@ -677,8 +677,9 @@ console.log("DDD json.service.ts DonnerStringJSon; m_string_json="+this.m_string
 		var debut:boolean;
 		var a_inserer: boolean;
 		var header: string;
-		var num_col_sql:number;
-//console.log('DonnerStringFormulaireJSon: nb_lig='+nb_lig);
+		var num_col_sql:number= -1;
+//console.log('JSon.DonnerStringFormulaireJSon: nb_lig='+nb_lig);
+//console.log(tab_cols_ecran);
 //		   this.m_tab_prs=new Array(nb_lig);
 //		   this.m_tab_lig=new Array(nb_lig);
 		debut=true;
@@ -686,9 +687,10 @@ console.log("DDD json.service.ts DonnerStringJSon; m_string_json="+this.m_string
 		for(i=0;i<nb_lig;i++)
 		{
 		   nb_cel=tab_ligs[i].m_cellules.length;
-//  console.log('lig['+i+']: nb_cel='+nb_cel);
+//console.log('lig['+i+']: nb_cel='+nb_cel);
 			for(j=0;j<nb_col_ecran;j++)
 			{
+//console.log('j='+j);
 				nom_col_ecran=tab_cols_ecran[j].m_nom_col;
 				header=tab_cols_ecran[j].m_lib_col;
 				type_col=tab_cols_ecran[j].m_type_col;

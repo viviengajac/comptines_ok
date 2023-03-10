@@ -16,7 +16,7 @@ import { Cbo } from '../AZ_common/cbo.model';
 @Injectable()
 export class ReferencesComponent extends EcranGrille
 {
-	public m_nom_tab:string;
+	public m_nom_tab:string='';
 	//m_cbo_type_lieu:Cbo;
 	//m_cbo_initialisee:boolean=false;
 	/*
@@ -100,7 +100,7 @@ console.log('AAA='+this.m_cbo_type_lieu.m_nom_table);
 		this.activatedRoute.params.forEach(params =>
 		{
             let userId = params["userId"];
-			this.m_nom_tab=this.activatedRoute.snapshot.paramMap.get("nom_ecran");
+			this.m_nom_tab=''+this.activatedRoute.snapshot.paramMap.get("nom_ecran");
 //console.log('Appel de ChangementDeGrille('+this.m_nom_tab+')');
 			this.ChangementDeGrille(this.m_nom_tab);
 //console.log('references.ngOnInit: m_nom_tab='+this.m_nom_tab+', avant appel de InitColDefs');

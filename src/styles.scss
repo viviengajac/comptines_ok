@@ -34,7 +34,7 @@ $CMPT23-theme: mat.define-light-theme((
 @include mat.all-component-themes($CMPT23-theme);
 
 /* You can add global styles to this file, and also import other style files */
-@import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
+@import "../node_modules/ag-grid-community/styles/ag-grid.css";
 //@import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
 //@import "./ag-theme-alpine-pm.css";
 @import "./ag-theme-alpine-pm-tp.css";

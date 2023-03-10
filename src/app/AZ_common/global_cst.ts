@@ -1,10 +1,11 @@
 import { AppComponent } from '../app.component';
+//import { MenuComponent } from '../menu/menu.component';
 export class GlobalConstantes
 {
 //	public static apiURL: string = "https://bertrandgajac.hopto.org:9003/";
 	public static m_base_url:string=window.location.origin;
 	public static m_url:string=window.location.href;
-    public static m_id_prs: number=-1;
+    public static m_id_prs_login: number=-1;
     public static m_compteur=0;
 	public static m_compteur_initialise=false;
 	public static m_classe_fonte:string='moyenne';
@@ -21,6 +22,9 @@ export class GlobalConstantes
 	public static m_num_bloc_appele:number;
 	public static m_id_appele:number;
 	public static m_init_faite:boolean=false;
+	public static m_nb_max_lig_creees:number=1111;
+	public static m_rep_fic:string='';
+	public static m_nom_col_select_id='SelectId';
 	public static NumClasseFonte(classe_fonte:string):number
 	{
 		var num_classe_fonte:number=2;

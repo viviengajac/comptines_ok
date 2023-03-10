@@ -8,10 +8,10 @@ import { ICellEditorAngularComp } from 'ag-grid-angular';
 })
 export class DateEditorComponent implements ICellEditorAngularComp,AfterViewInit
 {
-	public ma_date:string;
-	public params;
-@ViewChild('input', { read: ViewContainerRef }) public input;
-	agInit(params): void
+	public ma_date:string='';
+	public params:any=null;
+@ViewChild('input', { read: ViewContainerRef }) public input:any;
+	agInit(params:any): void
 	{
 //console.log('agInit de btnRenderer: params.onclick='+parametres.onClick+', params.label='+parametres.label);
 		this.params = params;
@@ -22,7 +22,7 @@ export class DateEditorComponent implements ICellEditorAngularComp,AfterViewInit
 	{
 		return true;
 	}
-	changeEvent(event)
+	changeEvent(event:any)
 	{
 		// Return date object
 		this.ma_date=""+event.target.value;

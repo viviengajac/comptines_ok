@@ -15,32 +15,31 @@ import { GlobalConstantes } from '../AZ_common/global_cst';
 //@Injectable()
 export class MenuComponent // implements OnInit
 {
-	m_phase_connexion: boolean;
-	m_appel_par_href:boolean;
+	m_phase_connexion: boolean=false;
 //	public static m_id_prs: number;
-	m_cbo_prs: Cbo;
-	m_cbo_fonte:Cbo;
-	formConnexion: UntypedFormGroup;
+	m_cbo_prs: any=null;	//	 Cbo;
+	m_cbo_fonte: any=null;	//	Cbo;
+	formConnexion:	any=null;	//	 UntypedFormGroup;
 //	formServeur: FormGroup;
-	accesBdService: AccesBdService;
-	m_compteur:number;
-	m_msg_err:string;
-	m_classe_fonte:string;
-	m_classe_compteur:string;
+	accesBdService:	any=null;	//	 AccesBdService;
+	m_compteur:number=0;
+	m_msg_err:string='';
+	m_classe_fonte:string='';
+	m_classe_compteur:string='';
 //	m_tailles_fontes:string[]=['tres_petite','petite','moyenne','grande','tres_grande'];
 	m_tailles_fontes:string[]=['tres_petite','moyenne','tres_grande'];
     constructor( private httpClient: HttpClient,private router: Router, public formBuilder:UntypedFormBuilder)
 	{
 //console.log('debut de constructor de menu');
 //		if(!GlobalConstantes.m_url_bd.endsWith('/'))GlobalConstantes.m_url_bd+='/';
-		GlobalConstantes.m_serveur_bd="serveur_de_bd";
+		GlobalConstantes.m_serveur_bd="accesbdcomptines";
 		this.ClasseCompteur();
-		var id_prs=GlobalConstantes.m_id_prs;
+		var id_prs_login=GlobalConstantes.m_id_prs_login;
 //console.log('menu.constructeur: id_prs='+id_prs);
-		if (id_prs>0)
+		if (id_prs_login>0)
 		{
 			this.m_phase_connexion=false;
-			this.ValiderIdPrs(id_prs,"AZAZAZ");
+			this.ValiderIdPrs(id_prs_login,"AZAZAZ");
 			var num_ecran_appele=GlobalConstantes.m_num_ecran_appele;
 			var num_bloc_appele=GlobalConstantes.m_num_bloc_appele;
 			var id_appele=GlobalConstantes.m_id_appele;
@@ -123,16 +122,7 @@ export class MenuComponent // implements OnInit
 //console.log('MenuComponent: OnDefServeur m_serveur_bd='+GlobalConstantes.m_serveur_bd);
 //console.log('MenuComponent: OnDefServeur m_url_bd='+GlobalConstantes.m_url_bd);
 			this.m_cbo_prs=new Cbo(this.httpClient,'prs_login');
-			this.m_cbo_prs.GenererListeStd()
-			.then(
-				res=>
-				{
-//console.log('cbo_prs: nb_items='+this.m_cbo_prs.m_liste_items.length);
-				},
-				erreur=>
-				{
-					console.log('cbo_prs: erreur='+erreur);
-				});
+			this.m_cbo_prs.GenererListeStd().then((err: string)=>{console.log(err);});
 		}
 	}
 	ValiderIdPrs(id_prs:number,mdp:string)
@@ -204,7 +194,7 @@ export class MenuComponent // implements OnInit
 			var id_fonte=this.formConnexion.get('m_cbo_fonte').value;
 //console.log('8');
 			var classe_fonte=this.m_tailles_fontes[id_fonte];
-			GlobalConstantes.m_id_prs=id_prs;
+			GlobalConstantes.m_id_prs_login=id_prs;
 			GlobalConstantes.m_classe_fonte=classe_fonte;
 //console.log('type de id_prs='+id_prs.constructor.name);
 			this.ValiderIdPrs(id_prs,mdp);
@@ -267,7 +257,7 @@ export class MenuComponent // implements OnInit
 	}
 	onDeConnexion()
 	{
-		GlobalConstantes.m_id_prs=-1;
+		GlobalConstantes.m_id_prs_login=-1;
 		GlobalConstantes.m_compteur=0;
 		this.m_phase_connexion=true;
 		this.formConnexion.get('m_cbo_prs').setValue(0);
@@ -305,6 +295,19 @@ export class MenuComponent // implements OnInit
 //console.log('MenuComponent.NumEcran('+nom_ecran+')='+num_ecran);
 		return num_ecran;
 	}
+	public static AppelerHref(nom_ecran:string,id:number)
+	{
+//console.log('MenuComponent.AppelerHref('+nom_ecran+','+id);
+		var num_ecran=this.NumEcran(nom_ecran);
+		if(num_ecran!='')
+		{
+			var num_fonte=GlobalConstantes.NumClasseFonte(GlobalConstantes.m_classe_fonte);
+			var params_url:string='?p='+GlobalConstantes.m_id_prs_login+'|'+num_ecran+'|'+id+'|'+num_fonte;
+			var url:string=GlobalConstantes.m_url+params_url;
+//console.log('MenuComponent.AppelerHref: url='+url);
+			window.open(url,'_blank');
+		}
+	}
 	tab_ecrans:string[]=['references','seance','interv'];
 	tab_bloc_ref:string[]=['cmpt','instr','lieu','ville'];
 	UrlEcran(num_ecran:number,num_bloc:number):string
@@ -312,6 +315,11 @@ export class MenuComponent // implements OnInit
 		var url_ecran:string=this.tab_ecrans[num_ecran];
 		if(num_ecran==0)url_ecran+='/'+this.tab_bloc_ref[num_bloc];
 		return url_ecran;
+	}
+	private static tab_nom_tab_pour_dependances:string[]=['cerem','deg','etat_prs','obed','orient','rite','temple','terr','type_doc','type_fic','type_loge','type_off','type_tenue','ville'];
+	public static NomTablePourDependances(num_bloc:number):string
+	{
+		return MenuComponent.tab_nom_tab_pour_dependances[num_bloc];
 	}
 	ClasseCompteur()
 	{

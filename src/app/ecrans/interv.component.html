@@ -37,7 +37,7 @@
 	<label style="width: 25px;" for="lblnb"> {{m_nb_lignes_maitre}} </label>
 	<button (click)="onViderCriteres()" class=" {{ m_classe_fonte }} ">Vider critères</button>
 	<button (click)="onExcelMaitre()" class=" {{ m_classe_fonte }} " [disabled]="m_interdit_exp">Excel</button>
-	<ag-grid-angular style="width: 100%; height: calc(100% - 52px);" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options_maitre" rowSelection='single' enableColResize (gridReady)="onGridMaitreReady($event)" [frameworkComponents]="frameworkComponents" (rowClicked)="onRowClickMaitre($event)" (columnResized)="onColumnMaitreResized($event)" [headerHeight]="m_hauteur_entete"></ag-grid-angular>
+	<ag-grid-angular style="width: 100%; height: calc(100% - 52px);" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options_maitre" rowSelection='single' enableColResize (gridReady)="onGridMaitreReady($event)" (rowClicked)="onRowClickMaitre($event)" (columnResized)="onColumnMaitreResized($event)" [headerHeight]="m_hauteur_entete"></ag-grid-angular>
 </div>
 <div style="border:2px solid #000;width: 100%; height: 50%; box-sizing: border-box; overflow: auto;padding: 2px;">
 	<!--div class="resizer" id="splitter_prs" style="width:100%;height:10px;border:1px solid #000;"></div-->
@@ -57,42 +57,42 @@
 				<div class="column">
 					<div class="row">
 						<label class=" {{m_classe_label_onglet_principal}} ">Date: </label>
-						<input type="date" formControlName="m_date_interv" name="date_interv" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} ">
+						<input type="date" formControlName="m_date_interv" name="date_interv" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} ">
 					</div>
 					<div class="row">
 						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Séance: </label>
-						<select formControlName="m_id_seance" name="id_seance" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} ">
+						<select formControlName="m_id_seance" name="id_seance" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} ">
 							<option *ngFor="let item of m_cbo_seance.m_liste_items; let i = index" [value]="m_cbo_seance.m_liste_items[i].m_id">{{m_cbo_seance.m_liste_items[i].m_lib}}</option>
 						</select>
 					</div>
 					<div class="row">
 						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Lieu: </label>
-						<select formControlName="m_id_lieu" name="id_lieu" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} ">
+						<select formControlName="m_id_lieu" name="id_lieu" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} ">
 							<option *ngFor="let item of m_cbo_lieu.m_liste_items; let i = index" [value]="m_cbo_lieu.m_liste_items[i].m_id">{{m_cbo_lieu.m_liste_items[i].m_lib}}</option>
 						</select>
 					</div>
 					<div class="row">
 						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Commentaire: </label>
-						<input type="text" formControlName="m_comm_interv" name="comm_interv" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+						<input type="text" formControlName="m_comm_interv" name="comm_interv" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
 					</div>
 					<div class="row">
 						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Tarif: </label>
-						<input type="number" step="0.01" formControlName="m_tarif_interv" name="tarif_interv" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+						<input type="number" step="0.01" formControlName="m_tarif_interv" name="tarif_interv" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
 					</div>
 					<div class="row">
 						<label class=" {{m_classe_label_onglet_principal}} ">Facturé: </label>
-						<input type="checkbox" formControlName="m_fact_interv" name="fact_interv" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+						<input type="checkbox" formControlName="m_fact_interv" name="fact_interv" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
 					</div>
 					<div class="row">
 						<label class=" {{m_classe_label_onglet_principal}} ">Numéro: </label>
-						<input type="text" formControlName="m_num_interv" name="num_interv" (change)="onChangeEvent($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+						<input type="text" formControlName="m_num_interv" name="num_interv" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
 					</div>
 				</div>
 			</div>
 		</form>
 	</div>
 	<div *ngIf="!m_onglet_principal" name="detail" style="height: calc(100% - 25px);">
-		<ag-grid-angular style="width: 100%; height: 100%;" name="detail" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options_detail" rowSelection='single' enableColResize (gridReady)="onGridDetailReady($event)" [frameworkComponents]="frameworkComponents" (cellValueChanged)="onCellValueDetailChanged($event)" (focusin)="onFocusIn($event)" (rowClicked)="onRowClickDetail($event)" (columnResized)="onColumnDetailResized($event)" [headerHeight]="m_hauteur_entete" [undoRedoCellEditing]="m_undoRedoCellEditing" [undoRedoCellEditingLimit]="m_undoRedoCellEditingLimit"></ag-grid-angular>
+		<ag-grid-angular style="width: 100%; height: 100%;" name="detail" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options_detail" rowSelection='single' enableColResize (gridReady)="onGridDetailReady($event)" (cellValueChanged)="onCellValueDetailChanged($event)" (focusin)="onFocusIn($event)" (rowClicked)="onRowClickDetail($event)" (columnResized)="onColumnDetailResized($event)" [headerHeight]="m_hauteur_entete" [undoRedoCellEditing]="m_undoRedoCellEditing" [undoRedoCellEditingLimit]="m_undoRedoCellEditingLimit"></ag-grid-angular>
 	</div>
 </div>
 </div>

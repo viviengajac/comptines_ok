@@ -6,18 +6,19 @@ import { GlobalConstantes } from '../AZ_common/global_cst';
 @Component({
   selector: 'app-btn-def-doc-renderer',
   template: `
-<input type="file" (change)="onCliquer($event)" [disabled]="inactif" class=" {{m_classe_fonte }} ">
-    `
+<!--input type="file" (change)="onCliquer($event)" [disabled]="inactif" class=" {{ m_classe_fonte }} "-->
+<input type="file" id="selectedFile" style="display: none;" (change)="onCliquer($event)" />
+<input type="button" value="Définir" onclick="document.getElementById('selectedFile').click();" [disabled]="inactif" class=" {{ m_classe_fonte }} " />    `
 })
-// était en 2nd paramètre de onCliquer() ligne au dessus:   ,$event.target.files
+//<input type="file" (change)="onCliquer($event,$event.target.files)" [disabled]="inactif" class=" {{m_classe_fonte }} ">
 export class BtnDefDocRendererComponent implements ICellRendererAngularComp
 {
-	params;
-	inactif: boolean;
-	label: string;
-	m_classe_fonte:string;
+	params:any=null;
+	inactif: boolean=false;
+	label: string='';
+	m_classe_fonte:string='';
 
-	agInit(parametres): void
+	agInit(parametres:any): void
 	{
 //console.log('agInit de btnDefDocRenderer: params.onclick='+parametres.onClick+', params.label='+parametres.label+', params.actif='+parametres.actif+', value=' + parametres.value);
 		this.params = parametres;
@@ -35,8 +36,7 @@ export class BtnDefDocRendererComponent implements ICellRendererAngularComp
 		return true;
 	}
 
-	// ne marche plus avec deux paramètres: onCliquer($event,$file)
-	onCliquer($event)
+	onCliquer($event:any)
 	{
 //console.log('BtnDefdoc: onClick dans btnrenderer');
 		if (this.params.onClick instanceof Function)
@@ -46,8 +46,8 @@ export class BtnDefDocRendererComponent implements ICellRendererAngularComp
 			const parametres =
 			{
 				event: $event,
-				//fic: $file,
-				detail: this.params.node.data
+//				fic: $file,
+				ligne_cliquee: this.params.node.data
 				// ...something
 			}
 //console.log('avant appel');

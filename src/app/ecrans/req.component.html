@@ -23,5 +23,5 @@
 	<button class=" {{ m_classe_fonte }} {{m_classe_bouton_actif}}" (click)="onBtnRecherche()">Rechercher</button>
 	<label style="width: 25px;" for="lblnb"> {{m_nb_lignes}} </label>
 	<button class=" {{ m_classe_fonte }} " (click)="onExcel()" [disabled]="m_interdit_exp">Excel</button>
-	<ag-grid-angular style="width: 100%; height: 100%;" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options" rowSelection='single' enableColResize (gridReady)="onGridReady($event)" [frameworkComponents]="frameworkComponents" (cellValueChanged)="onCellValueChanged($event)" (focusin)="onFocusIn($event)" (rowClicked)="onRowClick($event)" (columnResized)="onColumnResized($event)" [headerHeight]="m_hauteur_entete"></ag-grid-angular>	
+	<ag-grid-angular style="width: 100%; height: 100%;" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options" rowSelection='single' enableColResize (gridReady)="onGridReady($event)" (cellValueChanged)="onCellValueChanged($event)" (focusin)="onFocusIn($event)" (rowClicked)="onRowClick($event)" (columnResized)="onColumnResized($event)" [headerHeight]="m_hauteur_entete"></ag-grid-angular>	
 </div>

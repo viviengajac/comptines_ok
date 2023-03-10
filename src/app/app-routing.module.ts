@@ -6,7 +6,7 @@ import { SeanceComponent } from './ecrans/seance.component';
 import { LecDirComponent } from './AZ_lecdir/lecdir.component';
 import { MenuComponent } from './menu/menu.component';
 import { ReqComponent } from './ecrans/req.component';
-import { DependancesComponent } from './dependances/dependances.component';
+import { DependancesComponent } from './AZ_dependances/dependances.component';
 import { CarteComponent } from './carte/carte.component';
 import { DBDictComponent } from './ecrans/dbdict.component';
 //import { ConnexComponent } from './connex/connex.component';

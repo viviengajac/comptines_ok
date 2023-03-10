@@ -2,34 +2,43 @@ import { AccesBdService } from '../AZ_services/acces_bd';
 import { AccesJSon } from '../AZ_services/json.service';
 import { HttpClient } from '@angular/common/http';
 import { GlobalConstantes } from '../AZ_common/global_cst';
-import { TypeColEcran,TypeColSql,ColDef, ColonneEcran,ColonneSql,Ligne,Cellule,ColumnCbo,ColumnDate,ColumnDateHeure,ColumnVoirDoc,ColumnDefDoc,ColumnDependances,ColumnBool,ModifCol,ParamsCbo,ColumnBoolNonModif } from '../AZ_common/ecran.model';
-import { Cbo,CboListeItems,ItemCbo } from '../AZ_common/cbo.model';
+import { TypeColEcran,TypeColSql,ColDef, ColonneEcran,ColonneSql,Ligne,Cellule,ColumnCbo,ColumnDate,ColumnDateHeure,ColumnVoirDoc,ColumnDefDoc,ColumnDependances,ColumnBool,ModifCol } from '../AZ_common/ecran.model';
+import { Cbo,ItemCbo,ParamsCbo } from '../AZ_common/cbo.model';
 import { Ecran } from './ecran';
+import { MenuComponent } from '../menu/menu.component';
 import { formatDate } from '@angular/common';
 import * as FileSaver from 'file-saver';
+import { BtnVoirDocRendererComponent } from '../AZ_renderers/btn-voir-doc-renderer.component';
+import { BtnDefDocRendererComponent } from '../AZ_renderers/btn-def-doc-renderer.component';
+import { BtnDependancesRendererComponent } from '../AZ_renderers/btn-dependances-renderer.component';
+import { BoolRendererComponent } from '../AZ_renderers/bool-renderer.component';
+import { DateEditorComponent } from '../AZ_renderers/date-editor.component';
+import { DatetimeEditorComponent } from '../AZ_renderers/datetime-editor.component';
+import { CboEditorComponent } from '../AZ_renderers/cbo-editor.component';
+//import { CboRendererComponent } from '../AZ_renderers/cbo-renderer.component';
+
+//import { FileSaver } from 'file-saver';
 
 export class Bloc
 {
-	m_coldefs: any[];
+	m_coldefs: any;
 //	m_lignes_org:Ligne[];
 	m_lignes:Ligne[]=new Array(0);
-	m_colonnes_sql: ColonneSql[];
+	m_colonnes_sql: ColonneSql[]=new Array(0);
 	m_modif:boolean=false;
 	gridApi:any;
 	gridColumnApi:any;
-	m_nouvelle_cbo:ColumnCbo;
-	
+//	m_nouvelle_cbo:any=null;	// ColumnCbo;
 		
-	m_taille_blob:number;
-	m_buffer_blob:Uint8Array;
-	m_taille_bloc:number;
-	m_taille_lue:number;
-	m_octet_debut:number;
-	m_fini:boolean;
-	m_etape_finie:boolean;
-
+	m_taille_blob:number=0;
+	m_buffer_blob:any=null;	// Uint8Array;
+	m_taille_bloc:number=0;
+	m_taille_lue:number=0;
+	m_octet_debut:number=0;
+	m_fini:boolean=false;
+	m_etape_finie:boolean=false;
 	
-	constructor(public httpClient:HttpClient,public m_ecran:Ecran,public m_nom_table:string,public m_nom_bloc:string,public m_lib_bloc:string,public m_type_bloc:string,public m_hauteur_grille, public m_sql_select: string, public m_sql_update: string, public m_nom_cle_primaire: string,public m_colonnes_ecran: ColonneEcran[]){}
+	constructor(public httpClient:HttpClient,public m_ecran:Ecran,public m_nom_table:string,public m_nom_bloc:string,public m_lib_bloc:string,public m_type_bloc:string,public m_hauteur_grille:number, public m_sql_select: string, public m_sql_update: string, public m_nom_cle_primaire: string,public m_colonnes_ecran: ColonneEcran[]){}
 	InitGridApi(grid_api:any,grid_column_api:any)
 	{
 		this.gridApi=grid_api;
@@ -61,6 +70,7 @@ export class Bloc
 		}
 		return largeur_std*facteur;
 	}
+	/*
 	InitColumnCbo(col:ColDef,nom_table:string)
 	{
 		var promise = new Promise((resolve, reject) =>
@@ -72,20 +82,24 @@ export class Bloc
 			res=>
 			{
 				this.m_nouvelle_cbo.valueFormatter=this.formatterCbo(cbo_tmp.m_liste_items);
-//				this.m_nouvelle_cbo.cellEditorParams=new CboFiltre(cbo_tmp.m_liste_items);
-				this.m_nouvelle_cbo.cellEditorParams=new ParamsCbo(this.m_ecran,new CboListeItems(cbo_tmp.m_liste_items),nom_table);
+//				this.m_nouvelle_cbo.cellEditorParams=new ParamsCbo(this.m_ecran,new CboListeItems(cbo_tmp.m_liste_items),nom_table);
+				var params_cbo:ParamsCbo=new ParamsCbo();
+				params_cbo.Init(this.m_ecran,new CboListeItems(cbo_tmp.m_liste_items),nom_table);
+				this.m_nouvelle_cbo.cellEditorParams=params_cbo;
 //console.log('InitColumnCbo');
 //console.log(this.m_nouvelle_cbo);
 				resolve('OK');
 			}
 			,err=>
 			{
+//console.log('appel de MessageErreur depuis bloc: 1');
 				this.m_ecran.MessageErreur(err+'§sql§data§pile');
 				reject(err);
 			});
 		});
 		return promise;
 	}
+	*/
 	ClassesEntete(col:ColonneEcran):string[]
 	{
 		var classes:string[]=new Array(2);
@@ -107,7 +121,7 @@ export class Bloc
 		{
 //console.log('bloc.Initcoldefs: i='+i);
 			var col: ColonneEcran=this.m_colonnes_ecran[i];
-//console.log('m_inser_ecran='+col.m_inser_ecran);
+//console.log(col);
 			if(col.m_inser_ecran)
 				nb_col++;
 		}
@@ -129,6 +143,7 @@ export class Bloc
 				{
 					case TypeColEcran.CleEtrangere:
 //console.log('clé étrangère');
+/*
 						var col1:ColDef=new ColDef(col.m_nom_col,col.m_lib_col,true,true,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
 						var nom_table=col.NomTablePourCbo();
 						var fini:boolean=false;
@@ -143,6 +158,7 @@ export class Bloc
 						},
 						err=>
 						{
+//console.log('appel de MessageErreur depuis bloc: 2');
 							this.m_ecran.MessageErreur('Erreur '+err+'§sql§data§pile');
 							fini=true;
 						}
@@ -151,43 +167,85 @@ export class Bloc
 						{
 							await this.delay(50);
 						}
+*/
+						cols[num_col]=new ColumnCbo(col.m_nom_col,col.m_lib_col,true,true,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
+						var nom_table=col.NomTablePourCbo();
+						var fini:boolean=false;
+						var cbo_tmp:Cbo=new Cbo(this.httpClient,nom_table);
+						cbo_tmp.GenererListeStd()
+						.then(
+						res=>
+						{
+//console.log('Bloc '+this.m_nom_bloc+':InitiColDefs pour une ColumnCbo: '+col.m_nom_col+': cbo_tmp.m_liste_items');
+//console.log(cbo_tmp.m_liste_items);
+							cols[num_col].valueFormatter=this.formatterCbo(cbo_tmp.m_liste_items);
+//							this.m_nouvelle_cbo.cellEditorParams=new ParamsCbo(this.m_ecran,new CboListeItems(cbo_tmp.m_liste_items),nom_table);
+/*
+							var params_cbo:ParamsCbo=new ParamsCbo();
+							params_cbo.Init(this.m_ecran,cbo_tmp.m_liste_items,nom_table);
+							cols[num_col].cellEditorParams=params_cbo;
+*/
+//							cols[num_col].cellRenderer=CboRendererComponent;
+							cols[num_col].cellRenderer=CboEditorComponent;
+							cols[num_col].cellEditorParams=new ParamsCbo(this.m_ecran,cbo_tmp.m_liste_items,nom_table);
+							cols[num_col].cellRendererParams={onClick:this.onCboClick.bind(this),nom_col_cliquee:col.m_nom_col};
+							fini=true;
+//console.log('InitColumnCbo');
+//console.log(this.m_nouvelle_cbo);
+						}
+						,err=>
+						{
+//console.log('appel de MessageErreur depuis bloc: 1');
+							this.m_ecran.MessageErreur(err+'§sql§data§pile');
+							fini=true;
+						});
+						while(!fini)
+						{
+							await this.delay(50);
+						}
+//						cols[num_col].cellRenderer=CboEditorComponent;
 						break;
 					case TypeColEcran.Date:	// date
 //console.log('colonne date: '+col.m_nom_col);
 						cols[num_col]=new ColumnDate(col.m_nom_col,col.m_lib_col,true,true,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
+						cols[num_col].cellRenderer=DateEditorComponent;
 						break;
 					case TypeColEcran.DateHeure:	// dateheure
 //console.log('colonne dateheure: '+col.m_nom_col);
 						cols[num_col]=new ColumnDateHeure(col.m_nom_col,col.m_lib_col,true,true,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
+						cols[num_col].cellRenderer=DatetimeEditorComponent;
 						break;
 					case TypeColEcran.VoirDocDb:
 						cols[num_col]=new ColumnVoirDoc(col.m_nom_col,col.m_lib_col,true,false,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
+						cols[num_col].cellRenderer=BtnVoirDocRendererComponent;
 						cols[num_col].cellRendererParams={onClick: this.onBtnVoirDocDbClick.bind(this),label: 'VoirDb'};
 						break;
 					case TypeColEcran.DefDocDb:
 						cols[num_col]=new ColumnDefDoc(col.m_nom_col,col.m_lib_col,true,false,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
+						cols[num_col].cellRenderer=BtnDefDocRendererComponent;
 						cols[num_col].cellRendererParams={onClick: this.onBtnDefDocDbClick.bind(this),label:'DéfinirDb'};
 						break;
 					case TypeColEcran.VoirDocFs:
 						cols[num_col]=new ColumnVoirDoc(col.m_nom_col,col.m_lib_col,true,false,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
+						cols[num_col].cellRenderer=BtnVoirDocRendererComponent;
 						cols[num_col].cellRendererParams={onClick:this.onBtnVoirDocFsClick.bind(this),label: 'Voir'};
 						break;
 					case TypeColEcran.DefDocFs:
 						cols[num_col]=new ColumnDefDoc(col.m_nom_col,col.m_lib_col,true,false,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
+						cols[num_col].cellRenderer=BtnDefDocRendererComponent;
 						cols[num_col].cellRendererParams={onClick:this.onBtnDefDocFsClick.bind(this),label:'Définir'};
 						break;
 					case TypeColEcran.Dependances:
 						cols[num_col]=new ColumnDependances(col.m_nom_col,col.m_lib_col,true,false,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
+						cols[num_col].cellRenderer=BtnDependancesRendererComponent;
 						cols[num_col].cellRendererParams={onClick:this.onBtnDependancesClick.bind(this),label:'Dépendances'};
 						break;
 					case TypeColEcran.Booleen:
+//console.log('colonne ColumnBool:'+col.m_nom_col);
 						cols[num_col]=new ColumnBool(col.m_nom_col,col.m_lib_col,true,false,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
-						cols[num_col].cellRendererParams={onClick:this.onBoolClick.bind(this)};
+						cols[num_col].cellRenderer=BoolRendererComponent;
+						cols[num_col].cellRendererParams={onClick:this.onBoolClick.bind(this),nom_col_cliquee:col.m_nom_col};
 						break;
-					case TypeColEcran.BooleenNonModif:
-							cols[num_col]=new ColumnBoolNonModif(col.m_nom_col,col.m_lib_col,true,false,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
-							cols[num_col].cellRendererParams={onClick:this.onBoolClick.bind(this)};
-							break;
 					default:
 						cols[num_col]=new ColDef(col.m_nom_col,col.m_lib_col,true,true,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
 						break;
@@ -230,6 +288,7 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 		var type_mime:string=ab.DonnerTypeMime(type_fic);
 		if(type_mime.length==0)
 		{
+//console.log('appel de MessageErreur depuis bloc: 3');
 			this.m_ecran.MessageErreur('Erreur: type de fichier inconnu: '+type_fic);
 		}
 		else
@@ -243,7 +302,10 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 					ab.SpecifierEcran(this.m_ecran);
 					var str_res:string=""+res;
 					if(str_res.startsWith('Erreur'))
+					{
+//console.log('appel de MessageErreur depuis bloc: 4');
 						this.m_ecran.MessageErreur(str_res+'§sql§data§pile');
+					}
 					else
 					{
 //console.log('LireBlob: retour='+ab.m_retour_brut);
@@ -260,10 +322,13 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 								const data: Blob = new Blob([ab.m_buffer_blob], {type: type_mime});
 								var maintenant=formatDate(new Date(),'yyyyMMddHHmmss', 'en');
 								FileSaver.saveAs(data, nom_fic_complet + '_export_' + maintenant + type_fic);
+//								var FileSaver = require('file-saver');
+//								FileSaver.saveAs(data, nom_fic_complet + '_export_' + maintenant + type_fic);
 //								this.m_ecran.MessageBox('OK');
 							},
 							err =>
 							{
+//console.log('appel de MessageErreur depuis bloc: 5');
 								str_res=""+err;
 								this.m_ecran.MessageErreur(str_res+'§sql§data§pile');
 							}
@@ -273,6 +338,7 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 				},
 				err =>
 				{
+//console.log('appel de MessageErreur depuis bloc: 6');
 					this.m_ecran.MessageErreur(err+'§sql§data§pile');
 				}
 			);
@@ -280,20 +346,20 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 		this.ReinitialiserCompteur();
 		return 'OK';
 	}
-	onBtnVoirDocDbClick(e): string
+	onBtnVoirDocDbClick(e:any): string
 	{
 //console.log('rowdata='+this.rowDataClicked1);
-		var str_id_doc=e.detail[this.m_nom_cle_primaire];
+		var str_id_doc=e.ligne_cliquee[this.m_nom_cle_primaire];
 		return this.onBtnVoirDoc(str_id_doc,"db");
 	}
-	onBtnVoirDocFsClick(e): string
+	onBtnVoirDocFsClick(e:any): string
 	{
 //console.log('rowdata='+this.rowDataClicked1);
-		var str_id_doc=e.detail[this.m_nom_cle_primaire];
+		var str_id_doc=e.ligne_cliquee[this.m_nom_cle_primaire];
 		return this.onBtnVoirDoc(str_id_doc,"fs");
 	}
-	contenu_fic: string |ArrayBuffer;
-	fic: File;
+	contenu_fic:any=null;	//	 string |ArrayBuffer=null;
+	fic: any=null;	//	 File=null;
 	async onBtnDefDoc(id_doc:number,fic:File,db_ou_fs:string)
 	{
 //console.log('debut de onBtnDefDoc');
@@ -306,7 +372,14 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 //console.log('onBtnDefDocClick: num_lig='+num_lig);
 		if(num_lig<0)
 		{
+//console.log('appel de MessageErreur depuis bloc: 7');
 			this.m_ecran.MessageErreur("Il faut d'abord sauver la ligne");
+			faire=false;
+		}
+		else if (fic==null)
+		{
+//console.log('appel de MessageErreur depuis bloc: 7');
+			this.m_ecran.MessageErreur("Fichier non défini");
 			faire=false;
 		}
 		else
@@ -393,7 +466,10 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 //console.log('res='+res);
 									var str_res:string=""+res;
 									if(str_res.startsWith('Erreur'))
+									{
+//console.log('appel de MessageErreur depuis bloc: 8');
 										self.m_ecran.MessageErreur(str_res+'§sql§data§pile');
+									}
 									else if(str_res.length>0)
 									{
 //console.log('LireBlob: retour='+ab.m_retour_brut);
@@ -403,6 +479,7 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 								},
 								err =>
 								{
+//console.log('appel de MessageErreur depuis bloc: 9');
 									self.m_ecran.MessageErreur(err+'§sql§data§pile');
 								}
 							);
@@ -413,6 +490,7 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 				}
 				if(type_fic.length==0)
 				{
+//console.log('appel de MessageErreur depuis bloc: 10');
 					self.m_ecran.MessageErreur("Erreur: le type de fichier n'est pas connu: "+type_mime);
 				}
 				else
@@ -426,15 +504,20 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 //console.log('retour='+res);
 						var str_res:string=""+res;
 						if(str_res.startsWith('Erreur'))
+						{
+//console.log('appel de MessageErreur depuis bloc: 11');
 							self.m_ecran.MessageErreur(str_res+'§sql§data§pile');
+						}
 						else
 						{
 							self.m_ecran.RafraichirEcran();
+//console.log('bloc: appel de messagebox');
 							self.m_ecran.MessageBox("OK");
 						}
 					},
 					error =>
 					{
+//console.log('appel de MessageErreur depuis bloc: 12');
 						var msg='retour de EcrireBlob='+error.message;
 //console.log(msg);
 						self.m_ecran.MessageErreur(msg);
@@ -446,20 +529,27 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 		this.ReinitialiserCompteur();
 		return 'OK';
 	}
-	onBtnDefDocDbClick(e)
+	onBtnDefDocDbOuFsClick(e:any,db_ou_fs:string)
 	{
 //console.log('debut de onBtnDefDocClick');
-		var str_id_doc=e.detail[this.m_nom_cle_primaire];
-		this.fic=e.fic[0];
-		return this.onBtnDefDoc(str_id_doc,this.fic,"db");
+		var str_id_doc=e.ligne_cliquee[this.m_nom_cle_primaire];
+//		this.fic=e.fic[0];
+		var t:HTMLInputElement=e.event.srcElement;
+		if(t.files!=null)
+		{
+			this.fic=t.files[0];
+			this.onBtnDefDoc(str_id_doc,this.fic,db_ou_fs);
+		}
 	}
-	onBtnDefDocFsClick(e)
+	onBtnDefDocDbClick(e:any)
 	{
-//console.log('debut de onBtnDefDocClick');
-		var str_id_doc=e.detail[this.m_nom_cle_primaire];
-		this.fic=e.fic[0];
-		return this.onBtnDefDoc(str_id_doc,this.fic,"fs");
+		this.onBtnDefDocDbOuFsClick(e,"db");
 	}
+	onBtnDefDocFsClick(e:any)
+	{
+		this.onBtnDefDocDbOuFsClick(e,"fs");
+	}
+/*
 	onBtnDependances(nom_table:string,str_id:string)
 	{
 //console.log('debut de onBtnDependances');
@@ -472,38 +562,63 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 		this.ReinitialiserCompteur();
 		return 'OK';
 	}
-	onBtnDependancesClick(e)
+*/
+	onBtnDependancesClick(e:any)
 	{
 //console.log('debut de onBtnDefDocClick');
-		var nom_table=this.m_nom_table;
-		var str_id=e.detail[this.m_nom_cle_primaire];
-		return this.onBtnDependances(nom_table,str_id);
+//		var nom_table=this.m_nom_table;
+		var id=e.ligne_cliquee[this.m_nom_cle_primaire];
+		MenuComponent.AppelerHref('dependances/'+this.m_nom_table,id);
+		return 'OK';
 	}
-	onBoolClick(e): string
+	onBoolClick(e:any): string
 	{
-console.log('onBoolClick');
-console.log("e= "+e);
-console.log("e.checked= "+e.checked);
-		var str_id=e.detail[this.m_nom_cle_primaire];
+//console.log('onBoolClick');
+//console.log('nom_cle_primaire='+this.m_nom_cle_primaire+', nom_bloc='+this.m_nom_bloc);
+//console.log(e);
+		var str_id=e.ligne_cliquee[this.m_nom_cle_primaire];
+//console.log('str_id='+str_id);
 		var val_col:boolean=e.checked;
-console.log("val_col= "+val_col);
-console.log('event='+e.event);
-console.log('composedPath()='+e.event.composedPath());
-console.log('composedPath()[4]='+e.event.composedPath()[4]);
-// on remplace event.path par event.composedPath()
-		var t:HTMLInputElement=e.event.composedPath()[4];
-console.log("t= "+t);
+//console.log(e.detail);
+/*
+		var t:HTMLInputElement=e.event.path[2];
+//console.log(t);
 		var nom_col:string=t.getAttribute('col-id');
-console.log('nom_col='+nom_col);
 //		var nom_col:string=e.event.path[2].attributes.col-id.value;
-console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
+*/
+		var nom_col_cliquee=e.nom_col_cliquee;
+//console.log('nom_col='+nom_col);
+//console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 //		var num_col_sql=this.NumeroColonneSql(nom_col);
-		this.ModifValeurChamp(nom_col,str_id,val_col);
+		this.ModifValeurChamp(nom_col_cliquee,str_id,val_col);
+		return 'OK';
+	}
+	onCboClick(e:any): string
+	{
+//console.log('onCboClick');
+//console.log('nom_cle_primaire='+this.m_nom_cle_primaire+', nom_bloc='+this.m_nom_bloc);
+//console.log(e);
+		var str_id=e.ligne_cliquee[this.m_nom_cle_primaire];
+		var val_col=e.id;
+//console.log('str_id='+str_id);
+//		var val_col:boolean=e.checked;
+//console.log(e.detail);
+/*
+		var t:HTMLInputElement=e.event.path[2];
+//console.log(t);
+		var nom_col:string=t.getAttribute('col-id');
+//		var nom_col:string=e.event.path[2].attributes.col-id.value;
+*/
+		var nom_col_cliquee=e.nom_col_cliquee;
+//console.log('nom_col='+nom_col);
+//console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
+//		var num_col_sql=this.NumeroColonneSql(nom_col);
+		this.ModifValeurChamp(nom_col_cliquee,str_id,val_col);
 		return 'OK';
 	}
 	formatterCbo(options:ItemCbo[])
 	{
-		return (params) =>
+		return (params:any):string =>
 		{
 //console.log('formatterCbo: nb items='+options.length);
 			var i:number;
@@ -575,7 +690,7 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 //console.log('cellule ajoutee');
 		}
 	}
-	NumeroColonneSql(nom_col: string)
+	NumeroColonneSql(nom_col_sql: string)
 	{
 		var i:number;
 		var num_col:number=-1;
@@ -584,7 +699,7 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 		for(i=0;i<this.m_colonnes_sql.length;i++)
 		{
 //console.log('NumeroColonneSql: colonne_sql['+i+']='+this.m_colonnes_sql[i].m_nom_col);
-			if(this.m_colonnes_sql[i].m_nom_col==nom_col)
+			if(this.m_colonnes_sql[i].m_nom_col==nom_col_sql)
 				num_col=i;
 		}
 //console.log('NumeroColonneSql('+nom_col+')='+num_col);
@@ -594,7 +709,7 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 	{
 		return this.NumeroColonneSql(this.m_nom_cle_primaire);
 	}
-	NumeroColonneEcran(nom_col: string)
+	NumeroColonneEcran(nom_col_ecran: string)
 	{
 		var i:number;
 		var num_col:number=-1;
@@ -602,7 +717,7 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 		for(i=0;i<this.m_colonnes_ecran.length;i++)
 		{
 //console.log('colonne_sql['+i+']='+this.m_colonnes_sql[i].m_nom_col);
-			if(this.m_colonnes_ecran[i].m_nom_col==nom_col)
+			if(this.m_colonnes_ecran[i].m_nom_col==nom_col_ecran)
 				num_col=i;
 		}
 //console.log('ChercherColonneSql('+nom_col+')='+num_col);
@@ -611,16 +726,16 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 	NumeroColonneSqlParLibCol(lib_col: string)
 	{
 		var i:number;
-		var nom_col:string;
+		var nom_col_ecran:string='';
 		for(i=0;i<this.m_colonnes_ecran.length;i++)
 		{
 			if(this.m_colonnes_ecran[i].m_lib_col==lib_col)
-				nom_col=this.m_colonnes_ecran[i].m_nom_col;
+				nom_col_ecran=this.m_colonnes_ecran[i].m_nom_col;
 		}
-		var num_col=this.NumeroColonneSql(nom_col);
+		var num_col=this.NumeroColonneSql(nom_col_ecran);
 		return num_col;
 	}
-	NumeroColDef(nom_col: string)
+	NumeroColDef(nom_col_coldef: string)
 	{
 		var i:number;
 		var num_col:number=-1;
@@ -628,7 +743,7 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 		for(i=0;i<this.m_coldefs.length;i++)
 		{
 //console.log('colonne_sql['+i+']='+this.m_colonnes_sql[i].m_nom_col);
-			if(this.m_coldefs[i].field==nom_col)
+			if(this.m_coldefs[i].field==nom_col_coldef)
 				num_col=i;
 		}
 //console.log('ChercherColonneSql('+nom_col+')='+num_col);
@@ -666,21 +781,11 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 		}
 		return -1;
 	}
-	DonnerStringJSonPourGenererSql(remplacer_nom_col_par_header: boolean, pour_excel: boolean): string
-	{
-		var aj = new AccesJSon();
-		var string_json:string;
-		string_json=aj.DonnerStringJSon(this.m_colonnes_ecran,this.m_colonnes_sql,this.m_lignes, remplacer_nom_col_par_header,pour_excel);
-		console.log("DDD bloc.ts: this="+this+" ;bloc.DonnerStringJSonPourGenererSql="+string_json);
-		return string_json;
-	}
 	DonnerStringJSon(remplacer_nom_col_par_header: boolean, pour_excel: boolean): string
 	{
 		var aj = new AccesJSon();
 		var string_json:string;
-		console.log("DD0");
 		string_json=aj.DonnerStringJSon(this.m_colonnes_ecran,this.m_colonnes_sql,this.m_lignes, remplacer_nom_col_par_header,pour_excel);
-		console.log("DD2 bloc.ts: this="+this+" ;bloc.DonnerStringJson="+string_json);
 		return string_json;
 	}
 	DonnerStringFormulaireJSon(remplacer_nom_col_par_header: boolean,pour_excel: boolean): string
@@ -710,8 +815,9 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 		}
 		else
 		{
-			if(id_cle_primaire<-1111)
+			if(id_cle_primaire<-GlobalConstantes.m_nb_max_lig_creees)
 			{
+//console.log('appel de MessageErreur depuis bloc: 13');
 				this.m_ecran.MessageErreur('Ligne non modifiable');
 			}
 			else
@@ -732,14 +838,14 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 	}
 	ChargerBloc(req_sql: string,SuppColInvisibles: boolean,RemplacerNomColParHeader:boolean )
 	{
+//console.log('Bloc.ChargerBloc('+req_sql+')');
 		var promise = new Promise((resolve, reject) =>
 		{
 			try
 			{
-//console.log('AAA apres declaration promise: req='+req_sql);
+//console.log('apres declaration promise: req='+req_sql);
 //console.log('apres declaration promise: id_maitre='+this.m_id_maitre);
 				var ab=new AccesBdService(this.httpClient);
-//console.log('CCCC Bloc.ChargerBloc('+req_sql+')');
 				ab.LireTable(req_sql)
 				.then(res =>
 				{
@@ -762,7 +868,6 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 							{
 								if(this.m_colonnes_ecran[j].m_nom_col==this.m_colonnes_sql[i].m_nom_col)
 								{
-//console.log("GGGG="+this.m_colonnes_sql[i].m_nom_col+" ; "+this.m_colonnes_ecran[j].m_nom_col);
 									switch(this.m_colonnes_ecran[j].m_type_col)
 									{
 										case TypeColEcran.Date:
@@ -777,7 +882,7 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 						this.m_lignes=new Array(ab.m_lignes.length);
 //		this.m_lignes_org=new Array(lignes.length);
 						var num_col:number;
-// console.log("bloc: InitialiserLignes: nb_lignes="+lignes.length);
+//console.log("bloc: InitialiserLignes: nb_lignes="+ab.m_lignes.length);
 						for(i=0;i<ab.m_lignes.length;i++)
 						{
 //console.log("bloc: ChargerBloc: num_ligne="+i);
@@ -796,13 +901,13 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 										break;
 								}
 							}
-// console.log("bloc: InitialiserLignes: fin pour num_ligne="+i);
+//console.log("bloc: InitialiserLignes: fin pour num_ligne="+i);
 							this.m_lignes[i]=ab.m_lignes[i];
-//console.log("bloc: ChargerBloc: num_ligne="+i+": nb_cellules="+ab.m_lignes[i].m_cellules.length+": cellules[1]="+ab.m_lignes[i].m_cellules[1].m_val);
 //			this.m_lignes_org[i]=lignes[i];
 						}
 
 //					this.InitialiserLignes(ab.m_lignes);
+//console.log('bloc.ChargerBloc: fin correcte');
 						resolve('OK');
 					}
 					else
@@ -819,20 +924,21 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 			}
 			catch(e)
 			{
+//console.log('appel de MessageErreur depuis bloc: 14');
 				this.m_ecran.MessageErreur("Erreur: "+(e as Error).message+"\n"+(e as Error).stack);
 			}
 		});
 //console.log('Bloc.ChargerBloc:fin de ChargerBloc');
 		return promise;
 	}
-	AfficherBloc(RemplacerNomColParHeader:boolean, PourExcel:boolean ):string
+	PreparerAffichageBloc(RemplacerNomColParHeader:boolean, PourExcel:boolean ):string
 	{
 		var FormulaireOuGrille=this.m_type_bloc;
 		var string_json:string;
 		if(FormulaireOuGrille == "G")
 		{
 			string_json=this.DonnerStringJSon(RemplacerNomColParHeader,PourExcel);
-//console.log('AfficherBloc: string_json='+string_json);
+//console.log('PreparerAffichageBloc: string_json='+string_json);
 		}
 		else
 		{
@@ -840,12 +946,46 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 		}
 		return string_json;
 	}
+	async AfficherBloc(RemplacerNomColParHeader:boolean, PourExcel:boolean )
+	{
+		var string_json:string=this.PreparerAffichageBloc(RemplacerNomColParHeader,PourExcel);
+//console.log('Bloc.AfficherBloc: string_json='+string_json);
+//console.log('Bloc.AfficherBloc:début: gridApi');
+//console.log(this.gridApi);
+		this.gridApi.setColumnDefs(this.m_coldefs);
+		var json:any;
+		if(string_json.length>0)
+		{
+//console.log('EcranGrille.AfficherBloc: avant parsage: string_json='+string_json);
+			json=JSON.parse(string_json);
+//console.log('EcranGrille.AfficherBloc: apres parsage');
+//console.log('EcranGrille.AfficherBloc: voir ColDefs');
+//console.log(this.m_blocs[this.m_num_bloc_actif].m_coldefs);
+		}
+		else
+			json=new Array(0);
+//console.log('afficherbloc: classe de json='+this.m_json.constructor.name);
+		await this.delay(300);
+		this.gridApi.setRowData(json);
+//console.log('Bloc.AfficherBloc:fin: gridApi');
+//console.log(this.gridApi);
+//				this.gridDetailApi.sizeColumnsToFit();
+//console.log('fin de Afficherbloc');
+//		return promise;
+		/*
+		var classe_bouton:string=this.m_blocs[this.m_num_bloc_actif].m_modif?"btn_onglet_actif_modif":"btn_onglet_actif";
+		classe_bouton+="_"+GlobalConstantes.m_classe_fonte;
+		this.m_classe_boutons[this.m_num_bloc_actif]=classe_bouton;
+		this.m_classe_bouton_actif=classe_bouton;
+		*/
+	}
 	CreerUneLigne():number
 	{
 		var id_cle_primaire=0;
 		if(this.m_colonnes_sql===undefined)
 		{
-			this.m_ecran.MessageErreur("Il faut d'abord initialiser l'écran en faisant une recherche");
+//console.log('appel de MessageErreur depuis bloc: 15');
+			this.m_ecran.MessageErreur("Il faut d'abord initialiser l'�cran en faisant une recherche");
 		}
 		else
 		{
@@ -853,8 +993,8 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 //console.log('BlocService.CreerUneLigne: nom_cle_primaire='+this.m_nom_cle_primaire+', num_col_cle_primaire='+num_col_cle_primaire);
 			var i:number;
 			var j:number;
-			// les lignes normales non modifiables ont des id_cle_primaire<-1111
-			// les lignes nouvellement creees ont des id_cle_primaire compris entre -1 et -1110
+			// les lignes normales non modifiables ont des id_cle_primaire<-1111 (GlobalConstantes.m_nb_max_lig_creees)
+			// les lignes nouvellement creees ont des id_cle_primaire comptis entre -1 et -1110
 			// on aura un probleme si on cree 1111 lignes en une seule fois...
 			for(i=0;i<this.m_lignes.length;i++)
 			{
@@ -863,7 +1003,7 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 					if(this.m_lignes[i].m_cellules[j].m_num_col==num_col_cle_primaire)
 					{
 						var id=this.m_lignes[i].m_cellules[j].m_val;
-						if(id<id_cle_primaire &&id> -1111 )
+						if(id<id_cle_primaire &&id> -GlobalConstantes.m_nb_max_lig_creees )
 							id_cle_primaire=id;
 					}
 				}
@@ -926,7 +1066,7 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 					if(this.m_sql_update.includes(nom_col))
 						cols[num_col++]=this.m_colonnes_sql[i];
 				}
-//console.log('colonnes à sauvegrader');
+//console.log('colonnes à sauvegarder');
 //console.log(cols);
 				var lignes:Ligne[]=new Array(nb_lignes_modif);
 				var num_lig:number=0;
@@ -976,36 +1116,35 @@ console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 //console.log('il y a '+lignes.length+' lignes a sauver');
 				var aj = new AccesJSon();
 				var ab = new AccesBdService(this.httpClient);
-console.log("AA0 bloc.ts fonction Sauver(): avant var string_json=aj.TranscrireEnJSonUneTable(cols,lignes) ; cols="+cols+" ;lignes="+lignes);
 				var string_json=aj.TranscrireEnJSonUneTable(cols,lignes);
-console.log("AA1 bloc.ts fonction Sauver(): après var string_json=aj.TranscrireEnJSonUneTable(cols,lignes) ; string_json='"+string_json+"'");
 //				var sql:string=this.m_sql_update.replace(/@,@/g,",@");
 //				sql=sql.substring(0,sql.length-1);
-console.log("AAA bloc.ts fonction Sauver(): appel de EcrireTable: sql='"+this.m_sql_update+"' ; string_json='"+string_json+"'");
+//console.log('appel de EcrireTable: sql='+this.m_sql_update+', string_json='+string_json);
 				ab.EcrireTable(this.m_sql_update,string_json)
 				.then(res =>
 				{
-//console.log('apres then: num_onglet='+this.m_nom_bloc+', res='+res);
+//console.log('apres then: nom_bloc='+this.m_nom_bloc+', res='+res);
 					var str_res:string=""+res;
 					if(str_res.startsWith('Erreur'))
 					{
+//console.log('appel de MessageErreur depuis bloc: 16');
 						this.m_ecran.MessageErreur(str_res+'§sql§data§pile');
 						reject(str_res);
 					}
 					else
 					{
+//console.log('sauvegarde effectuee correctement');
 						this.m_modif=false;
 						resolve('OK');
 					}
-//console.log('onglet['+this.m_num_onglet_actif+']: modif repasse a false');
-				});
+				});				
 			}
 		});
 //console.log('Bloc.Sauver: fin');
 		this.ReinitialiserCompteur();
 		return promise;
 	}
-	ForcerValeurChamp(num_lig_ecran_modifiee,nom_col_modifiee:string,id_cle_primaire:number,val_col_new:any)
+	ForcerValeurChamp(num_lig_ecran_modifiee:number,nom_col_modifiee:string,id_cle_primaire:number,val_col_new:any)
 	{
 		this.ModifValeurChamp(nom_col_modifiee,id_cle_primaire,val_col_new);
 //console.log("Bloc.ForcerValeurChamp("+nom_col_modifiee+","+id_cle_primaire+","+val_col_new+")");
@@ -1082,19 +1221,21 @@ console.log("AAA bloc.ts fonction Sauver(): appel de EcrireTable: sql='"+this.m_
 	*/
 	ModifValeurChamp(nom_col_modifiee:string,id_cle_primaire:number,val_col_new: any)
 	{
-console.log('BlocService.ModifValeurChamp(nom_col_modifiee='+nom_col_modifiee+',id_cle_primaire='+id_cle_primaire+')');
-		if(id_cle_primaire<-1111)
+//console.log('BlocService.ModifValeurChamp(nom_col_modifiee='+nom_col_modifiee+',id_cle_primaire='+id_cle_primaire+')');
+		if(id_cle_primaire<-GlobalConstantes.m_nb_max_lig_creees)
 		{
+//console.log('appel de MessageErreur depuis bloc: 17');
 			this.m_ecran.MessageErreur('Ligne non modifiable');
 		}
 		else
 		{
+//console.log('avant appel de Numlig');
 			var num_lig:number=this.NumLig(id_cle_primaire);
-			
+//console.log('num_lig='+num_lig);
 			var num_col_sql=this.NumeroColonneSql(nom_col_modifiee);
-console.log('BlocService.ModifValeurChamp: num_lig='+num_lig+'num_col_sql='+num_col_sql);
-console.log('et '+this.m_colonnes_sql[num_col_sql].m_type_col);
+//console.log('BlocService.ModifValeurChamp: num_col_sql='+num_col_sql);
 			var syntaxe_ok:boolean=true;
+//console.log(this.m_colonnes_sql);
 			switch(this.m_colonnes_sql[num_col_sql].m_type_col)
 			{
 				case TypeColSql.Date:
@@ -1124,29 +1265,37 @@ console.log('et '+this.m_colonnes_sql[num_col_sql].m_type_col);
 					}
 					break;
 				case TypeColSql.Booleen:
-					console.log('bool');
 					val_col_new=val_col_new?"1":"0";
 					break;
 			}
 			if(syntaxe_ok)
 			{
-				this.m_modif=true;
-				// mettre la colonne etat=U
-				var num_col_u=this.NumeroColonneSql("etat");
-				var etat=this.ValCelluleParNum(num_lig,num_col_u);
-console.log('etat de la ligne='+etat);
-				if(etat===undefined ||etat =="")
+//console.log('syntaxe_ok');
+				var faire:boolean=false;
+				if(this.m_nom_bloc!="maitre")
 				{
+					this.m_modif=true;
+					// mettre la colonne etat=U
+//console.log('m_colonnes_sql');
+//console.log(this.m_colonnes_sql);
+					var num_col_u=this.NumeroColonneSql("etat");
+//console.log('num_col_u='+num_col_u);
+					var etat=this.ValCelluleParNum(num_lig,num_col_u);
+//console.log('etat de la ligne='+etat);
+					if(etat===undefined ||etat =="")
+					{
 //console.log('ecrire etat U');
-					this.EcrireVal(num_lig,num_col_u,"U");
+						this.EcrireVal(num_lig,num_col_u,"U");
+					}
+					this.m_ecran.ToucherBlocActif();
 				}
 //console.log('num_col_modifiee='+num_col_modifiee+', id_cle_primaire='+id_cle_primaire);
 //console.log('num_col_sql_modifiee='+num_col_sql_modifiee+', nouvelle valeur='+val_col_new+', id_cle_primaire='+id_cle_primaire);
 				this.EcrireVal(num_lig,num_col_sql,val_col_new);
-				this.m_ecran.ToucherBlocActif();
 			}
 			else
 			{
+//console.log('appel de MessageErreur depuis bloc: 18');
 				this.m_ecran.MessageErreur("Erreur: format incorrect");
 			}
 		}
@@ -1157,6 +1306,7 @@ console.log('etat de la ligne='+etat);
 //console.log('Bloc.PersonnaliserCbo('+id_cle_primaire+','+nom_col_cliquee+')');
 		var num_lig:number=this.NumLig(id_cle_primaire);
 		var num_col:number=this.NumeroColonneEcran(nom_col_cliquee);
+//console.log('num_col='+num_col);
 		var type_col=this.m_colonnes_ecran[num_col].m_type_col;
 //console.log('onRowClickDetail: type_col='+type_col);
 		switch(type_col)
@@ -1193,28 +1343,23 @@ for(i=0;i<this.m_col_detail.length;i++)
 							{
 //								num_coldef=i;
 								const nom_table=nom_col_cliquee.substring(3);
-								this.m_coldefs[i].cellEditorParams=new ParamsCbo(this.m_ecran, new CboListeItems(cbo_tmp.m_liste_items),nom_table);
+//								this.m_coldefs[i].cellEditorParams=new ParamsCbo(this.m_ecran, new CboListeItems(cbo_tmp.m_liste_items),nom_table);
+/*
+								var params_cbo:ParamsCbo=new ParamsCbo();
+								params_cbo.Init(this.m_ecran, cbo_tmp.m_liste_items,nom_table);
+								this.m_coldefs[i].cellEditorParams=params_cbo;
+*/
+								this.m_coldefs[i].cellEditorParams=new ParamsCbo(this.m_ecran, cbo_tmp.m_liste_items,nom_table);
 								this.gridApi.setColumnDefs(this.m_coldefs);
 //console.log('trouve:nb items='+cbo_tmp.m_liste_items.length);
 //console.log('trouve:nb items bis='+this.m_coldefs[i].cellEditorParams.m_liste_items.length+', num cel='+i);
 							}
 						}
 						fini=true;
-//console.log('LigneSelectionnee: num_coldef='+num_coldef);
-						/*
-						var col=this.m_coldefs[num_coldef];
-						col.cellEditorParams=new CboFiltre(cbo_tmp.m_liste_items);
-						var nouvelle_col:ColumnCbo=new ColumnCbo(col.field,col.headerName,col.sortable,col.filter,col.hide,col.resizable,col.editable,col.width,col.cellClass,col.headerClass);
-						nouvelle_col.cellEditorParams=new CboFiltre(cbo_tmp.m_liste_items);
-//console.log('personnalisation de la combobox '+this.m_nom_col_detail_cliquee+': futur nb items='+cbo_tmp.m_liste_items.length+', num_col='+num_col);
-//console.log('avant maj: nb_items='+col.cellEditorParams.m_options.length);
-						this.m_coldefs[num_coldef]=nouvelle_col;
-						*/
-//console.log('classe de la coldef='+this.m_onglets[this.m_num_onglet_actif].m_coldefs[num_col].constructor.name);
-//console.log(this.gridDetailColumnApi.constructor.name);
 					}
 					,err=>
 					{
+//console.log('appel de MessageErreur depuis bloc: 19');
 						this.m_ecran.MessageErreur(err+'§sql§data§pile');
 						fini=true;
 					});
@@ -1356,86 +1501,4 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 		}
 	}
 	*/
-	ChargerBlocPourGenererSQL(req_sql: string,SuppColInvisibles: boolean,RemplacerNomColParHeader:boolean )
-	{
-		var promise = new Promise((resolve, reject) =>
-		{
-			try
-			{
-//console.log('AAA apres declaration promise: req='+req_sql);
-//console.log('apres declaration promise: id_maitre='+this.m_id_maitre);
-				var ab=new AccesBdService(this.httpClient);
-				var i:number;
-//console.log('CCCC Bloc.ChargerBloc('+req_sql+')');
-				ab.LireTablePourGenererSQL(req_sql)
-				.then(res =>
-				{
-					/* console.log("ARETOUR"+ab.m_retour_brut+" ;ret="+ab.m_json_decode);
-					for(i=0;i<3;i++) {
-						console.log("TEST"+i+"= "+ab.m_lignes[i]);
-					} */
-					/* var str_res:string=""+res;
-					console.log("POUR SQL!!!="+str_res);
-					var i:number;
-					var j:number;
-					var str_res:string=""+res;
-					if(!str_res.startsWith("Erreur"))
-					{
-						this.m_colonnes_sql=new Array(ab.m_colonnes_sql.length);
-						for(i=0;i<ab.m_colonnes_sql.length;i++)
-						{
-							this.m_colonnes_sql[i]=ab.m_colonnes_sql[i];
-							for(j=0;j<this.m_colonnes_ecran.length;j++)
-							{
-								if(this.m_colonnes_ecran[j].m_nom_col==this.m_colonnes_sql[i].m_nom_col)
-								{
-									switch(this.m_colonnes_ecran[j].m_type_col)
-									{
-										case TypeColEcran.Date:
-											if(this.m_colonnes_sql[i].m_type_col==TypeColSql.Chaine)
-												this.m_colonnes_sql[i].m_type_col=TypeColSql.Date;
-											break;
-									}
-								}
-							}
-						}
-						const suffixe_date=" 00:00:00.000";
-						this.m_lignes=new Array(ab.m_lignes.length);
-						var num_col:number;
-						for(i=0;i<ab.m_lignes.length;i++)
-						{
-							for(j=0;j<ab.m_lignes[i].m_cellules.length;j++)
-							{
-								num_col=ab.m_lignes[i].m_cellules[j].m_num_col;
-								switch(this.m_colonnes_sql[num_col].m_type_col)
-								{
-									case TypeColSql.Date:
-										var val_col=ab.m_lignes[i].m_cellules[j].m_val;
-										if(val_col.endsWith(suffixe_date))
-										ab.m_lignes[i].m_cellules[j].m_val=val_col.substring(0,val_col.length-suffixe_date.length);
-										break;
-								}
-							}
-							this.m_lignes[i]=ab.m_lignes[i];
-						}
-						resolve('OK');
-					}
-					else
-					{
-						reject(str_res);
-					} */
-				},
-				(error) =>
-				{
-					var str_err:string=error;
-					reject(str_err);
-				})
-			}
-			catch(e)
-			{
-				this.m_ecran.MessageErreur("Erreur: "+(e as Error).message+"\n"+(e as Error).stack);
-			}
-		});
-		return promise;
-	}
 }

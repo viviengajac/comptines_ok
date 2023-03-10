@@ -11,11 +11,11 @@ import { GlobalConstantes } from '../AZ_common/global_cst';
 })
 export class BtnDependancesRendererComponent implements ICellRendererAngularComp
 {
-	params;
-	label: string;
-	m_classe_fonte:string;
+	params:any=null;
+	label: string='';
+	m_classe_fonte:string='';
 
-	agInit(parametres): void
+	agInit(parametres:any): void
 	{
 		this.params = parametres;
 		this.m_classe_fonte=GlobalConstantes.m_classe_fonte;
@@ -28,7 +28,7 @@ export class BtnDependancesRendererComponent implements ICellRendererAngularComp
 		return true;
 	}
 
-	onCliquer($event)
+	onCliquer($event:any)
 	{
 //console.log('onClick dans btnrenderer');
 		if (this.params.onClick instanceof Function)
@@ -38,7 +38,7 @@ export class BtnDependancesRendererComponent implements ICellRendererAngularComp
 			const parametres =
 			{
 				event: $event,
-				detail: this.params.node.data
+				ligne_cliquee: this.params.node.data
 				// ...something
 			}
 //console.log('avant appel');
