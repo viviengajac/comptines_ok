@@ -58,6 +58,32 @@ export class DatetimeEditorComponent implements ICellEditorAngularComp,AfterView
 			//this.ma_date=event.target.value;
 			this.ma_date=""+event.target.value;
 //console.log('XXXX= DateHeureEditorComponent: ma_date='+this.ma_date);
+		if (this.params.onClick instanceof Function)
+		{
+//console.log('changeEvent de cboeditorcomponent: voir event');
+//console.log(event);
+/*
+			var t:HTMLInputElement=event.target;
+//console.log(t);
+			var nom_elem=t.name;
+//console.log(nom_elem);
+			var val:any=t.value;
+//console.log(val);
+			this.m_id=val;
+*/
+//console.log('CboEditorComponent: m_id='+this.m_id);
+			const parametres =
+			{
+				event: event,
+				date_saisie:this.ma_date,
+				ligne_cliquee: this.params.node.data,
+				nom_col_cliquee: this.params.nom_col_cliquee
+				// ...something
+			}
+//console.log('avant appel');
+			this.params.onClick(parametres);
+//console.log('apres appel');
+		}
 	}
 	getValue()
 	{

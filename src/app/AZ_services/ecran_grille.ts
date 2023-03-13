@@ -341,6 +341,7 @@ console.log('EcranGrille.AppelerHref: m_idx_detail='+this.m_idx_detail);
 					this.m_classe_boutons[this.m_num_bloc_actif]=this.m_classe_bouton_actif;
 					*/
 					this.ToucherBlocActif();
+					this.AfficherBloc(false,false);
 				}
 //console.log('onglet['+this.m_num_onglet_actif+']: modif repasse a false');
 			},
@@ -421,7 +422,7 @@ console.log('EcranGrille.AppelerHref: m_idx_detail='+this.m_idx_detail);
 //console.log('id='+id);
 //console.log('nom_col_cliquee='+this.m_nom_col_cliquee);
 		if(this.m_nom_col_cliquee!=undefined)
-			this.m_blocs[this.m_num_bloc_actif].PersonnaliserCbo(id,this.m_nom_col_cliquee);
+			this.m_blocs[this.m_num_bloc_actif].PersonnaliserCelluleCbo(id,this.m_nom_col_cliquee);
 //						this.m_col[num_col]=nouvelle_col;
 //console.log(this.gridColumnApi.constructor.name);
 		this.m_grid_options.columnDefs=this.m_blocs[this.m_num_bloc_actif].m_coldefs;

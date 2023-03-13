@@ -451,7 +451,10 @@ console.log('10');
 			this.DefinirHauteurGrilleMaitre(10);
 			this.AppelerHref(GlobalConstantes.m_id_appele,GlobalConstantes.m_num_bloc_appele);
 		}
-	}	
+	}
+	RestaurerCboSpecifiques()
+	{
+	}
 	async onRowClickMaitre(event:any)
 	{
 //console.log('onRowClickMaitre: m_row_index_maitre='+this.m_row_index_maitre+', nouvel index='+event.rowIndex);
@@ -479,6 +482,7 @@ console.log('10');
 //console.log('faire='+faire);
 		if(faire)
 		{
+			this.RestaurerCboSpecifiques();
 			const selectedRow = this.gridMaitreApi.getSelectedRows()[0];
 //console.log('selectedRow, nom_cle_maitre='+this.m_nom_cle_maitre);
 //console.log(selectedRow);
@@ -1363,7 +1367,7 @@ console.log('apres appel de ModifValeurChamp');
 		var id_detail=selectedRow[this.m_blocs[this.m_num_bloc_actif].m_nom_cle_primaire];
 //console.log('iddetail='+id_detail);
 //console.log(event);
-		this.m_blocs[this.m_num_bloc_actif].PersonnaliserCbo(id_detail,this.m_nom_col_cliquee);
+		this.m_blocs[this.m_num_bloc_actif].PersonnaliserCelluleCbo(id_detail,this.m_nom_col_cliquee);
 //		this.m_col_detail=this.m_onglets[this.m_num_onglet_actif].m_coldefs;
 		this.m_grid_options_detail.columnDefs=this.m_blocs[this.m_num_bloc_actif].m_coldefs;	// this.m_col_detail;
 		this.gridDetailApi.setColumnDefs(this.m_blocs[this.m_num_bloc_actif].m_coldefs);
