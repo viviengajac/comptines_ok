@@ -1,0 +1,34 @@
+<div class="row" style="width: 100%; height: 100%;" flex class="{{ m_classe_fonte }} ">
+	<jw-modal id="erreur">
+		<h4>Erreur</h4>
+		<h4>{{m_msg_err}}</h4>
+		<h5>{{m_sql_err}}</h5>
+		<h5>{{m_data_err}}</h5>
+		<h5>{{m_pile_err}}</h5>
+		<button (click)="closeModal('erreur');">OK</button>
+	</jw-modal>
+	<jw-modal id="info">
+		<h4>Message</h4>
+		<h4>{{m_msg_info}}</h4>
+		<button (click)="closeModalbis('info','OK');">OK</button>
+		<button (click)="closeModalbis('info','Cancel');">Cancel</button>
+	</jw-modal>
+	<button class=" {{ m_classe_fonte }} " (click)="onRecherche()">Rechercher</button>
+	<button class=" {{ m_classe_fonte }} " (click)="onSauver()" id="btnSauver" [disabled]="m_interdit_ecr">Sauver</button>
+	<div>
+		<form [formGroup]="formOngletPrincipal">
+			<div class="form-group">
+				<div class="column">
+					<div class="row">
+						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Nom: </label>
+						<input type="text" formControlName="m_nom_prj" name="nom_prj" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} " style=" {m_style_champs_onglet_principal}} ">
+					</div>
+					<div class="row">
+						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Répertoire des fichiers: </label>
+						<input type="text" formControlName="m_rep_fic" name="rep_fic" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
