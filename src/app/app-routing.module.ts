@@ -11,7 +11,7 @@ import { CarteComponent } from './carte/carte.component';
 import { DBDictComponent } from './ecrans/dbdict.component';
 import { PrjComponent } from './ecrans/prj.component';
 //import { ConnexComponent } from './connex/connex.component';
-
+//test
 const routes: Routes =
 [
 	{ path: 'menu', component: MenuComponent },
@@ -19,6 +19,7 @@ const routes: Routes =
 	{ path: 'seance', component: SeanceComponent },
 	{ path: 'dbdict', component: DBDictComponent },
 	{ path: 'fic', component: LecDirComponent },
+	{ path: 'prj', component: PrjComponent },
 	{ path: 'req', component: ReqComponent },
 	{ path: 'dependances', component: DependancesComponent },
 	{ path: 'references/:nom_ecran', component: ReferencesComponent },

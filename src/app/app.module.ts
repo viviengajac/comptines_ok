@@ -53,7 +53,7 @@ import { PrjComponent } from './ecrans/prj.component';
     DependancesComponent,
     CarteComponent,
     DBDictComponent,
-	PrjComponent
+    PrjComponent
   ],
   imports: [
     BrowserModule,

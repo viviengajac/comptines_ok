@@ -32,7 +32,7 @@ export class MenuComponent // implements OnInit
 	{
 //console.log('debut de constructor de menu');
 //		if(!GlobalConstantes.m_url_bd.endsWith('/'))GlobalConstantes.m_url_bd+='/';
-		GlobalConstantes.m_serveur_bd="accesbdcomptines";
+		GlobalConstantes.m_serveur_bd="serveur_de_bd";
 		this.ClasseCompteur();
 		var id_prs_login=GlobalConstantes.m_id_prs_login;
 //console.log('menu.constructeur: id_prs='+id_prs);
