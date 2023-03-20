@@ -84,6 +84,7 @@ export class ColumnDate extends ColDef
 	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean, width:number,public override cellClass:string,public override headerClass:string[])
 	{
 		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
+		this.editable = false;
 	}
 	cellEditor: string='dateEditor';
 }
@@ -92,6 +93,7 @@ export class ColumnDateHeure extends ColDef
 	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean, width:number,public override cellClass:string,public override headerClass:string[])
 	{
 		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
+		this.editable = false;
 	}
 	cellEditor: string='datetimeEditor';
 }
