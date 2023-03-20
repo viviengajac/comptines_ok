@@ -6,6 +6,7 @@ import { EcranGrille } from '../AZ_services/ecran_grille';
 import { Bloc } from '../AZ_services/bloc';
 import { TypeColEcran,TypeColSql,ColonneEcran,ModifCol } from '../AZ_common/ecran.model';
 import { ModalService } from '../AZ_modal/modal.service';
+import { ActivatedRoute } from '@angular/router';
 /*
 @Component({
   selector: 'app-prs',
@@ -20,22 +21,22 @@ import { ModalService } from '../AZ_modal/modal.service';
 @Injectable()
 export class ReqComponent extends EcranGrille
 {
-	constructor(public override httpClient: HttpClient, public override formBuilder:UntypedFormBuilder,public override modalService:ModalService)
+	constructor(public override httpClient: HttpClient, public override formBuilder:UntypedFormBuilder,public override modalService:ModalService,public override activatedRoute:ActivatedRoute)
 	{
-		super(httpClient, formBuilder,modalService);
+		super(httpClient, formBuilder,modalService,activatedRoute);
 //console.log('debut de constructeur de Prscomponent');
 		this.m_nom_ecran="Requetes";
 		this.m_blocs=new Array(1);
 //		this.m_classe_boutons=new Array(4);
 		var cols=new Array(1);
 		cols[0]=new ColonneEcran("id_req","id_req",TypeColEcran.ClePrimaire,false,ModifCol.NonModifiable,false,true,100);
-		this.m_blocs[0]=new Bloc(httpClient,this,"req","req","Sql","G",300,"exec AZreq__recherche","", "id_req",cols);
+		this.m_blocs[0]=new Bloc(httpClient,this,"req","req","Sql","G","exec AZreq__recherche","", "id_req",cols);
 		this.formRecherche=this.formBuilder.group({m_sql: ''});
 		this.m_classe_boutons=new Array(this.m_blocs.length);
 		this.m_num_bloc_actif=0;
 //console.log('fin de constructeur de Prscomponent');
 	}
-	ngOnInit(): void
+	override ngOnInit(): void
 	{
 //console.log('debut de NgInit de Prscomponent');
 		this.InitColDefs();
@@ -57,8 +58,10 @@ export class ReqComponent extends EcranGrille
 			var i:number=0;
 			for(i=0;i<nb_cols;i++)
 			{
-				var nom_col=this.m_blocs[0].m_colonnes_sql[i].m_nom_col;
+				var nom_col=this.m_blocs[0].m_colonnes_sql[i].m_nom_col;				
 				var type_col_sql=this.m_blocs[0].m_colonnes_sql[i].m_type_col;
+				if(nom_col=='SelectId')
+					type_col_sql=TypeColSql.Booleen;
 				var type_col:TypeColEcran=TypeColEcran.Chaine;
 				switch(type_col_sql)
 				{

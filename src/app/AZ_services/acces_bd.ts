@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AccesJSon } from '../AZ_services/json.service';
-import { ColonneSql, Ligne } from '../AZ_common/ecran.model';
+import { ColonneSql, Ligne, TypeColSql } from '../AZ_common/ecran.model';
 import { GlobalConstantes } from '../AZ_common/global_cst';
 import { Ecran } from './ecran';
 
@@ -716,4 +716,52 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 		});
 	}
 	*/
+	ValCelluleParNom(num_lig:number,nom_col_sql:string)
+	{
+		var num_col_sql:number=this.NumeroColonneSql(nom_col_sql);
+		return this.ValCelluleParNum(num_lig,num_col_sql);
+	}
+	ValCelluleParNum(num_lig:number,num_col_sql:number)
+	{
+		var i:number;
+		for(i=0;i<this.m_lignes[num_lig].m_cellules.length;i++)
+		{
+//console.log('BlocService.ValCelluleParNum: i='+i);
+			if(this.m_lignes[num_lig].m_cellules[i].m_num_col==num_col_sql)
+			{
+				var val_cel=this.m_lignes[num_lig].m_cellules[i].m_val;
+				switch(this.m_colonnes_sql[num_col_sql].m_type_col)
+				{
+					case TypeColSql.Date:
+//console.log('dans ValCellule: date='+val_cel);
+						if(val_cel.length==8)
+						{
+							var annee:number=val_cel.substring(0,4);
+							var mois:number=val_cel.substring(4,6);
+							var jour:number=val_cel.substring(6);
+							val_cel=annee+'-'+mois+'-'+jour;
+						}
+//console.log('dans ValCellule: aprs_formatage='+val_cel);
+						break;
+				}
+//console.log('retour de ValCelluleParNum: val_cel='+val_cel);
+				return val_cel;
+			}
+		}
+	}
+	NumeroColonneSql(nom_col_sql: string)
+	{
+		var i:number;
+		var num_col:number=-1;
+//console.log('Bloc.NumeroColonneSql: nom_col cherchée='+nom_col);
+//console.log(this.m_colonnes_sql);
+		for(i=0;i<this.m_colonnes_sql.length;i++)
+		{
+//console.log('NumeroColonneSql: colonne_sql['+i+']='+this.m_colonnes_sql[i].m_nom_col);
+			if(this.m_colonnes_sql[i].m_nom_col==nom_col_sql)
+				num_col=i;
+		}
+//console.log('NumeroColonneSql('+nom_col+')='+num_col);
+		return num_col;
+	}
 }

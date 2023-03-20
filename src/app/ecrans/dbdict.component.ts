@@ -28,13 +28,13 @@ export class DBDictComponent extends EcranMaitreDetail
 		cols[0]=new ColonneEcran("id_dbdict","id_dbdict",TypeColEcran.ClePrimaire,true,ModifCol.NonModifiable,false,true,100);
 		cols[1]=new ColonneEcran("nom_dbdict","Nom table",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,300);
 		cols[2]=new ColonneEcran("selfdesc","Self Desc",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,350);
-		this.m_blocs[0]=new Bloc(httpClient,this,"dbdict_recherche","maitre","maitre","G",300,"exec AZdbdict__recherche","","id_dbdict",cols);
+		this.m_blocs[0]=new Bloc(httpClient,this,"dbdict_recherche","maitre","maitre","G","exec AZdbdict__recherche","","id_dbdict",cols);
 		cols=new Array(4);
 		cols[0]=new ColonneEcran("etat","etat",TypeColEcran.Chaine,false,ModifCol.NonModifiable,false,true,100);
 		cols[1]=new ColonneEcran("id_dbdict","id_dbdict",TypeColEcran.ClePrimaire,false,ModifCol.NonModifiable,false,true,100);
 		cols[2]=new ColonneEcran("nom_dbdict","Nom table",TypeColEcran.Chaine,true,ModifCol.Obligatoire,true,true,100);
 		cols[3]=new ColonneEcran("selfdesc","Self Desc",TypeColEcran.Entier,true,ModifCol.Modifiable,true,true,100);
-		this.m_blocs[1]=new Bloc(httpClient,this,"dbdictm1","dbdictm1","DBDictM1","F",300,"exec AZdbdict__dbdictSelect @id@","exec AZdbdict__dbdictMaj @etat@,@id_dbdict@,@nom_dbdict@,@selfdesc@","id_dbdict",cols);
+		this.m_blocs[1]=new Bloc(httpClient,this,"dbdictm1","dbdictm1","DBDictM1","F","exec AZdbdict__dbdictSelect @id@","exec AZdbdict__dbdictMaj @etat@,@id_dbdict@,@nom_dbdict@,@selfdesc@","id_dbdict",cols);
 		cols=new Array(10);
 		cols[0]=new ColonneEcran("etat","etat",TypeColEcran.Chaine,false,ModifCol.NonModifiable,false,true,100);
 		cols[1]=new ColonneEcran("id_dbdicta1","ID DBDict A1",TypeColEcran.ClePrimaire,true,ModifCol.NonModifiable,false,true,200);
@@ -46,7 +46,7 @@ export class DBDictComponent extends EcranMaitreDetail
 		cols[7]=new ColonneEcran("niveau","Niveau",TypeColEcran.Entier,true,ModifCol.Obligatoire,false,true,100);
 		cols[8]=new ColonneEcran("idx","Index",TypeColEcran.Entier,true,ModifCol.Obligatoire,true,true,100);
 		cols[9]=new ColonneEcran("contrainte","Contrainte",TypeColEcran.Chaine,true,ModifCol.Modifiable,true,true,300);
-		this.m_blocs[2]=new Bloc(httpClient,this,"dbdicta1","dbdicta1","DBDictA1","G",300,"exec AZdbdict__dbdicta1Select @id@","exec AZdbdict__dbdicta1Maj @etat@,@id_dbdicta1@,@id_dbdict@,@champ@,@id_dbdicttype@,@longueur@,@niveau@,@idx@,@contrainte@","id_dbdicta1",cols);
+		this.m_blocs[2]=new Bloc(httpClient,this,"dbdicta1","dbdicta1","DBDictA1","G","exec AZdbdict__dbdicta1Select @id@","exec AZdbdict__dbdicta1Maj @etat@,@id_dbdicta1@,@id_dbdict@,@champ@,@id_dbdicttype@,@longueur@,@niveau@,@idx@,@contrainte@","id_dbdicta1",cols);
 		cols=new Array(7);		
 		cols[0]=new ColonneEcran("etat","etat",TypeColEcran.Chaine,false,ModifCol.NonModifiable,false,true,100);
 		cols[1]=new ColonneEcran("id_dbdicta2","ID DBDict A2",TypeColEcran.ClePrimaire,true,ModifCol.NonModifiable,false,true,200);
@@ -55,7 +55,7 @@ export class DBDictComponent extends EcranMaitreDetail
 		cols[4]=new ColonneEcran("table_cible","Table cible",TypeColEcran.Chaine,true,ModifCol.Obligatoire,true,true,150);
 		cols[5]=new ColonneEcran("champ_cible","Champ cible",TypeColEcran.Chaine,true,ModifCol.Obligatoire,false,true,150);
 		cols[6]=new ColonneEcran("requete","Requête",TypeColEcran.Chaine,true,ModifCol.Modifiable,true,true,350);
-		this.m_blocs[3]=new Bloc(httpClient,this,"dbdicta2","dbdicta2","DBDictA2","G",300,"exec AZdbdict__dbdicta2Select @id@","exec AZdbdict__dbdicta2Maj @etat@,@id_dbdicta2@,@id_dbdict@,@champ_source@,@table_cible@,@champ_cible@,@requete@","id_dbdicta2",cols);
+		this.m_blocs[3]=new Bloc(httpClient,this,"dbdicta2","dbdicta2","DBDictA2","G","exec AZdbdict__dbdicta2Select @id@","exec AZdbdict__dbdicta2Maj @etat@,@id_dbdicta2@,@id_dbdict@,@champ_source@,@table_cible@,@champ_cible@,@requete@","id_dbdicta2",cols);
 		this.formRecherche=this.formBuilder.group({ m_filtre_nom_table: '', m_filtre_table: 0});
 		this.formOngletPrincipal=this.formBuilder.group({m_nom_dbdict: '',m_selfdesc:''});
 		this.m_nom_cle_maitre="id_dbdict";

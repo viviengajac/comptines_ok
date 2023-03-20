@@ -442,6 +442,8 @@ console.log('10');
 	}
 	onGridMaitreReady(params:any)
 	{
+//console.log('EcranMaitreDetail.onGridMaitreReady');
+//console.log(this.m_grid_options_maitre);
 		this.gridMaitreApi = params.api;
 		this.gridMaitreColumnApi = params.columnApi;
 		this.m_blocs[0].InitGridApi(params.api,params.columnApi);

@@ -48,21 +48,23 @@ export class Ligne
 }
 export class ColDef
 {
-	constructor(public field: string, public headerName: string, public sortable: boolean, public filter: any, public hide: boolean,public resizable:boolean,public editable:boolean,public width:number, public cellClass:string,public headerClass:string[])
+	constructor(public field: string, public headerName: string, public sortable: boolean, public filter: any, public hide: boolean,public resizable:boolean,public editable:boolean,public width:number, public cellClass:string,public headerClass:string[],public cellEditorPopup:boolean)
 	{
 		this.wrapText=true;
 		this.autoHeight=true;
-		this.cellStyle={ "white-space": "normal" }
+//		this.cellStyle={ "white-space": "normal" }
+		this.cellStyle={ "padding-left": 0, "padding-right": 0 }
 	}
 	public wrapText:boolean=true;
 	public autoHeight:boolean=true;
-	public cellStyle: { "white-space": "normal" }
+//	public cellStyle: { "white-space": "normal" }
+	public cellStyle: { "padding-left": 0, "padding-right": 0 }
 }
 export class ColumnCbo extends ColDef
 {
 	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean,public override width:number,public override cellClass:string,public override headerClass:string[])
 	{
-		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
+		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass,true);
 	}
 	public valueFormatter: any;
 	cellEditor: string='cboEditor';
@@ -72,7 +74,7 @@ export class ColumnSelect extends ColDef
 {
 	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean,public override width:number,public override cellClass:string,public override headerClass:string[])
 	{
-		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
+		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass,true);
 	}
 	public valueFormatter: any;
 	cellEditor: string='agSelectCellEditor';
@@ -82,7 +84,7 @@ export class ColumnDate extends ColDef
 {
 	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean, width:number,public override cellClass:string,public override headerClass:string[])
 	{
-		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
+		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass,false);
 	}
 	cellEditor: string='dateEditor';
 }
@@ -90,7 +92,7 @@ export class ColumnDateHeure extends ColDef
 {
 	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean, width:number,public override cellClass:string,public override headerClass:string[])
 	{
-		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
+		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass,false);
 	}
 	cellEditor: string='datetimeEditor';
 }
@@ -98,7 +100,7 @@ export class ColumnVoirDoc extends ColDef
 {
 	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean, width:number,public override cellClass:string,public override headerClass:string[])
 	{
-		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
+		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass,false);
 		this.cellRenderer='btnVoirDocRenderer';
 	}
 	public cellRenderer: string;
@@ -108,7 +110,7 @@ export class ColumnDefDoc extends ColDef
 {
 	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean, width:number,public override cellClass:string,public override headerClass:string[])
 	{
-		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
+		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass,false);
 		this.cellRenderer='btnDefDocRenderer';
 	}
 	public cellRenderer: string;
@@ -118,7 +120,7 @@ export class ColumnDependances extends ColDef
 {
 	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean, width:number,public override cellClass:string,public override headerClass:string[])
 	{
-		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
+		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass,false);
 		this.cellRenderer='btnDependancesRenderer';
 	}
 	public cellRenderer: string;
@@ -128,7 +130,7 @@ export class ColumnBool extends ColDef
 {
 	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean, width:number,public override cellClass:string,public override headerClass:string[])
 	{
-		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
+		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass,false);
 		this.cellRenderer='boolRenderer';
 	}
 	public cellRenderer: string;

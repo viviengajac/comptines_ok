@@ -8,9 +8,9 @@ import { MenuComponent } from '../menu/menu.component';
 @Component({
   selector: 'app-cbo-editor',
   template: `
-<select (change)="changeEvent($event)">
+<select (change)="changeEvent($event)" class="{{m_classe_fonte}}">
 	<option *ngFor="let item of m_vals" value="{{item.m_id}}" class="{{m_classe_fonte}}" [selected]="item.m_selected==true">{{item.m_lib}}</option>
-</select><button (click)="onCliquerHREF($event)">Href</button>`
+</select><button (click)="onCliquerHREF($event)" class="{{m_classe_fonte}}">?</button>`
 })
 export class CboEditorComponent implements ICellEditorAngularComp,AfterViewInit
 {
@@ -24,6 +24,8 @@ export class CboEditorComponent implements ICellEditorAngularComp,AfterViewInit
 	agInit(params:any): void
 	{
 		this.params = params;
+		this.m_classe_fonte=params.colDef.cellClass;
+//console.log('CboEditorcomponent: m_classe_fonte='+this.m_classe_fonte);
 		this.m_nom_table=params.colDef.cellEditorParams.m_nom_table;
 		this.m_id=params.value;
 		var nb_items=params.colDef.cellEditorParams.m_liste_items.length;
@@ -105,7 +107,6 @@ console.log(this.m_vals);
 //console.log('CboEditorComponent: bis='+params.colDef.cellEditorParams.m_liste_items.length);
 //console.log(params.colDef);
 */
-		this.m_classe_fonte=params.colDef.cellClass;
 	}
 	refresh(parametres?: any): boolean
 	{
@@ -202,5 +203,9 @@ console.log(this.m_vals);
 * /
 */
 		MenuComponent.AppelerHref(this.m_nom_table,this.m_id);
+	}
+	isPopup()
+	{
+		return true;
 	}
 }

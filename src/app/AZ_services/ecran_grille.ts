@@ -6,6 +6,7 @@ import { OptionsGrille } from '../AZ_common/grille.model';
 import { ModalService } from '../AZ_modal/modal.service';
 import { Ecran } from './ecran';
 import { GlobalConstantes } from '../AZ_common/global_cst';
+import { ActivatedRoute } from '@angular/router';
 @Injectable()
 export class EcranGrille extends Ecran
 {
@@ -19,13 +20,47 @@ export class EcranGrille extends Ecran
 //	m_num_onglet_actif:number=-1;
 //	m_classe_bouton_actif:string;
 	m_idx_detail:number=-1;
-	constructor(public override httpClient: HttpClient, public override formBuilder:UntypedFormBuilder,public override modalService:ModalService)
+	constructor(public override httpClient: HttpClient, public override formBuilder:UntypedFormBuilder,public override modalService:ModalService,public activatedRoute:ActivatedRoute)
 	{
 //console.log('constructeur de EcranGrille');
 		super(httpClient,formBuilder,modalService);
 //console.log('apres appel du pere');
 		this.m_grid_options=new OptionsGrille(this);
 	}
+	ngOnInit(): void
+	{
+//console.log('References: début de ngOnInit');
+		/*
+		if(!this.m_cbo_initialisee)
+		{
+			this.m_cbo_deg=new Cbo(this.httpClient,'deg');
+			this.m_cbo_deg.GenererListeStd().then(res=>{},err=>{this.MessageErreur(err);});
+			this.m_cbo_type_loge=new Cbo(this.httpClient,'type_loge');
+			this.m_cbo_type_loge.GenererListeStd().then(res=>{},err=>{this.MessageErreur(err);});
+			this.m_cbo_rite=new Cbo(this.httpClient,'rite');
+			this.m_cbo_rite.GenererListeStd().then(res=>{},err=>{this.MessageErreur(err);});
+			this.m_cbo_ville=new Cbo(this.httpClient,'ville');
+			this.m_cbo_ville.GenererListeStd().then(res=>{},err=>{this.MessageErreur(err);});
+			this.m_cbo_initialisee=true;
+		}
+		*/
+		this.activatedRoute.params.forEach(params =>
+		{
+//            let userId = params["userId"];
+//console.log('AdmReference.ngOnInit');
+//console.log(this);
+//console.log(this.activatedRoute);
+//console.log(this.activatedRoute.params);
+			var nom_tab:string=''+this.activatedRoute.snapshot.paramMap.get("nom_ecran");
+//console.log('Appel de ChangementDeGrille('+nom_tab+')');
+			this.ChangementDeGrille(nom_tab);
+//console.log('references.ngOnInit: m_nom_tab='+this.m_nom_tab+', avant appel de InitColDefs');
+			this.InitColDefs();
+//console.log('apres InitColDefs');
+			this.Init();
+//console.log('apres Init');
+        })
+	}	
 	onColumnResized(event:any)
 	{
 		this.gridApi.resetRowHeights();

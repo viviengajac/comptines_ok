@@ -49,7 +49,7 @@ export class IntervComponent extends EcranMaitreDetail
 //		cols[6]=new ColonneEcran("fact_interv","Facture",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
 		cols[6]=new ColonneEcran("fact_interv","Facture",TypeColEcran.Booleen,true,ModifCol.NonModifiable,true,true,80);
 		cols[7]=new ColonneEcran("tarif_interv","Tarif",TypeColEcran.Flottant,true,ModifCol.NonModifiable,true,true,100);
-		this.m_blocs[0]=new Bloc(httpClient,this,"interv__recherche","maitre","Maitre","G",300,"exec AZinterv__recherche","", "id_interv",cols);
+		this.m_blocs[0]=new Bloc(httpClient,this,"interv__recherche","maitre","Maitre","G","exec AZinterv__recherche","", "id_interv",cols);
 		cols=new Array(11);
 		cols[0]=new ColonneEcran("etat","etat",TypeColEcran.Chaine,false,ModifCol.NonModifiable,false,true,100);
 		cols[1]=new ColonneEcran("id_interv","id_interv",TypeColEcran.ClePrimaire,true,ModifCol.NonModifiable,false,true,100);
@@ -62,7 +62,7 @@ export class IntervComponent extends EcranMaitreDetail
 		cols[8]=new ColonneEcran("tarif_interv","Tarif",TypeColEcran.Entier,true,ModifCol.Obligatoire,true,true,100);
 		cols[9]=new ColonneEcran("fact_interv","Facturé",TypeColEcran.Booleen,true,ModifCol.Modifiable,true,true,100);
 		cols[10]=new ColonneEcran("num_interv","Numéro",TypeColEcran.Chaine,true,ModifCol.Modifiable,true,true,100);
-		this.m_blocs[1]=new Bloc(httpClient,this,"interv","interv","Intervention","F",300,"exec AZinterv__intervSelect @id@","exec AZinterv__intervMaj @etat@,@id_interv@,@date_interv@,@id_seance@,@id_lieu@,@comm_interv@,@tarif_interv@,@fact_interv@,@num_interv@", "id_interv",cols);
+		this.m_blocs[1]=new Bloc(httpClient,this,"interv","interv","Intervention","F","exec AZinterv__intervSelect @id@","exec AZinterv__intervMaj @etat@,@id_interv@,@date_interv@,@id_seance@,@id_lieu@,@comm_interv@,@tarif_interv@,@fact_interv@,@num_interv@", "id_interv",cols);
 		cols=new Array(5);
 		cols[0]=new ColonneEcran("etat","etat",TypeColEcran.Chaine,false,ModifCol.NonModifiable,false,true,100);
 		cols[1]=new ColonneEcran("id_seance_cmpt","id_seance_cmpt",TypeColEcran.ClePrimaire,true,ModifCol.NonModifiable,false,true,100);
@@ -70,7 +70,7 @@ export class IntervComponent extends EcranMaitreDetail
 		cols[3]=new ColonneEcran("id_intervWITH","Intervention Date/Lieu",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,true,100);
 		cols[4]=new ColonneEcran("nom_cmpt","Comptines de la séance",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,300);
 		//cols[5]=new ColonneEcran("num_cmpt","Numéro",TypeColEcran.Entier,true,ModifCol.Obligatoire,true,true,100);
-		this.m_blocs[2]=new Bloc(httpClient,this,"seance_cmpt","seance_cmpt","Contenu Séance","G",300,"exec AZinterv__seance_cmptSelect @id@","","id_seance_cmpt",cols);
+		this.m_blocs[2]=new Bloc(httpClient,this,"seance_cmpt","seance_cmpt","Contenu Séance","G","exec AZinterv__seance_cmptSelect @id@","","id_seance_cmpt",cols);
 		cols=new Array(6);
 		cols[0]=new ColonneEcran("etat","etat",TypeColEcran.Chaine,false,ModifCol.NonModifiable,false,true,100);
 		cols[1]=new ColonneEcran("id_interv_cmpt","id_interv_cmpt",TypeColEcran.ClePrimaire,true,ModifCol.NonModifiable,false,true,100);
@@ -79,7 +79,7 @@ export class IntervComponent extends EcranMaitreDetail
 		cols[4]=new ColonneEcran("id_cmpt","Comptines hors séance",TypeColEcran.CleEtrangere,true,ModifCol.Modifiable,false,true,300);
 		cols[5]=new ColonneEcran("id_cmptWITH","Comptines hors séance",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,false,300);
 		//cols[5]=new ColonneEcran("num_cmpt","Numéro",TypeColEcran.Entier,true,ModifCol.Obligatoire,true,true,100);
-		this.m_blocs[3]=new Bloc(httpClient,this,"interv_cmpt","interv_cmpt","Extra Comptines","G",300,"exec AZinterv__interv_cmptSelect @id@","exec AZinterv__interv_cmptMaj @etat@,@id_interv_cmpt@,@id_interv@,@id_cmpt@","id_interv_cmpt",cols);
+		this.m_blocs[3]=new Bloc(httpClient,this,"interv_cmpt","interv_cmpt","Extra Comptines","G","exec AZinterv__interv_cmptSelect @id@","exec AZinterv__interv_cmptMaj @etat@,@id_interv_cmpt@,@id_interv@,@id_cmpt@","id_interv_cmpt",cols);
 		this.formRecherche=this.formBuilder.group({m_filtre_date_interv_mini: '', m_filtre_date_interv_maxi: '', m_filtre_num_interv: '',m_filtre_seance:0,m_filtre_lieu:0});
 		this.formOngletPrincipal=this.formBuilder.group({m_id_interv:0,m_date_interv:'',m_id_seance:0,m_id_lieu:0,m_comm_interv:'',m_tarif_interv:0,m_fact_interv:0,m_num_interv:''});
 		this.m_nom_cle_maitre="id_interv";
