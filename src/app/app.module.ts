@@ -29,6 +29,7 @@ import { ReqComponent } from './ecrans/req.component';
 import { DependancesComponent } from './AZ_dependances/dependances.component';
 import { CarteComponent } from './carte/carte.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { PrjComponent } from './ecrans/prj.component';
 
 //import { CboGridEditor } from './cbo-grid-editor/cbo-grid.editor';
 @NgModule({
@@ -51,7 +52,8 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     ReqComponent,
     DependancesComponent,
     CarteComponent,
-    DBDictComponent
+    DBDictComponent,
+    PrjComponent
   ],
   imports: [
     BrowserModule,
