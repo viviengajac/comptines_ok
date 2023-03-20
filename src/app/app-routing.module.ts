@@ -11,7 +11,7 @@ import { CarteComponent } from './carte/carte.component';
 import { DBDictComponent } from './ecrans/dbdict.component';
 import { PrjComponent } from './ecrans/prj.component';
 //import { ConnexComponent } from './connex/connex.component';
-
+//test
 const routes: Routes =
 [
 	{ path: 'menu', component: MenuComponent },
