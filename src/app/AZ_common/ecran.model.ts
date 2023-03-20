@@ -63,6 +63,7 @@ export class ColumnCbo extends ColDef
 	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean,public override width:number,public override cellClass:string,public override headerClass:string[])
 	{
 		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
+		this.editable = false;
 	}
 	public valueFormatter: any;
 	cellEditor: string='cboEditor';
@@ -120,6 +121,7 @@ export class ColumnDependances extends ColDef
 	{
 		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
 		this.cellRenderer='btnDependancesRenderer';
+		this.editable = false;
 	}
 	public cellRenderer: string;
 	public cellRendererParams:any;
@@ -130,6 +132,7 @@ export class ColumnBool extends ColDef
 	{
 		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
 		this.cellRenderer='boolRenderer';
+		this.editable = false;
 	}
 	public cellRenderer: string;
 	public cellRendererParams:any;
