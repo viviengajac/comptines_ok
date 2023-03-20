@@ -24,6 +24,7 @@ const routes: Routes =
 	{ path: 'dependances', component: DependancesComponent },
 	{ path: 'references/:nom_ecran', component: ReferencesComponent },
 	{ path: 'carte', component: CarteComponent },
+	{ path: 'prj', component: PrjComponent },
 //	{ path: '', component: MenuComponent },
 //	{ path: 'not-found', component: MenuComponent },
 	{ path: '**', redirectTo: 'not-found' }

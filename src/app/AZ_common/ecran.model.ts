@@ -1,7 +1,7 @@
 import { ItemCbo } from '../AZ_common/cbo.model';
 import { Ecran } from '../AZ_services/ecran';
 
-export enum TypeColEcran { ClePrimaire=1,Chaine=2,Entier=3,CleEtrangere=4,Date=5,Booleen=6,VoirDocDb=7,DefDocDb=8,VoirDocFs=9,DefDocFs=10, Flottant=11,DateHeure=12,Dependances=13}
+export enum TypeColEcran { ClePrimaire=1,Chaine=2,Entier=3,CleEtrangere=4,Date=5,Booleen=6,VoirDocDb=7,DefDocDb=8,VoirDocFs=9,DefDocFs=10, Flottant=11,DateHeure=12,Dependances=13, Select=14}
 export enum ModifCol { NonModifiable=1, Modifiable=2, Obligatoire=3 }
 export class ColonneEcran
 {
@@ -66,6 +66,16 @@ export class ColumnCbo extends ColDef
 	}
 	public valueFormatter: any;
 	cellEditor: string='cboEditor';
+	cellEditorParams:any=null;
+}
+export class ColumnSelect extends ColDef
+{
+	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean,public override width:number,public override cellClass:string,public override headerClass:string[])
+	{
+		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
+	}
+	public valueFormatter: any;
+	cellEditor: string='agSelectCellEditor';
 	cellEditorParams:any=null;
 }
 export class ColumnDate extends ColDef

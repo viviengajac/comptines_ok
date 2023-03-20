@@ -224,5 +224,10 @@ export class TreeViewComponent
 			else
 				this.Ouvrir();
 		}
+		else
+		{
+			var ecran=this.m_nd.m_ecran;
+			ecran.MessageBox("Il faut avoir les droits de lecture");
+		}
 	}
 }

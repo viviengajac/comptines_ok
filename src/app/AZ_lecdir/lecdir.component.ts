@@ -25,7 +25,7 @@ export class LecDirComponent extends Ecran
 	}
 	ngOnInit(): void
 	{
-//console.log('debut de NgInit de Prjcomponent');
+//console.log('debut de NgInit de Lecdir');
 		this.Init();
 		if(GlobalConstantes.m_rep_fic=='')
 		{
@@ -44,9 +44,9 @@ export class LecDirComponent extends Ecran
 					}
 					else
 					{
-//console.log('EcranMaitreDetail.AppelerHref: res='+res);
+//console.log('Lecdir.ngOnInit: res='+res);
 						GlobalConstantes.m_rep_fic= str_res;
-console.log('Lecdir.ngOnInit: aprs LireValeur rep_fic='+GlobalConstantes.m_rep_fic);
+//console.log('Lecdir.ngOnInit: aprs LireValeur rep_fic='+GlobalConstantes.m_rep_fic);
 						/*
 						var ad: AccesDir=new AccesDir(this.httpClient);
 //console.log('treeview.Ouvrir('+this.m_nd.m_repertoire+')');
@@ -77,7 +77,7 @@ console.log('Lecdir.ngOnInit: aprs LireValeur rep_fic='+GlobalConstantes.m_rep_f
 		else
 		{
 //		this.m_nd=new TvNd(httpClient,this,'/',TypeNd.Rep,'C:/Users/bertr/Documents/oitar/territoire_pm_nouveau');
-console.log('Lecdir.ngOnInit: rep_fic='+GlobalConstantes.m_rep_fic);
+//console.log('Lecdir.ngOnInit:fin: rep_fic='+GlobalConstantes.m_rep_fic);
 			this.TesterRep();
 		}
 //console.log('fin de NgInit de Prjcomponent');

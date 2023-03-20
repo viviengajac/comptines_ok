@@ -2,7 +2,7 @@ import { AccesBdService } from '../AZ_services/acces_bd';
 import { AccesJSon } from '../AZ_services/json.service';
 import { HttpClient } from '@angular/common/http';
 import { GlobalConstantes } from '../AZ_common/global_cst';
-import { TypeColEcran,TypeColSql,ColDef, ColonneEcran,ColonneSql,Ligne,Cellule,ColumnCbo,ColumnDate,ColumnDateHeure,ColumnVoirDoc,ColumnDefDoc,ColumnDependances,ColumnBool,ModifCol } from '../AZ_common/ecran.model';
+import { TypeColEcran,TypeColSql,ColDef, ColonneEcran,ColonneSql,Ligne,Cellule,ColumnCbo,ColumnDate,ColumnDateHeure,ColumnVoirDoc,ColumnDefDoc,ColumnDependances,ColumnBool,ColumnSelect,ModifCol } from '../AZ_common/ecran.model';
 import { Cbo,ItemCbo,ParamsCbo } from '../AZ_common/cbo.model';
 import { Ecran } from './ecran';
 import { MenuComponent } from '../menu/menu.component';
@@ -205,15 +205,63 @@ export class Bloc
 						}
 //						cols[num_col].cellRenderer=CboEditorComponent;
 						break;
+					case TypeColEcran.Select:
+//console.log('colonne Select');
+						cols[num_col]=new ColumnSelect(col.m_nom_col,col.m_lib_col,true,true,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
+						var nom_table=col.NomTablePourCbo();
+						var fini:boolean=false;
+						var cbo_tmp:Cbo=new Cbo(this.httpClient,nom_table);
+						cbo_tmp.GenererListeStd()
+						.then(
+						res=>
+						{
+//console.log('Bloc '+this.m_nom_bloc+':InitiColDefs pour une ColumnCbo: '+col.m_nom_col+': cbo_tmp.m_liste_items');
+//console.log(cbo_tmp.m_liste_items);
+							var nb_choix:number=cbo_tmp.m_liste_items.length;
+							var liste_choix:string[]=new Array(nb_choix);
+							var i:number=0;
+							for(i=0;i<nb_choix;i++)
+							{
+								liste_choix[i]=cbo_tmp.m_liste_items[i].m_lib;
+							}
+							cols[num_col].cellEditorParams={values:liste_choix};
+							cols[num_col].valueFormatter=this.formatterCbo(cbo_tmp.m_liste_items);
+//							this.m_nouvelle_cbo.cellEditorParams=new ParamsCbo(this.m_ecran,new CboListeItems(cbo_tmp.m_liste_items),nom_table);
+/*
+							var params_cbo:ParamsCbo=new ParamsCbo();
+							params_cbo.Init(this.m_ecran,cbo_tmp.m_liste_items,nom_table);
+							cols[num_col].cellEditorParams=params_cbo;
+*/
+//							cols[num_col].cellRenderer=CboRendererComponent;
+							cols[num_col].cellRenderer=CboEditorComponent;
+							cols[num_col].cellRendererParams={onClick:this.onCboClick.bind(this),nom_col_cliquee:col.m_nom_col};
+							fini=true;
+//console.log('InitColumnCbo');
+//console.log(this.m_nouvelle_cbo);
+						}
+						,err=>
+						{
+//console.log('appel de MessageErreur depuis bloc: 1');
+							this.m_ecran.MessageErreur(err+'§sql§data§pile');
+							fini=true;
+						});
+						while(!fini)
+						{
+							await this.delay(50);
+						}
+//						cols[num_col].cellRenderer=CboEditorComponent;
+						break;
 					case TypeColEcran.Date:	// date
 //console.log('colonne date: '+col.m_nom_col);
 						cols[num_col]=new ColumnDate(col.m_nom_col,col.m_lib_col,true,true,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
 						cols[num_col].cellRenderer=DateEditorComponent;
+						cols[num_col].cellRendererParams={onClick:this.onDateClick.bind(this),nom_col_cliquee:col.m_nom_col};
 						break;
 					case TypeColEcran.DateHeure:	// dateheure
 //console.log('colonne dateheure: '+col.m_nom_col);
 						cols[num_col]=new ColumnDateHeure(col.m_nom_col,col.m_lib_col,true,true,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
 						cols[num_col].cellRenderer=DatetimeEditorComponent;
+						cols[num_col].cellRendererParams={onClick:this.onDateHeureClick.bind(this),nom_col_cliquee:col.m_nom_col};
 						break;
 					case TypeColEcran.VoirDocDb:
 						cols[num_col]=new ColumnVoirDoc(col.m_nom_col,col.m_lib_col,true,false,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
@@ -593,9 +641,43 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 		this.ModifValeurChamp(nom_col_cliquee,str_id,val_col);
 		return 'OK';
 	}
+	onDateClick(e:any): string
+	{
+//console.log('onBoolClick');
+//console.log('nom_cle_primaire='+this.m_nom_cle_primaire+', nom_bloc='+this.m_nom_bloc);
+//console.log(e);
+		var str_id=e.ligne_cliquee[this.m_nom_cle_primaire];
+//console.log('str_id='+str_id);
+		var val_col:any=e.date_saisie;
+//console.log(e.detail);
+/*
+		var t:HTMLInputElement=e.event.path[2];
+//console.log(t);
+		var nom_col:string=t.getAttribute('col-id');
+//		var nom_col:string=e.event.path[2].attributes.col-id.value;
+*/
+		var nom_col_cliquee=e.nom_col_cliquee;
+//console.log('nom_col='+nom_col);
+//console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
+//		var num_col_sql=this.NumeroColonneSql(nom_col);
+		this.ModifValeurChamp(nom_col_cliquee,str_id,val_col);
+		return 'OK';
+	}
+	onDateHeureClick(e:any): string
+	{
+//console.log('onBoolClick');
+//console.log('nom_cle_primaire='+this.m_nom_cle_primaire+', nom_bloc='+this.m_nom_bloc);
+//console.log(e);
+		var str_id=e.ligne_cliquee[this.m_nom_cle_primaire];
+//console.log('str_id='+str_id);
+		var val_col:any=e.date_saisie;
+		var nom_col_cliquee=e.nom_col_cliquee;
+		this.ModifValeurChamp(nom_col_cliquee,str_id,val_col);
+		return 'OK';
+	}
 	onCboClick(e:any): string
 	{
-//console.log('onCboClick');
+//console.log('Bloc.onCboClick');
 //console.log('nom_cle_primaire='+this.m_nom_cle_primaire+', nom_bloc='+this.m_nom_bloc);
 //console.log(e);
 		var str_id=e.ligne_cliquee[this.m_nom_cle_primaire];
@@ -613,7 +695,9 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 //console.log('nom_col='+nom_col);
 //console.log('str_id='+str_id+', return_value='+val_col+', nom_col='+nom_col);
 //		var num_col_sql=this.NumeroColonneSql(nom_col);
+//		this.RestaurerCelluleCbo(nom_col_cliquee);
 		this.ModifValeurChamp(nom_col_cliquee,str_id,val_col);
+//console.log('avant appel de RestaurerCelleuleCbo');
 		return 'OK';
 	}
 	formatterCbo(options:ItemCbo[])
@@ -1301,75 +1385,139 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 		}
 		this.ReinitialiserCompteur();
 	}
-	async PersonnaliserCbo(id_cle_primaire:number,nom_col_cliquee:string)
+	async PersonnaliserCelluleCbo(id_cle_primaire:number,nom_col_cliquee:string)
 	{
-//console.log('Bloc.PersonnaliserCbo('+id_cle_primaire+','+nom_col_cliquee+')');
+//console.log('Bloc.PersonnaliserCelluleCbo('+id_cle_primaire+','+nom_col_cliquee+')');
 		var num_lig:number=this.NumLig(id_cle_primaire);
 		var num_col:number=this.NumeroColonneEcran(nom_col_cliquee);
 //console.log('num_col='+num_col);
 		var type_col=this.m_colonnes_ecran[num_col].m_type_col;
 //console.log('onRowClickDetail: type_col='+type_col);
-		switch(type_col)
+		if(type_col == TypeColEcran.CleEtrangere)
 		{
-			case TypeColEcran.CleEtrangere:
-				var req:string=this.m_ecran.RequeteCombobox(this.m_nom_bloc,num_lig,nom_col_cliquee);
-				if(req==this.m_ecran.m_derniere_req_specifique)
-					req="";
-				else
-					this.m_ecran.m_derniere_req_specifique=req;
-//console.log('LigneSelectionnee: req='+req);
-				if(req.length>0)
+			var req:string=this.m_ecran.RequeteCombobox(this.m_nom_bloc,num_lig,nom_col_cliquee);
+//console.log('Bloc.PersonnaliserCbo: req='+req);
+			if(req==this.m_ecran.m_derniere_req_specifique)
+				req="";
+			else
+				this.m_ecran.m_derniere_req_specifique=req;
+//console.log('apres controle de la dernière req: req='+req);
+			if(req.length>0)
+			{
+				var fini:boolean=false;
+				var cbo_tmp:Cbo=new Cbo(this.httpClient,nom_col_cliquee);
+				cbo_tmp.GenererListe(req)
+				.then(
+				res=>
 				{
-					var fini:boolean=false;
-					var cbo_tmp:Cbo=new Cbo(this.httpClient,nom_col_cliquee);
-					cbo_tmp.GenererListe(req)
-					.then(
-					res=>
-					{
 /*
 var i:number;
-for(i=0;i<this.m_col_detail.length;i++)
+for(i=0;i<cbo_tmp.m_liste_items.length;i++)
 {
-	console.log('col_detail['+i+']='+this.m_col_detail[i].field+': classe='+this.m_col_detail[i].constructor.name);
+	console.log('col_detail['+i+']=id='+cbo_tmp.m_liste_items[i].m_id+': lib='+cbo_tmp.m_liste_items[i].m_lib);
 }
 */
-//							cols[j].Init(cbo_tmp.m_liste_items);
-//						var num_coldef:number=-1;
-						var i:number;
-						for(i=0;i<this.m_coldefs.length;i++)
-						{
+//						cols[j].Init(cbo_tmp.m_liste_items);
+//					var num_coldef:number=-1;
+					var i:number;
+					for(i=0;i<this.m_coldefs.length;i++)
+					{
 //console.log('test coldef['+i+']: field='+this.m_coldefs[i].field);
-							if(this.m_coldefs[i].field==nom_col_cliquee)
-							{
-//								num_coldef=i;
-								const nom_table=nom_col_cliquee.substring(3);
-//								this.m_coldefs[i].cellEditorParams=new ParamsCbo(this.m_ecran, new CboListeItems(cbo_tmp.m_liste_items),nom_table);
+						if(this.m_coldefs[i].field==nom_col_cliquee)
+						{
+							this.gridApi.setColumnDefs([]);
+//							num_coldef=i;
+							const nom_table=nom_col_cliquee.substring(3);
+//							this.m_coldefs[i].cellEditorParams=new ParamsCbo(this.m_ecran, new CboListeItems(cbo_tmp.m_liste_items),nom_table);
 /*
-								var params_cbo:ParamsCbo=new ParamsCbo();
-								params_cbo.Init(this.m_ecran, cbo_tmp.m_liste_items,nom_table);
-								this.m_coldefs[i].cellEditorParams=params_cbo;
+							var params_cbo:ParamsCbo=new ParamsCbo();
+							params_cbo.Init(this.m_ecran, cbo_tmp.m_liste_items,nom_table);
+							this.m_coldefs[i].cellEditorParams=params_cbo;
 */
-								this.m_coldefs[i].cellEditorParams=new ParamsCbo(this.m_ecran, cbo_tmp.m_liste_items,nom_table);
-								this.gridApi.setColumnDefs(this.m_coldefs);
+							this.m_coldefs[i].cellEditorParams=new ParamsCbo(this.m_ecran, cbo_tmp.m_liste_items,nom_table);
+							this.gridApi.setColumnDefs(this.m_coldefs);
 //console.log('trouve:nb items='+cbo_tmp.m_liste_items.length);
 //console.log('trouve:nb items bis='+this.m_coldefs[i].cellEditorParams.m_liste_items.length+', num cel='+i);
-							}
 						}
-						fini=true;
 					}
-					,err=>
-					{
+					fini=true;
+				}
+				,err=>
+				{
 //console.log('appel de MessageErreur depuis bloc: 19');
-						this.m_ecran.MessageErreur(err+'§sql§data§pile');
-						fini=true;
-					});
-					while(!fini)
-					{
+					this.m_ecran.MessageErreur(err+'§sql§data§pile');
+					fini=true;
+				});
+				while(!fini)
+				{
 //console.log('attente');
-						await this.delay(50);
+					await this.delay(50);
+				}
+			}
+		}
+	}
+	async RestaurerCelluleCbo(nom_col_cliquee:string)
+	{
+//console.log('Bloc.PersonnaliserCbo('+id_cle_primaire+','+nom_col_cliquee+')');
+		var num_col:number=this.NumeroColonneEcran(nom_col_cliquee);
+//console.log('num_col='+num_col);
+		var type_col=this.m_colonnes_ecran[num_col].m_type_col;
+//console.log('onRowClickDetail: type_col='+type_col);
+		if(type_col == TypeColEcran.CleEtrangere)
+		{
+//console.log('colonne_ecran');
+//console.log(this.m_colonnes_ecran[num_col]);
+			var nom_table=this.m_colonnes_ecran[num_col].NomTablePourCbo();
+			var fini:boolean=false;
+			var cbo_tmp:Cbo=new Cbo(this.httpClient,nom_table);
+			cbo_tmp.GenererListeStd()
+			.then(
+			res=>
+			{
+//console.log('Bloc '+this.m_nom_bloc+':InitiColDefs pour une ColumnCbo: '+col.m_nom_col+': cbo_tmp.m_liste_items');
+//console.log(cbo_tmp.m_liste_items);
+				var i:number;
+				for(i=0;i<this.m_coldefs.length;i++)
+				{
+//console.log('test coldef['+i+']: field='+this.m_coldefs[i].field);
+					if(this.m_coldefs[i].field==nom_col_cliquee)
+					{
+//						this.gridApi.setColumnDefs([]);
+//						num_coldef=i;
+						const nom_table=nom_col_cliquee.substring(3);
+//						this.m_coldefs[i].cellEditorParams=new ParamsCbo(this.m_ecran, new CboListeItems(cbo_tmp.m_liste_items),nom_table);
+/*
+						var params_cbo:ParamsCbo=new ParamsCbo();
+						params_cbo.Init(this.m_ecran, cbo_tmp.m_liste_items,nom_table);
+						this.m_coldefs[i].cellEditorParams=params_cbo;
+*/
+						this.m_coldefs[i].cellEditorParams=new ParamsCbo(this.m_ecran, cbo_tmp.m_liste_items,nom_table);
+						this.gridApi.setColumnDefs(this.m_coldefs);
+//console.log('trouve:nb items='+cbo_tmp.m_liste_items.length);
+//console.log('trouve:nb items bis='+this.m_coldefs[i].cellEditorParams.m_liste_items.length+', num cel='+i);
 					}
 				}
-				break;
+				fini=true;
+//				this.m_nouvelle_cbo.cellEditorParams=new ParamsCbo(this.m_ecran,new CboListeItems(cbo_tmp.m_liste_items),nom_table);
+/*
+				var params_cbo:ParamsCbo=new ParamsCbo();
+				params_cbo.Init(this.m_ecran,cbo_tmp.m_liste_items,nom_table);
+				cols[num_col].cellEditorParams=params_cbo;
+*/
+//				cols[num_col].cellRenderer=CboRendererComponent;
+//console.log('InitColumnCbo');
+//console.log(this.m_nouvelle_cbo);
+			}
+			,err=>
+			{
+//console.log('appel de MessageErreur depuis bloc: 1');
+				this.m_ecran.MessageErreur(err+'§sql§data§pile');
+				fini=true;
+			});
+			while(!fini)
+			{
+				await this.delay(50);
+			}
 		}
 	}
 	/*
