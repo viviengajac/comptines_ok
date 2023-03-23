@@ -3,18 +3,20 @@ import { ICellEditorAngularComp } from 'ag-grid-angular';
 @Component({
   selector: 'app-date-editor',
   template: `
-	<input type="date" (change)="changeEvent($event)" value="{{ma_date}}">
+	<input type="date" (change)="changeEvent($event)" value="{{ma_date}}" class="{{m_classe_fonte}}">
     `
 })
 export class DateEditorComponent implements ICellEditorAngularComp,AfterViewInit
 {
 	public ma_date:string='';
 	public params:any=null;
+	public m_classe_fonte:string='';
 @ViewChild('input', { read: ViewContainerRef }) public input:any;
 	agInit(params:any): void
 	{
 //console.log('agInit de btnRenderer: params.onclick='+parametres.onClick+', params.label='+parametres.label);
 		this.params = params;
+		this.m_classe_fonte=params.colDef.cellClass;
 //console.log('DataEditorComponent.agInit: params='+params+', params.data='+params.data+', params.data.type='+params.data.type+', params.value='+params.value);
 		this.ma_date=params.value;
 	}

@@ -27,7 +27,7 @@ export class PrjComponent extends EcranFormulaire
 		cols[0]=new ColonneEcran("id_prj","id_prj",TypeColEcran.ClePrimaire,false,ModifCol.NonModifiable,false,true,100);
 		cols[1]=new ColonneEcran("nom_prj","Nom",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,150);
 		cols[2]=new ColonneEcran("rep_fic","Répertoire des fichiers",TypeColEcran.Chaine,true,ModifCol.Obligatoire,true,true,120);
-		this.m_blocs[0]=new Bloc(httpClient,this,"prj","projet","projet","F",300,"exec AZprjSelect","", "id_prj",cols);
+		this.m_blocs[0]=new Bloc(httpClient,this,"prj","projet","projet","F","exec AZprjSelect","", "id_prj",cols);
 //		this.m_blocs[0]=new Bloc(httpClient,this,"prj","projet","projet","F",300,"exec AZprjSelect","exec AZprjMaj @etat@,@id_prj@,@nom_prj@,@rep_fic@", "id_prj",cols);
 		this.formOngletPrincipal=this.formBuilder.group({m_nom_prj:'',m_rep_fic:''});
 //		this.m_tab_col_nom_fic=["nom_prs","prenom_prs"];

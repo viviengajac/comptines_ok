@@ -21,12 +21,13 @@ export class DependancesComponent extends EcranGrille
 /*
 	public m_serveur_bd:string;
 */
-	public m_nom_tab:string='';
+//	public m_nom_tab:string='';
 	public m_str_id:string='';
 	private sub: any=null;
-	constructor(public override httpClient: HttpClient, public override formBuilder:FormBuilder, public override modalService: ModalService,public activatedRoute:ActivatedRoute)
+	public m_nom_tab:string='';
+	constructor(public override httpClient: HttpClient, public override formBuilder:FormBuilder, public override modalService: ModalService,public override activatedRoute:ActivatedRoute)
 	{
-		super(httpClient,formBuilder,modalService);
+		super(httpClient,formBuilder,modalService,activatedRoute);
 //console.log('DependancesComponent.constructor');
 		this.m_blocs=new Array(1);
 		var cols=new Array(5);
@@ -35,7 +36,7 @@ export class DependancesComponent extends EcranGrille
 		cols[2]=new ColonneEcran("id","Nom",TypeColEcran.Entier,false,ModifCol.NonModifiable,false,true,100);
 		cols[3]=new ColonneEcran("rep","Libellé",TypeColEcran.Chaine,true,ModifCol.Modifiable,true,true,500);
 		cols[4]=new ColonneEcran("info","Autre",TypeColEcran.Chaine,true,ModifCol.Modifiable,true,true,250);
-		this.m_blocs[0]=new Bloc(this.httpClient,this,"dep","dep","Dépendances","G",500,"exec lec_dependances '@sens@','@nom_tab@',@id@,@nb_lignes_max@,@profondeur_max@","","id",cols);
+		this.m_blocs[0]=new Bloc(this.httpClient,this,"dep","dep","Dépendances","G","exec lec_dependances '@sens@','@nom_tab@',@id@,@nb_lignes_max@,@profondeur_max@","","id",cols);
 		this.formRecherche=this.formBuilder.group({m_filtre_nb_lignes_max: 2000, m_filtre_profondeur_max: 2});
 		this.m_classe_boutons=new Array(this.m_blocs.length);
 		/*
@@ -49,7 +50,7 @@ console.log('dependances: fin du constructeur: serveur_bd='+this.m_serveur_bd);
 		*/
 //console.log('dependances: fin du constructeur');
 	}
-	ngOnInit(): void
+	override ngOnInit(): void
 	{
 //console.log('dependances.ngOnInit: base url='+location.origin);
 //console.log('activatedRoute');

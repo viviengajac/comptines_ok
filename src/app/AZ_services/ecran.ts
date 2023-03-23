@@ -12,7 +12,9 @@ import { GlobalConstantes } from '../AZ_common/global_cst';
 import { ModalService } from '../AZ_modal/modal.service';
 import { Bloc } from '../AZ_services/bloc';
 import { Cbo} from '../AZ_common/cbo.model';
-import { Cellule,TypeColEcran } from '../AZ_common/ecran.model';
+import { AccesBdService } from '../AZ_services/acces_bd';
+import { Cellule,TypeColEcran,ColonneEcran,ModifCol } from '../AZ_common/ecran.model';
+import { OptionsGrille } from '../AZ_common/grille.model';
 @Injectable()
 export class Ecran // implements OnInit
 {
@@ -47,6 +49,7 @@ export class Ecran // implements OnInit
 	public m_pourcent_telechargement:number=0;
 	public m_fin_telechargement:boolean=false;
 	public formOngletPrincipal: any=null;	//  UntypedFormGroup;
+//	public m_grid_options_maitre:any=null;	//	OptionsGrille;
 
 	constructor(public httpClient: HttpClient, public formBuilder:UntypedFormBuilder,public modalService:ModalService)
 	{
@@ -116,6 +119,7 @@ export class Ecran // implements OnInit
 				ecran.style.visibility='hidden';
 			}
 		}
+//		this.m_grid_options_maitre=new OptionsGrille(this);
 	}
 	InitColDefs()
 	{
@@ -138,6 +142,7 @@ export class Ecran // implements OnInit
 		var promise = new Promise((resolve, reject) =>
 		{
 //console.log('Ecran.LancerUneRecherche');
+//console.log(this.m_blocs[num_bloc]);
 			this.ReinitialiserCompteur();
 			var req_sql=this.RequeteRecherche().replace('@id_prs_login@',''+GlobalConstantes.m_id_prs_login);
 //console.log('apres appel de RequeteRecherche: req_sql='+req_sql);
@@ -414,7 +419,7 @@ console.log('hauteur_avant='+hauteur_avant_modif+', apres='+hauteur);
 		}
 		else
 		{
-//console.log('Ecran.ModifValeurChamp('+nom_col_modifiee+','+id_cle_primaire+')');
+//console.log('Ecran.ModifValeurChamp('+nom_col_modifiee+','+id_cle_primaire+', num_bloc_actif='+this.m_num_bloc_actif+')');
 			this.m_blocs[this.m_num_bloc_actif].ModifValeurChamp(nom_col_modifiee,id_cle_primaire,val_col_new);
 			this.ToucherBlocActif();
 		}
@@ -535,11 +540,15 @@ console.log('hauteur_avant='+hauteur_avant_modif+', apres='+hauteur);
 	}
 	onModifValFormulaire(event:any)
 	{
+//console.log('Ecran.onModifValFormulaire');
 		var t:HTMLInputElement=event.target;
+//console.log(t);
 		var nom_elem=t.name;
 		var val:any=t.value;
 		var num_bloc:number=this.m_num_bloc_actif;
+//console.log('num_bloc='+num_bloc);
 		var num_col_sql_modifiee:number=this.m_blocs[num_bloc].NumeroColonneSql(nom_elem);
+//console.log('num_col_sql_modifiee='+num_col_sql_modifiee);
 		if(num_col_sql_modifiee<0)
 		{
 //console.log('appel de MessageErreur depuis EcranMaitreDetail: 15');
@@ -548,8 +557,9 @@ console.log('hauteur_avant='+hauteur_avant_modif+', apres='+hauteur);
 		else
 		{
 			var nom_col_cle_primaire=this.m_blocs[num_bloc].m_nom_cle_primaire;
+//console.log('nom_col_cle_primaire='+nom_col_cle_primaire);
 			var id_cle_primaire=this.m_blocs[num_bloc].ValCelluleParNom(0,nom_col_cle_primaire);
-//console.log('appel de onChangeEvent: nom_elem='+nom_elem+', num_col_sql_modifiee='+num_col_sql_modifiee+', val='+val);
+//console.log('appel de onChangeEvent: nom_elem='+nom_elem+', num_col_sql_modifiee='+num_col_sql_modifiee+', val='+val+', id_cle_primaire='+id_cle_primaire);
 			this.ModifValeurChamp(nom_elem,id_cle_primaire,val);
 		}
 	}
@@ -601,5 +611,187 @@ console.log('hauteur_avant='+hauteur_avant_modif+', apres='+hauteur);
 		}
 		this.MessageBox(msg);
 		this.ReinitialiserCompteur();
+	}
+	InitBlocs()
+	{
+		var promise = new Promise((resolve, reject) =>
+		{
+			try
+			{
+				var req_sql:string="exec AZlire_config_ecr 'prs'";
+				var ab=new AccesBdService(this.httpClient);
+				ab.LireTable(req_sql)
+				.then(res =>
+				{
+//console.log('prs:constructeur: res='+res);
+					var i:number;
+					var j:number;
+					var str_res:string=""+res;
+					if(!str_res.startsWith("Erreur"))
+					{
+console.log('requete executee: nb_cols='+ab.m_colonnes_sql.length);
+//						this.InitialiserColonnesSql(ab.m_colonnes_sql);
+console.log("nb_lignes="+ab.m_lignes.length);
+						var max_num_bloc:number=0;
+						var num_bloc:number=0;
+						for(i=0;i<ab.m_lignes.length;i++)
+						{
+//							num_bloc=ab.m_lignes[i].m_cellules[0].m_val;
+							num_bloc=ab.ValCelluleParNom(i,'num_bloc');
+							if(num_bloc>max_num_bloc)
+								max_num_bloc=num_bloc;
+//console.log("max_num_blocs="+max_num_blocs);
+						}
+						var nb_blocs:number=max_num_bloc+1;
+						this.m_blocs=new Array(nb_blocs);
+console.log("max_num_bloc="+max_num_bloc);
+						for(num_bloc=0;num_bloc<nb_blocs;num_bloc++)
+						{
+							var max_num_ch:number=0;
+							var num_ch:number=0;
+							for(i=0;i<ab.m_lignes.length;i++)
+							{
+//						var num_bloc_tmp=ab.m_lignes[i].m_cellules[0].m_val;
+								var num_bloc_tmp=ab.ValCelluleParNom(i,'num_bloc');
+								if(num_bloc_tmp == num_bloc)
+								{
+//									num_ch=ab.m_lignes[i].m_cellules[8].m_val;
+									num_ch=ab.ValCelluleParNom(i,'num_champ');
+//console.log('num_ch='+num_ch);
+									if(num_ch>max_num_ch)
+										max_num_ch=num_ch;							
+								}
+							}
+							var nb_ch:number=max_num_ch+1;
+console.log("bloc numero "+num_bloc+": max_num_champs="+max_num_ch);
+							var tab_ch:ColonneEcran[]=new Array(nb_ch);
+							var code_type_bloc:string='';
+							var nom_bloc:string='';
+							var lib_bloc:string='';
+							var nom_table:string='';
+							var sql_select:string='';
+							var sql_update:string='';
+							var nom_cle_primaire:string='';
+							for(i=0;i<ab.m_lignes.length;i++)
+							{
+								var num_bloc_tmp=ab.ValCelluleParNom(i,'num_bloc');
+								if(num_bloc_tmp == num_bloc)
+								{
+console.log('ligne numero '+i);
+console.log(ab.m_lignes[i]);
+									if(code_type_bloc=='')
+									{
+										code_type_bloc=ab.ValCelluleParNom(i,'code_type_bloc');
+										nom_bloc=ab.ValCelluleParNom(i,'nom_bloc');
+										lib_bloc=ab.ValCelluleParNom(i,'lib_bloc');
+										nom_table=ab.ValCelluleParNom(i,'nom_table');
+										sql_select=ab.ValCelluleParNom(i,'sql_select');
+										sql_update=ab.ValCelluleParNom(i,'sql_update');
+										nom_cle_primaire=ab.ValCelluleParNom(i,'nom_cle_primaire');
+									}
+									num_ch=ab.ValCelluleParNom(i,'num_champ');
+									var nom_ch=ab.ValCelluleParNom(i,'nom_champ');
+									var lib_ch=ab.ValCelluleParNom(i,'lib_champ');
+									var code_type_ch=ab.ValCelluleParNom(i,'code_type_champ');
+									var visible:boolean=ab.ValCelluleParNom(i,'visible');
+console.log('nom_ch='+nom_ch+', visible='+visible);
+									var code_type_modif_ch=ab.ValCelluleParNom(i,'code_type_modif_champ');
+									var inser_excel=ab.ValCelluleParNom(i,'inser_excel');
+									var inser_ecran=ab.ValCelluleParNom(i,'inser_ecran');
+									var lg_ch=ab.ValCelluleParNom(i,'lg_champ');
+									var type_ch:TypeColEcran=TypeColEcran.Entier;
+									switch(code_type_ch)
+									{
+										case "B":
+											type_ch=TypeColEcran.Booleen;
+											break;
+										case "C":
+											type_ch=TypeColEcran.Chaine;
+											break;
+										case "D":
+											type_ch=TypeColEcran.Date;
+											break;
+										case "E":
+											type_ch=TypeColEcran.Entier;
+											break;
+										case "F":
+											type_ch=TypeColEcran.Flottant;
+											break;
+										case "H":
+											type_ch=TypeColEcran.DateHeure;
+											break;
+										case "CP":
+											type_ch=TypeColEcran.ClePrimaire;
+											break;
+										case "CE":
+											type_ch=TypeColEcran.CleEtrangere;
+											break;
+										case "Dp":
+											type_ch=TypeColEcran.Dependances;
+											break;
+										case "DD":
+											type_ch=TypeColEcran.DefDocDb;
+											break;
+										case "DF":
+											type_ch=TypeColEcran.DefDocFs;
+											break;
+										case "VD":
+											type_ch=TypeColEcran.VoirDocDb;
+											break;
+										case "VF":
+											type_ch=TypeColEcran.VoirDocFs;
+											break;
+									}
+									var mc:ModifCol=ModifCol.Modifiable;
+									switch(code_type_modif_ch)
+									{
+										case "M":
+											mc=ModifCol.Modifiable;
+											break;
+										case "N":
+											mc=ModifCol.NonModifiable;
+											break;
+										case "O":
+											mc=ModifCol.Obligatoire;
+											break;
+									}
+									var ce:ColonneEcran=new ColonneEcran(nom_ch,lib_ch,type_ch,visible,mc,inser_excel,inser_ecran,lg_ch);
+									tab_ch[num_ch]=ce;
+console.log("bloc "+num_bloc+": champ "+num_ch+"="+nom_ch);
+								}
+//console.log("bloc: InitialiserLignes: fin pour num_ligne="+i);
+//			this.m_lignes_org[i]=lignes[i];
+							}
+							this.m_blocs[num_bloc]=new Bloc(this.httpClient,this,nom_table,nom_bloc,lib_bloc,code_type_bloc,sql_select,sql_update,nom_cle_primaire,tab_ch);
+						}
+//					this.InitialiserLignes(ab.m_lignes);
+//console.log('bloc.ChargerBloc: fin correcte');
+						this.InitColDefs();
+// console.log('m_grid_options_maitre');
+//console.log(this.m_grid_options_maitre);
+						resolve('OK');
+					}
+					else
+					{
+console.log('requete mal executee: nb_cols='+ab.m_colonnes_sql.length);
+						reject(str_res);
+					}
+				},
+				(error) =>
+				{
+					var str_err:string=error;
+					reject(str_err);
+console.log('erreur dans AZlire_config_ecr:'+str_err);
+				})
+			}
+			catch(e)
+			{
+//console.log('appel de MessageErreur depuis bloc: 14');
+				this.MessageErreur("Erreur: "+(e as Error).message+"\n"+(e as Error).stack);
+				reject('KO');
+			}
+		});
+//console.log('Bloc.ChargerBloc:fin de ChargerBloc');
+		return promise;
 	}
 }

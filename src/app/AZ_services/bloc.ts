@@ -38,7 +38,7 @@ export class Bloc
 	m_fini:boolean=false;
 	m_etape_finie:boolean=false;
 	
-	constructor(public httpClient:HttpClient,public m_ecran:Ecran,public m_nom_table:string,public m_nom_bloc:string,public m_lib_bloc:string,public m_type_bloc:string,public m_hauteur_grille:number, public m_sql_select: string, public m_sql_update: string, public m_nom_cle_primaire: string,public m_colonnes_ecran: ColonneEcran[]){}
+	constructor(public httpClient:HttpClient,public m_ecran:Ecran,public m_nom_table:string,public m_nom_bloc:string,public m_lib_bloc:string,public m_type_bloc:string, public m_sql_select: string, public m_sql_update: string, public m_nom_cle_primaire: string,public m_colonnes_ecran: ColonneEcran[]){}
 	InitGridApi(grid_api:any,grid_column_api:any)
 	{
 		this.gridApi=grid_api;
@@ -295,7 +295,7 @@ export class Bloc
 						cols[num_col].cellRendererParams={onClick:this.onBoolClick.bind(this),nom_col_cliquee:col.m_nom_col};
 						break;
 					default:
-						cols[num_col]=new ColDef(col.m_nom_col,col.m_lib_col,true,true,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
+						cols[num_col]=new ColDef(col.m_nom_col,col.m_lib_col,true,true,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header,false);
 						break;
 				}
 				this.m_coldefs[num_col]=cols[num_col];
@@ -1419,6 +1419,7 @@ for(i=0;i<cbo_tmp.m_liste_items.length;i++)
 */
 //						cols[j].Init(cbo_tmp.m_liste_items);
 //					var num_coldef:number=-1;
+/*BG*/
 					var i:number;
 					for(i=0;i<this.m_coldefs.length;i++)
 					{
@@ -1440,6 +1441,17 @@ for(i=0;i<cbo_tmp.m_liste_items.length;i++)
 //console.log('trouve:nb items bis='+this.m_coldefs[i].cellEditorParams.m_liste_items.length+', num cel='+i);
 						}
 					}
+/*BG*/
+/*
+					const cbo_specifique=document.createElement('input');
+					cbo_specifique.setAttribute('type','select');
+					for (var i = 0; i < cbo_tmp.m_liste_items.length;i++)
+					{
+						var option = document.createElement("option");
+						option.setAttribute(cbo_tmp.m_liste_items[i].m_lib);
+						cbo_specifique.appendChild(option);
+					}
+*/
 					fini=true;
 				}
 				,err=>
@@ -1452,7 +1464,7 @@ for(i=0;i<cbo_tmp.m_liste_items.length;i++)
 				{
 //console.log('attente');
 					await this.delay(50);
-				}
+				} 
 			}
 		}
 	}
