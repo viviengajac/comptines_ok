@@ -979,8 +979,8 @@
     border-right-color: #babfc7;
     border-right-color: var(--ag-border-color, #babfc7); }
   .ag-theme-alpine-pm-p .ag-row-selected {
-    background-color: rgba(33, 150, 243, 0.3);
-    background-color: var(--ag-selected-row-background-color, rgba(33, 150, 243, 0.3)); }
+    background-color: rgba(33, 150, 243, 0.3) !important;
+    /* background-color: var(--ag-selected-row-background-color, rgba(33, 150, 243, 0.3)); */ }
   .ag-theme-alpine-pm-p .ag-cell-range-selected:not(.ag-cell-focus),
   .ag-theme-alpine-pm-p .ag-body-viewport:not(.ag-has-focus) .ag-cell-range-single-cell:not(.ag-cell-inline-editing) {
     background-color: rgba(33, 150, 243, 0.2);
