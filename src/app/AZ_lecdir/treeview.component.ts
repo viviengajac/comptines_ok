@@ -69,17 +69,17 @@ export class TreeViewComponent
 				this.m_nd.m_ouvert=true;
 				if(this.m_nd.m_nd_fils.length==0)
 				{
-//console.log('ouverture de repertoire');
+console.log('ouverture de repertoire');
 //				this.m_classe_nd='dir';
 					var ad: AccesDir=new AccesDir(this.httpClient);
-//console.log('treeview.Ouvrir('+this.m_nd.m_repertoire+')');
+console.log('treeview.Ouvrir('+this.m_nd.m_repertoire+')');
 					ad.LireDir(this.m_nd.m_repertoire)
 					.then
 					(res=>
 					{
 						var i:number;
 						this.m_nd.m_nd_fils=new Array(ad.m_tab_nd.length);
-//console.log('treeview.Ouvrir: apres LecDir: nb nd='+ad.m_tab_nd.length);
+console.log('treeview.Ouvrir: apres LecDir: nb nd='+ad.m_tab_nd.length);
 						for(i=0;i<ad.m_tab_nd.length;i++)
 						{
 							var nom=ad.m_tab_nd[i].m_nom_nd;
@@ -89,7 +89,7 @@ export class TreeViewComponent
 							this.m_nd.m_nd_fils[i]=it;
 //console.log('nd['+i+']');
 						}
-//console.log('fin de la boucle: length='+this.m_nd.m_nd_fils.length);
+console.log('fin de la boucle: length='+this.m_nd.m_nd_fils.length);
 					},
 					err=>
 					{

@@ -27,31 +27,33 @@
 </div>
 <div id="wrap" *ngIf="!m_phase_connexion">
 	<ul class="navbar">
-		<li>
+		<!-- <li>
 			<label class="{{m_classe_fonte}}">Dev</label>
 			<ul>
 				<li class="{{m_classe_fonte}}"><a routerLink="/dbdict">DBDict</a></li><br>
 				<li class="{{m_classe_fonte}}"><a routerLink="/prj">Projet</a></li><br>
 			</ul>
-		</li>
+		</li> -->
 		<li>
 			<label class="{{m_classe_fonte}}">Références</label>
 			<ul>
-				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','cmpt']">Comptines</a></li><br>
-				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','instr']">Instruments</a></li><br>
-				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','lieu']">Lieux</a></li><br>
-				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','ville']">Villes</a></li><br>
+				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','cmpt']">Comptines</a></li>
+				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','instr']">Instruments</a></li>
+				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','lieu']">Lieux</a></li>
+				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','ville']">Villes</a></li>
+				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','theme']">Thèmes</a></li>
 			</ul>
 		</li>
 		<!--li>__</li-->
 		<li>
-			<label class="{{m_classe_fonte}}">Comptines</label>
+			<label class="{{m_classe_fonte}}">1001 Paroles</label>
 			<ul>
-				<li class="{{m_classe_fonte}}"><a routerLink="/seance">Séances</a></li><br>
-				<li class="{{m_classe_fonte}}"><a routerLink="/interv">Interventions</a></li><br>
+				<li class="{{m_classe_fonte}}"><a routerLink="/seance">Séances</a></li>
+				<li class="{{m_classe_fonte}}"><a routerLink="/interv">Interventions</a></li>
+				<li class="sep"></li>
 				<li class="{{m_classe_fonte}}"><a routerLink="fic">Fichiers</a></li>
-				<li class="{{m_classe_fonte}}"><a routerLink="prj">PRJ</a></li>
-				<li class="{{m_classe_fonte}}"><a routerLink="req">SQL</a></li>
+				<!-- <li class="{{m_classe_fonte}}"><a routerLink="prj">PRJ</a></li>
+				<li class="{{m_classe_fonte}}"><a routerLink="req">SQL</a></li> -->
 				<li class="{{m_classe_fonte}}"><a routerLink="carte">Carte</a></li>
 			</ul>
 		</li>

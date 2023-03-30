@@ -684,6 +684,9 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 			case '.pdf':
 				type_mime="application/pdf";
 				break;
+			case '.txt':
+				type_mime="text/txt";
+				break;
 			case '.xls':
 			case '.xlsx':
 				type_mime="application/vnd.ms-excel";

@@ -459,7 +459,7 @@ console.log('10');
 	}
 	async onRowClickMaitre(event:any)
 	{
-//console.log('onRowClickMaitre: m_row_index_maitre='+this.m_row_index_maitre+', nouvel index='+event.rowIndex);
+console.log('onRowClickMaitre: m_row_index_maitre='+this.m_row_index_maitre+', nouvel index='+event.rowIndex);
 		var i:number;
 		var modif: boolean=false;
 		for(i=0;i<this.m_blocs.length;i++)
@@ -486,10 +486,10 @@ console.log('10');
 		{
 			this.RestaurerCboSpecifiques();
 			const selectedRow = this.gridMaitreApi.getSelectedRows()[0];
-//console.log('selectedRow, nom_cle_maitre='+this.m_nom_cle_maitre);
-//console.log(selectedRow);
+console.log('selectedRow, nom_cle_maitre='+this.m_nom_cle_maitre);
+console.log(selectedRow);
 			this.m_id_maitre=selectedRow[this.m_nom_cle_maitre];
-//console.log('id_maitre='+this.m_id_maitre);
+console.log('id_maitre='+this.m_id_maitre);
 			this.ChargerDetails(false,false);
 			this.ReinitialiserCompteur();
 			this.m_row_index_maitre=event.rowIndex;
@@ -635,11 +635,12 @@ console.log('EcranMaitreDetail.AppelerHref: idx='+idx);
 	}
 	async ChargerDetails(supp_col_invisibles: boolean,remplacer_nom_col_par_header:boolean)
 	{
-//console.log('ChargerDetails');
+console.log('ChargerDetails');
+console.log('id_maitre='+this.m_id_maitre);
 		this.m_idx_detail-1;
 		if(this.m_id_maitre > 0)
 		{
-//console.log('id_maitre='+this.m_id_maitre);
+console.log('id_maitre='+this.m_id_maitre);
 			var nb_blocs:number=this.m_blocs.length-1;
 			var i: number;
 			var num_bloc:number=1;
@@ -1129,6 +1130,7 @@ for(i=0;i<this.m_col_maitre.length;i++)
 	}
 	async onSauver()
 	{
+		console.log("AA EMD.Sauver");
 		try
 		{
 			var en_cours: boolean=false;
@@ -1369,7 +1371,12 @@ console.log('apres appel de ModifValeurChamp');
 		var id_detail=selectedRow[this.m_blocs[this.m_num_bloc_actif].m_nom_cle_primaire];
 //console.log('iddetail='+id_detail);
 //console.log(event);
-		this.m_blocs[this.m_num_bloc_actif].PersonnaliserCelluleCbo(id_detail,this.m_nom_col_cliquee);
+// modif pour éviter une erreur quand on clique dans un cbo avant d'avoir cliqué sur une ligne
+		if(this.m_nom_col_cliquee=='')
+			this.m_blocs[this.m_num_bloc_actif].PersonnaliserCelluleCbo(id_detail,this.m_blocs[this.m_num_bloc_actif].m_nom_cle_primaire);
+		else if(this.m_nom_col_cliquee!=undefined)
+			this.m_blocs[this.m_num_bloc_actif].PersonnaliserCelluleCbo(id_detail,this.m_nom_col_cliquee);
+		// OLD AVANT MODIF this.m_blocs[this.m_num_bloc_actif].PersonnaliserCelluleCbo(id_detail,this.m_nom_col_cliquee);
 //		this.m_col_detail=this.m_onglets[this.m_num_onglet_actif].m_coldefs;
 		this.m_grid_options_detail.columnDefs=this.m_blocs[this.m_num_bloc_actif].m_coldefs;	// this.m_col_detail;
 		this.gridDetailApi.setColumnDefs(this.m_blocs[this.m_num_bloc_actif].m_coldefs);

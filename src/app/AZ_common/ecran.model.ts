@@ -1,7 +1,7 @@
 import { ItemCbo } from '../AZ_common/cbo.model';
 import { Ecran } from '../AZ_services/ecran';
 
-export enum TypeColEcran { ClePrimaire=1,Chaine=2,Entier=3,CleEtrangere=4,Date=5,Booleen=6,VoirDocDb=7,DefDocDb=8,VoirDocFs=9,DefDocFs=10, Flottant=11,DateHeure=12,Dependances=13, Select=14}
+export enum TypeColEcran { ClePrimaire=1,Chaine=2,Entier=3,CleEtrangere=4,Date=5,Booleen=6,VoirDocDb=7,DefDocDb=8,VoirDocFs=9,DefDocFs=10,Flottant=11,DateHeure=12,Dependances=13,Select=14,BooleenNonModif=15}
 export enum ModifCol { NonModifiable=1, Modifiable=2, Obligatoire=3 }
 export class ColonneEcran
 {
@@ -19,7 +19,7 @@ export class ColonneEcran
 		return nom_table;
 	}
 }
-export enum TypeColSql { Entier=1,Chaine=2,Date=3,Booleen=4, Flottant=5}
+export enum TypeColSql {Entier=1,Chaine=2,Date=3,Booleen=4,Flottant=5}
 export class ColonneSql
 {
 	constructor(public m_nom_col:string,public m_type_col:TypeColSql) {}
@@ -147,6 +147,17 @@ export class ColumnBool extends ColDef
 //		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
 		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass,false);
 		this.cellRenderer='boolRenderer';
+		this.editable = false;
+	}
+	public cellRenderer: string;
+	public cellRendererParams:any;
+}
+export class ColumnBoolNonModif extends ColDef
+{
+	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean, width:number,public override cellClass:string,public override headerClass:string[])
+	{
+		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass,false);
+		this.cellRenderer='boolRendererNonModif';
 		this.editable = false;
 	}
 	public cellRenderer: string;

@@ -19,7 +19,11 @@
 	<form [formGroup]="formRecherche">
 		<div class="form-group">
 			<label class=" {{m_classe_entete}} "> Les séances:</label>
-			<label> Nom: </label>
+<!-- 			<label> Nom: </label>
+			<select formControlName="m_filtre_seance" id="m_filtre_seance" name="m_filtre_seance" class=" {{ m_classe_fonte }} ">
+				<option *ngFor="let item of m_cbo_seance.m_liste_items; let i = index" [value]="m_cbo_seance.m_liste_items[i].m_id">{{m_cbo_seance.m_liste_items[i].m_lib}}</option>
+			</select> -->
+			<label> Comptine: </label>
 			<select formControlName="m_filtre_seance" id="m_filtre_seance" name="m_filtre_seance" class=" {{ m_classe_fonte }} ">
 				<option *ngFor="let item of m_cbo_seance.m_liste_items; let i = index" [value]="m_cbo_seance.m_liste_items[i].m_id">{{m_cbo_seance.m_liste_items[i].m_lib}}</option>
 			</select>

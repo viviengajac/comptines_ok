@@ -2,7 +2,7 @@ import { AccesBdService } from '../AZ_services/acces_bd';
 import { AccesJSon } from '../AZ_services/json.service';
 import { HttpClient } from '@angular/common/http';
 import { GlobalConstantes } from '../AZ_common/global_cst';
-import { TypeColEcran,TypeColSql,ColDef, ColonneEcran,ColonneSql,Ligne,Cellule,ColumnCbo,ColumnDate,ColumnDateHeure,ColumnVoirDoc,ColumnDefDoc,ColumnDependances,ColumnBool,ColumnSelect,ModifCol } from '../AZ_common/ecran.model';
+import { TypeColEcran,TypeColSql,ColDef, ColonneEcran,ColonneSql,Ligne,Cellule,ColumnCbo,ColumnDate,ColumnDateHeure,ColumnVoirDoc,ColumnDefDoc,ColumnDependances,ColumnBool,ColumnSelect,ModifCol, ColumnBoolNonModif } from '../AZ_common/ecran.model';
 import { Cbo,ItemCbo,ParamsCbo } from '../AZ_common/cbo.model';
 import { Ecran } from './ecran';
 import { MenuComponent } from '../menu/menu.component';
@@ -12,6 +12,7 @@ import { BtnVoirDocRendererComponent } from '../AZ_renderers/btn-voir-doc-render
 import { BtnDefDocRendererComponent } from '../AZ_renderers/btn-def-doc-renderer.component';
 import { BtnDependancesRendererComponent } from '../AZ_renderers/btn-dependances-renderer.component';
 import { BoolRendererComponent } from '../AZ_renderers/bool-renderer.component';
+import { BoolRendererNonModifComponent } from '../AZ_renderers/bool-renderer-non-modif.component';
 import { DateEditorComponent } from '../AZ_renderers/date-editor.component';
 import { DatetimeEditorComponent } from '../AZ_renderers/datetime-editor.component';
 import { CboEditorComponent } from '../AZ_renderers/cbo-editor.component';
@@ -170,6 +171,7 @@ export class Bloc
 */
 						cols[num_col]=new ColumnCbo(col.m_nom_col,col.m_lib_col,true,true,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
 						var nom_table=col.NomTablePourCbo();
+						console.log("nom table="+nom_table);
 						var fini:boolean=false;
 						var cbo_tmp:Cbo=new Cbo(this.httpClient,nom_table);
 						cbo_tmp.GenererListeStd()
@@ -255,13 +257,13 @@ export class Bloc
 //console.log('colonne date: '+col.m_nom_col);
 						cols[num_col]=new ColumnDate(col.m_nom_col,col.m_lib_col,true,true,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
 						cols[num_col].cellRenderer=DateEditorComponent;
-						cols[num_col].cellRendererParams={onClick:this.onDateClick.bind(this),nom_col_cliquee:col.m_nom_col};
+						cols[num_col].cellRendererParams={onClick:this.onDateClick.bind(this),nom_col_cliquee:col.m_nom_col,modifiable:col.EstModifiable()};
 						break;
 					case TypeColEcran.DateHeure:	// dateheure
 //console.log('colonne dateheure: '+col.m_nom_col);
 						cols[num_col]=new ColumnDateHeure(col.m_nom_col,col.m_lib_col,true,true,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
 						cols[num_col].cellRenderer=DatetimeEditorComponent;
-						cols[num_col].cellRendererParams={onClick:this.onDateHeureClick.bind(this),nom_col_cliquee:col.m_nom_col};
+						cols[num_col].cellRendererParams={onClick:this.onDateHeureClick.bind(this),nom_col_cliquee:col.m_nom_col,modifiable:col.EstModifiable()};
 						break;
 					case TypeColEcran.VoirDocDb:
 						cols[num_col]=new ColumnVoirDoc(col.m_nom_col,col.m_lib_col,true,false,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
@@ -292,8 +294,18 @@ export class Bloc
 //console.log('colonne ColumnBool:'+col.m_nom_col);
 						cols[num_col]=new ColumnBool(col.m_nom_col,col.m_lib_col,true,false,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
 						cols[num_col].cellRenderer=BoolRendererComponent;
-						cols[num_col].cellRendererParams={onClick:this.onBoolClick.bind(this),nom_col_cliquee:col.m_nom_col};
+						cols[num_col].cellRendererParams={onClick:this.onBoolClick.bind(this),nom_col_cliquee:col.m_nom_col,modifiable:col.EstModifiable()};
 						break;
+					case TypeColEcran.BooleenNonModif:
+						cols[num_col]=new ColumnBoolNonModif(col.m_nom_col,col.m_lib_col,true,false,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
+						cols[num_col].cellRenderer=BoolRendererNonModifComponent;
+						cols[num_col].cellRendererParams={onClick:this.onBoolClick.bind(this)};							
+						break;
+
+					/* case TypeColEcran.BooleenNonModif:
+						cols[num_col]=new ColumnBoolNonModif(col.m_nom_col,col.m_lib_col,true,false,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
+						cols[num_col].cellRenderer=BoolRendererNonModifComponent;
+						cols[num_col].cellRendererParams={onClick:this.onBoolClick.bind(this),nom_col_cliquee:col.m_nom_col}; */
 					default:
 						cols[num_col]=new ColDef(col.m_nom_col,col.m_lib_col,true,true,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header,false);
 						break;
@@ -1387,12 +1399,12 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 	}
 	async PersonnaliserCelluleCbo(id_cle_primaire:number,nom_col_cliquee:string)
 	{
-//console.log('Bloc.PersonnaliserCelluleCbo('+id_cle_primaire+','+nom_col_cliquee+')');
+console.log('Bloc.PersonnaliserCelluleCbo('+id_cle_primaire+','+nom_col_cliquee+')');
 		var num_lig:number=this.NumLig(id_cle_primaire);
 		var num_col:number=this.NumeroColonneEcran(nom_col_cliquee);
-//console.log('num_col='+num_col);
+console.log('num_lig='+num_lig+'; num_col='+num_col);
 		var type_col=this.m_colonnes_ecran[num_col].m_type_col;
-//console.log('onRowClickDetail: type_col='+type_col);
+console.log('onRowClickDetail: type_col='+type_col);
 		if(type_col == TypeColEcran.CleEtrangere)
 		{
 			var req:string=this.m_ecran.RequeteCombobox(this.m_nom_bloc,num_lig,nom_col_cliquee);

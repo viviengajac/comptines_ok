@@ -26,23 +26,26 @@ export class SeanceComponent extends EcranMaitreDetail
 		this.m_nom_ecran="Séances";
 		this.m_blocs=new Array(3);
 		var cols=new Array(3);
-		cols[0]=new ColonneEcran("id_seance","id_seance",TypeColEcran.ClePrimaire,true,ModifCol.NonModifiable,false,true,100);
+		cols[0]=new ColonneEcran("id_seance","id_seance",TypeColEcran.ClePrimaire,false,ModifCol.NonModifiable,false,true,100);
 		cols[1]=new ColonneEcran("num_seance","Numéro",TypeColEcran.Entier,true,ModifCol.NonModifiable,true,true,100);
 		cols[2]=new ColonneEcran("nom_seance","Nom",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,350);
 		this.m_blocs[0]=new Bloc(httpClient,this,"seance_recherche","maitre","maitre","G","exec AZseance__recherche","","id_seance",cols);
 		cols=new Array(4);
 		cols[0]=new ColonneEcran("etat","etat",TypeColEcran.Chaine,false,ModifCol.NonModifiable,false,true,100);
-		cols[1]=new ColonneEcran("id_seance","id_seance",TypeColEcran.ClePrimaire,true,ModifCol.NonModifiable,false,true,100);
+		cols[1]=new ColonneEcran("id_seance","id_seance",TypeColEcran.ClePrimaire,false,ModifCol.NonModifiable,false,true,100);
 		cols[2]=new ColonneEcran("nom_seance","Nom",TypeColEcran.Chaine,true,ModifCol.Obligatoire,true,true,100);
 		cols[3]=new ColonneEcran("num_seance","Numéro",TypeColEcran.Entier,true,ModifCol.Modifiable,true,true,100);
 		this.m_blocs[1]=new Bloc(httpClient,this,"seance","seance","Séance","F","exec AZseance__seanceSelect @id@","exec AZseance__seanceMaj @etat@,@id_seance@,@nom_seance@,@num_seance@","id_seance",cols);
-		cols=new Array(5);
+		cols=new Array(8);
 		cols[0]=new ColonneEcran("etat","etat",TypeColEcran.Chaine,false,ModifCol.NonModifiable,false,true,100);
-		cols[1]=new ColonneEcran("id_seance_cmpt","id_seance_cmpt",TypeColEcran.ClePrimaire,true,ModifCol.NonModifiable,false,true,100);
-		cols[2]=new ColonneEcran("id_seance","id_seance",TypeColEcran.Entier,true,ModifCol.NonModifiable,false,true,100);
+		cols[1]=new ColonneEcran("id_seance_cmpt","id_seance_cmpt",TypeColEcran.ClePrimaire,false,ModifCol.NonModifiable,false,true,100);
+		cols[2]=new ColonneEcran("id_seance","id_seance",TypeColEcran.Entier,false,ModifCol.NonModifiable,false,true,100);
 		//cols[3]=new ColonneEcran("num_cmpt","Numéro",TypeColEcran.Entier,true,ModifCol.Obligatoire,true,true,100);
 		cols[3]=new ColonneEcran("id_cmpt","Comptines de la séance",TypeColEcran.CleEtrangere,true,ModifCol.Obligatoire,false,true,300);
 		cols[4]=new ColonneEcran("id_cmptWITH","id_cmptWITH",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,false,300);
+		cols[5]=new ColonneEcran("grands","Grands",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
+		cols[6]=new ColonneEcran("moyens","Moyens",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
+		cols[7]=new ColonneEcran("petits","Petits",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
 		// j'ai commenté la ligne ColonneEcran("num_cmpt", et retiré le paramètre ,@num_cmpt@ de la ligne suivante dans l'exec AZseance__seance_cmptMaj ; num_cmpt ne correspond à aucun champ d'aucune table de la bd, à voir plus tard si besoin
 		// idem pour interv.component.ts
 		this.m_blocs[2]=new Bloc(httpClient,this,"seance_cmpt","comptines","Comptines","G","exec AZseance__seance_cmptSelect @id@","exec AZseance__seance_cmptMaj @etat@,@id_seance_cmpt@,@id_seance@,@id_cmpt@","id_seance_cmpt",cols);
@@ -56,7 +59,9 @@ export class SeanceComponent extends EcranMaitreDetail
 	{
 		this.m_cbo_cmpt=new Cbo(this.httpClient,'cmpt');
 		this.m_cbo_cmpt.GenererListeStd().then((res:string)=>{},(err:string)=>{this.MessageErreur(err);});
-		this.m_cbo_seance=new Cbo(this.httpClient,'seance');
+		/* this.m_cbo_seance=new Cbo(this.httpClient,'seance');
+		this.m_cbo_seance.GenererListeStd().then((res:string)=>{},(err:string)=>{this.MessageErreur(err);}); */
+		this.m_cbo_seance=new Cbo(this.httpClient,'cmpt');
 		this.m_cbo_seance.GenererListeStd().then((res:string)=>{},(err:string)=>{this.MessageErreur(err);});
 		this.InitColDefs();
 		this.Init();
@@ -65,14 +70,25 @@ export class SeanceComponent extends EcranMaitreDetail
 	}
 	override RequeteRecherche():string
 	{
-		var nom_seance=this.formRecherche.get('m_filtre_seance').value;
+		var id_cmpt=this.formRecherche.get('m_filtre_seance').value;
+		console.log("filtre="+this.formRecherche.get('m_filtre_seance').value);
+		if(id_cmpt.length==0||id_cmpt==0)
+			id_cmpt="null";
+		else
+			id_cmpt='"'+id_cmpt+'"';
+		var req_sql_maitre="exec AZseance__recherche @id_prs_login@,@filtre_seance@";
+		var req_sql=req_sql_maitre.replace("@filtre_seance@",id_cmpt);
+		return req_sql;
+
+/* 		var nom_seance=this.formRecherche.get('m_filtre_seance').value;
+		console.log("filtre="+this.formRecherche.get('m_filtre_seance').value);
 		if(nom_seance.length==0||nom_seance==0)
 			nom_seance="null";
 		else
 			nom_seance='"'+nom_seance+'"';
 		var req_sql_maitre="exec AZseance__recherche @id_prs_login@,@nom_seance@";
 		var req_sql=req_sql_maitre.replace("@nom_seance@",nom_seance);
-		return req_sql;
+		return req_sql; */
 	}
 	override onViderCriteres()
 	{

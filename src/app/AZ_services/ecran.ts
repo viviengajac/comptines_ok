@@ -5,6 +5,7 @@ import { BtnVoirDocRendererComponent } from '../AZ_renderers/btn-voir-doc-render
 import { BtnDefDocRendererComponent } from '../AZ_renderers/btn-def-doc-renderer.component';
 import { BtnDependancesRendererComponent } from '../AZ_renderers/btn-dependances-renderer.component';
 import { BoolRendererComponent } from '../AZ_renderers/bool-renderer.component';
+import { BoolRendererNonModifComponent } from '../AZ_renderers/bool-renderer-non-modif.component';
 import { DateEditorComponent } from '../AZ_renderers/date-editor.component';
 import { DatetimeEditorComponent } from '../AZ_renderers/datetime-editor.component';
 import { CboEditorComponent } from '../AZ_renderers/cbo-editor.component';
@@ -141,11 +142,11 @@ export class Ecran // implements OnInit
 	{
 		var promise = new Promise((resolve, reject) =>
 		{
-//console.log('Ecran.LancerUneRecherche');
+console.log('Ecran.LancerUneRecherche');
 //console.log(this.m_blocs[num_bloc]);
 			this.ReinitialiserCompteur();
 			var req_sql=this.RequeteRecherche().replace('@id_prs_login@',''+GlobalConstantes.m_id_prs_login);
-//console.log('apres appel de RequeteRecherche: req_sql='+req_sql);
+console.log('apres appel de RequeteRecherche: req_sql='+req_sql);
 			this.m_blocs[num_bloc].ChargerBloc(req_sql,false, false)
 			.then
 			(res=>

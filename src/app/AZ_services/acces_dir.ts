@@ -139,7 +139,7 @@ export class AccesDir
 				res =>
 				{
 					var str_res:string=""+res;
-//console.log('str_res='+str_res);
+console.log('str_res='+str_res);
 					if(str_res.startsWith('Erreur'))
 					{
 						reject(str_res);
@@ -184,7 +184,7 @@ export class AccesDir
 				fini=true;
 			else
 			{
-//console.log('id_nd='+id_nd+', m_ind='+this.m_ind);
+console.log('AD.DecoderDir; id_nd='+id_nd+', m_ind='+this.m_ind);
 				var nom_nd:string=this.LireNomPropriete();
 				var td:string=this.m_tampon_bd[this.m_ind];
 				var type_nd:TypeNd;

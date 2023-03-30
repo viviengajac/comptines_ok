@@ -60,15 +60,19 @@
 						<input type="date" formControlName="m_date_interv" name="date_interv" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} ">
 					</div>
 					<div class="row">
-						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Séance: </label>
-						<select formControlName="m_id_seance" name="id_seance" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} ">
-							<option *ngFor="let item of m_cbo_seance.m_liste_items; let i = index" [value]="m_cbo_seance.m_liste_items[i].m_id">{{m_cbo_seance.m_liste_items[i].m_lib}}</option>
-						</select>
-					</div>
-					<div class="row">
 						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Lieu: </label>
 						<select formControlName="m_id_lieu" name="id_lieu" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} ">
 							<option *ngFor="let item of m_cbo_lieu.m_liste_items; let i = index" [value]="m_cbo_lieu.m_liste_items[i].m_id">{{m_cbo_lieu.m_liste_items[i].m_lib}}</option>
+						</select>
+					</div>
+					<div class="row">
+						<label class=" {{m_classe_label_onglet_principal}} ">Numéro: </label>
+						<input type="text" formControlName="m_num_interv" name="num_interv" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+					</div>
+					<div class="row">
+						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Séance: </label>
+						<select formControlName="m_id_seance" name="id_seance" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} ">
+							<option *ngFor="let item of m_cbo_seance.m_liste_items; let i = index" [value]="m_cbo_seance.m_liste_items[i].m_id">{{m_cbo_seance.m_liste_items[i].m_lib}}</option>
 						</select>
 					</div>
 					<div class="row">
@@ -76,16 +80,12 @@
 						<input type="text" formControlName="m_comm_interv" name="comm_interv" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
 					</div>
 					<div class="row">
-						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Tarif: </label>
-						<input type="number" step="0.01" formControlName="m_tarif_interv" name="tarif_interv" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
-					</div>
-					<div class="row">
 						<label class=" {{m_classe_label_onglet_principal}} ">Facturé: </label>
 						<input type="checkbox" formControlName="m_fact_interv" name="fact_interv" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
 					</div>
 					<div class="row">
-						<label class=" {{m_classe_label_onglet_principal}} ">Numéro: </label>
-						<input type="text" formControlName="m_num_interv" name="num_interv" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+						<label class=" {{m_classe_label_onglet_principal}} " class="obligatoire">Tarif: </label>
+						<input type="number" step="0.01" formControlName="m_tarif_interv" name="tarif_interv" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
 					</div>
 				</div>
 			</div>

@@ -8,6 +8,7 @@ import { TypeColEcran,ColonneEcran,ModifCol } from '../AZ_common/ecran.model';
 import { ModalService } from '../AZ_modal/modal.service';
 import { ActivatedRoute } from '@angular/router';
 import { Cbo } from '../AZ_common/cbo.model';
+import { Ecran } from '../AZ_services/ecran';
 
 @Component({
   selector: 'app-references',
@@ -18,7 +19,7 @@ export class ReferencesComponent extends EcranGrille
 {
 	public m_nom_tab:string='';
 	//m_cbo_type_lieu:Cbo;
-	//m_cbo_initialisee:boolean=false;
+	//override m_grid_api_initialisee:boolean=false;
 	/*
 	m_cbo_deg: Cbo;
 	m_cbo_type_loge: Cbo;
@@ -29,45 +30,59 @@ export class ReferencesComponent extends EcranGrille
 	constructor(public override httpClient: HttpClient, public override formBuilder:UntypedFormBuilder, public override modalService: ModalService,public override activatedRoute:ActivatedRoute)
 	{
 		super(httpClient,formBuilder,modalService,activatedRoute);
-		this.m_blocs=new Array(4);
-		var cols=new Array(9);
+		this.m_blocs=new Array(5);
+		var cols=new Array(11);
 		cols[0]=new ColonneEcran("etat","etat",TypeColEcran.Chaine,false,ModifCol.NonModifiable,false,true,100);
-		cols[1]=new ColonneEcran("id_cmpt","id_cmpt",TypeColEcran.ClePrimaire,true,ModifCol.NonModifiable,false,true,100);
-		cols[2]=new ColonneEcran("nom_cmpt","Nom",TypeColEcran.Chaine,true,ModifCol.Obligatoire,true,true,300);
-		cols[3]=new ColonneEcran("id_instr","Instrument",TypeColEcran.CleEtrangere,true,ModifCol.Modifiable,false,true,200);
-		cols[4]=new ColonneEcran("id_instrWITH","Instrument",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,false,200);
-		cols[5]=new ColonneEcran("grands","Grands",TypeColEcran.Booleen,true,ModifCol.Modifiable,true,true,80);
-		cols[6]=new ColonneEcran("moyens","Moyens",TypeColEcran.Booleen,true,ModifCol.Modifiable,true,true,80);
-		cols[7]=new ColonneEcran("petits","Petits",TypeColEcran.Booleen,true,ModifCol.Modifiable,true,true,80);
-		cols[8]=new ColonneEcran("dep","Dépendances",TypeColEcran.Dependances,true,ModifCol.Modifiable,false,true,250);
+		cols[1]=new ColonneEcran("id_cmpt","id_cmpt",TypeColEcran.ClePrimaire,false,ModifCol.NonModifiable,false,true,100);
+		cols[2]=new ColonneEcran("nom_cmpt","Titre",TypeColEcran.Chaine,true,ModifCol.Obligatoire,true,true,300);
+		
+		cols[3]=new ColonneEcran("nb","Nb",TypeColEcran.Entier,true,ModifCol.NonModifiable,true,true,80);
+
+		cols[4]=new ColonneEcran("id_instr","Instrument",TypeColEcran.CleEtrangere,true,ModifCol.Modifiable,false,true,120);
+		cols[5]=new ColonneEcran("id_instrWITH","Instrument",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,false,120);
+
+		cols[6]=new ColonneEcran("id_theme","Thème",TypeColEcran.CleEtrangere,true,ModifCol.Modifiable,false,true,120);
+		cols[7]=new ColonneEcran("id_themeWITH","Thème",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,false,120);
+
+		cols[8]=new ColonneEcran("grands","Grands",TypeColEcran.Booleen,true,ModifCol.Modifiable,true,true,80);
+		cols[9]=new ColonneEcran("moyens","Moyens",TypeColEcran.Booleen,true,ModifCol.Modifiable,true,true,80);
+		cols[10]=new ColonneEcran("petits","Petits",TypeColEcran.Booleen,true,ModifCol.Modifiable,true,true,80);
+		//cols[11]=new ColonneEcran("dep","Dépendances",TypeColEcran.Dependances,true,ModifCol.Modifiable,false,true,250);
 		//cols[9]=new ColonneEcran("doc_db","Def BLOB",TypeColEcran.DefDocDb,true,ModifCol.Modifiable,false,true,250);
 		//cols[10]=new ColonneEcran("doc_db","Voir BLOB",TypeColEcran.VoirDocDb,true,ModifCol.Modifiable,false,true,250);
-		this.m_blocs[0]=new Bloc(this.httpClient,this,"cmpt","cmpt","Comptines","G","exec AZcmptSelect","exec AZcmptMaj @etat@,@id_cmpt@,@nom_cmpt@,@id_instr@,@grands@,@moyens@,@petits@","id_cmpt",cols);
-		cols=new Array(4);
+		this.m_blocs[0]=new Bloc(this.httpClient,this,"cmpt","cmpt","Comptines","G","exec AZcmptSelect","exec AZcmptMaj @etat@,@id_cmpt@,@nom_cmpt@,@id_instr@,@id_theme@,@grands@,@moyens@,@petits@","id_cmpt",cols);
+		cols=new Array(3);
 		cols[0]=new ColonneEcran("etat","etat",TypeColEcran.Chaine,false,ModifCol.NonModifiable,false,false,100);
-		cols[1]=new ColonneEcran("id_instr","id_instr",TypeColEcran.ClePrimaire,true,ModifCol.NonModifiable,false,true,80);
+		cols[1]=new ColonneEcran("id_instr","id_instr",TypeColEcran.ClePrimaire,false,ModifCol.NonModifiable,false,true,80);
 		cols[2]=new ColonneEcran("nom_instr","Nom",TypeColEcran.Chaine,true,ModifCol.Obligatoire,true,true,200);
-		cols[3]=new ColonneEcran("dep","Dépendances",TypeColEcran.Dependances,true,ModifCol.Modifiable,false,true,250);
+		//cols[3]=new ColonneEcran("dep","Dépendances",TypeColEcran.Dependances,true,ModifCol.Modifiable,false,true,250);
 		this.m_blocs[1]=new Bloc(this.httpClient,this,"instr","instr","Instruments","G","exec AZinstrSelect","exec AZinstrMaj @etat@,@id_instr@,@nom_instr@","id_instr",cols);
 		cols=new Array(11);
 		cols[0]=new ColonneEcran("etat","etat",TypeColEcran.Chaine,false,ModifCol.NonModifiable,false,true,100);
-		cols[1]=new ColonneEcran("id_lieu","id_lieu",TypeColEcran.ClePrimaire,true,ModifCol.NonModifiable,false,true,100);
-		cols[2]=new ColonneEcran("nom_lieu","Nom",TypeColEcran.Chaine,true,ModifCol.Obligatoire,true,true,300);
-		cols[3]=new ColonneEcran("ad_lieu","Adresse",TypeColEcran.Chaine,true,ModifCol.Modifiable,true,true,200);
-		cols[4]=new ColonneEcran("id_ville","Ville",TypeColEcran.CleEtrangere,true,ModifCol.Modifiable,false,true,200);
-		cols[5]=new ColonneEcran("id_villeWITH","id_villeWITH",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,false,200);
-		cols[6]=new ColonneEcran("lat_lieu","Latitude",TypeColEcran.Flottant,true,ModifCol.Obligatoire,false,true,120);
-		cols[7]=new ColonneEcran("lon_lieu","Longitude",TypeColEcran.Flottant,true,ModifCol.Obligatoire,false,true,120);
-		cols[8]=new ColonneEcran("id_type_lieu","Type de lieu",TypeColEcran.CleEtrangere,true,ModifCol.Obligatoire,false,true,120);
-		cols[9]=new ColonneEcran("id_type_lieuWITH","id_type_lieuWITH",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,false,200);
-		cols[10]=new ColonneEcran("dep","Dépendances",TypeColEcran.Dependances,true,ModifCol.Modifiable,false,true,250);
-		this.m_blocs[2]=new Bloc(this.httpClient,this,"lieu","lieu","Lieux","G","exec AZlieuSelect","exec AZlieuMaj @etat@,@id_lieu@,@nom_lieu@,@ad_lieu@,@id_ville@,@lat_lieu@,@lon_lieu@,@id_type_lieu@","id_lieu",cols);
-		cols=new Array(4);
+		cols[1]=new ColonneEcran("id_lieu","id_lieu",TypeColEcran.ClePrimaire,false,ModifCol.NonModifiable,false,true,100);		
+		cols[2]=new ColonneEcran("sigle_lieu","Sigle",TypeColEcran.Chaine,true,ModifCol.Obligatoire,true,true,120);
+		cols[3]=new ColonneEcran("nom_lieu","Nom",TypeColEcran.Chaine,true,ModifCol.Obligatoire,true,true,300);
+		cols[4]=new ColonneEcran("ad_lieu","Adresse",TypeColEcran.Chaine,true,ModifCol.Modifiable,true,true,200);
+		cols[5]=new ColonneEcran("id_ville","Ville",TypeColEcran.CleEtrangere,true,ModifCol.Modifiable,false,true,200);
+		cols[6]=new ColonneEcran("id_villeWITH","id_villeWITH",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,false,200);
+		cols[7]=new ColonneEcran("lat_lieu","Latitude",TypeColEcran.Flottant,true,ModifCol.Obligatoire,false,true,120);
+		cols[8]=new ColonneEcran("lon_lieu","Longitude",TypeColEcran.Flottant,true,ModifCol.Obligatoire,false,true,120);
+		cols[9]=new ColonneEcran("id_type_lieu","Type de lieu",TypeColEcran.CleEtrangere,true,ModifCol.Obligatoire,false,true,120);
+		cols[10]=new ColonneEcran("id_type_lieuWITH","id_type_lieuWITH",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,false,200);
+		//cols[10]=new ColonneEcran("dep","Dépendances",TypeColEcran.Dependances,true,ModifCol.Modifiable,false,true,250);
+		this.m_blocs[2]=new Bloc(this.httpClient,this,"lieu","lieu","Lieux","G","exec AZlieuSelect","exec AZlieuMaj @etat@,@id_lieu@,@sigle_lieu@,@nom_lieu@,@ad_lieu@,@id_ville@,@lat_lieu@,@lon_lieu@,@id_type_lieu@","id_lieu",cols);
+		cols=new Array(3);
 		cols[0]=new ColonneEcran("etat","etat",TypeColEcran.Chaine,false,ModifCol.NonModifiable,false,true,100);
-		cols[1]=new ColonneEcran("id_ville","id_ville",TypeColEcran.ClePrimaire,true,ModifCol.NonModifiable,false,true,80);
+		cols[1]=new ColonneEcran("id_ville","id_ville",TypeColEcran.ClePrimaire,false,ModifCol.NonModifiable,false,true,80);
 		cols[2]=new ColonneEcran("nom_ville","Nom",TypeColEcran.Chaine,true,ModifCol.Obligatoire,true,true,200);
-		cols[3]=new ColonneEcran("dep","Dépendances",TypeColEcran.Dependances,true,ModifCol.Modifiable,false,true,250);
+		//cols[3]=new ColonneEcran("dep","Dépendances",TypeColEcran.Dependances,true,ModifCol.Modifiable,false,true,250);
 		this.m_blocs[3]=new Bloc(this.httpClient,this,"ville","ville","Villes","G","exec AZvilleSelect","exec AZvilleMaj @etat@,@id_ville@,@nom_ville@","id_ville",cols);
+		cols=new Array(3);
+		cols[0]=new ColonneEcran("etat","etat",TypeColEcran.Chaine,false,ModifCol.NonModifiable,false,true,100);
+		cols[1]=new ColonneEcran("id_theme","id_theme",TypeColEcran.ClePrimaire,false,ModifCol.NonModifiable,false,true,80);
+		cols[2]=new ColonneEcran("nom_theme","Nom",TypeColEcran.Chaine,true,ModifCol.Obligatoire,true,true,200);
+		//cols[3]=new ColonneEcran("dep","Dépendances",TypeColEcran.Dependances,true,ModifCol.Modifiable,false,true,250);
+		this.m_blocs[4]=new Bloc(this.httpClient,this,"theme","theme","themes","G","exec AZthemeSelect","exec AZthemeMaj @etat@,@id_theme@,@nom_theme@","id_theme",cols);
 		this.m_classe_boutons=new Array(this.m_blocs.length);
 //console.log('references: fin du constructeur');
 	}

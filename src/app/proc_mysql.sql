@@ -37,7 +37,7 @@ end
 
 
 
---AZinterv_intervMaj
+--AZinterv_intervMaj_OLD
 begin
 	if (p_etat ='U') then
         if (p_id_seance = 0) then
@@ -50,7 +50,22 @@ begin
 		delete from interv where id_interv=p_id_interv;
 	end if;
 end
---
+--AZinterv_intervMaj -- en cours
+begin
+	declare p_num_auto int;
+	if (p_etat ='U') then
+        if (p_id_seance = 0) then
+            set p_id_seance = NULL;
+        end if;
+		update interv set date_interv=p_date_interv,id_seance=p_id_seance,id_lieu=p_id_lieu,comm_interv=p_comm_interv,tarif_interv=p_tarif_interv,fact_interv=p_fact_interv,num_interv=p_num_interv where id_interv=p_id_interv;
+	elseif (p_etat = 'I') then
+		SELECT MAX(num_interv)+1 into p_num_auto FROM interv WHERE id_lieu = p_id_lieu;
+		insert into interv (date_interv,id_seance,id_lieu,comm_interv,tarif_interv,fact_interv,num_interv) values (p_date_interv,p_id_seance,p_id_lieu,p_comm_interv,p_tarif_interv,p_fact_interv,p_num_auto);
+	elseif (p_etat = 'D') then
+		delete from interv where id_interv=p_id_interv;
+	end if;
+end
+
 --AZseance__seance_cmptSelect
 begin
 	select '' as etat,C.id_cmpt,C.nom_cmpt as id_cmptWITH,C.id_instr,I.nom_instr,S.id_cmpt,S.id_seance_cmpt,S.id_seance
@@ -166,6 +181,8 @@ begin
 		select id_dbdict,nom_dbdict from dbdictm1 order by 2;
     elseif (p_nom_tab='ville') then
 		select id_ville,nom_ville from ville order by 2;
+	elseif (p_nom_tab='theme') then
+		select id_theme,nom_theme from theme order by 2;
 	elseif (p_nom_tab='dbdicttype') then
 		select id_dbdicttype,lib_dbdicttype from dbdicttype order by 2;
 	end if;
@@ -279,8 +296,79 @@ end
 
 --AZcmptSelect
 begin
+	SELECT '' as etat,c.nom_cmpt,c.id_instr,c.id_cmpt,i.nom_instr as id_instrWITH,c.grands,c.moyens,c.petits,(SELECT count(*) FROM `seance_cmpt` as sc WHERE sc.id_cmpt=c.id_cmpt) as nb
+    FROM `cmpt` as c
+    LEFT JOIN `instr` as i ON c.id_instr=i.id_instr
+    ORDER BY nom_cmpt;
+ end
+
+ --
+begin
+	SELECT '' as etat,c.id_cmpt,c.nom_cmpt,c.id_instr,i.nom_instr as id_instrWITH,c.id_theme,t.nom_theme as id_themeWITH,c.grands,c.moyens,c.petits,(SELECT count(*) FROM `seance_cmpt` as sc WHERE sc.id_cmpt=c.id_cmpt) as nb
+    FROM `cmpt` as c
+    LEFT JOIN `instr` as i ON c.id_instr=i.id_instr
+	LEFT JOIN `theme` as t ON c.id_theme=t.id_theme
+    ORDER BY nom_cmpt;
+ end
+
+
+
+ --AZcmptSelect_OLD
+ begin
 	SELECT '' as etat,c.nom_cmpt,c.id_instr,c.id_cmpt,i.nom_instr as id_instrWITH,c.grands,c.moyens,c.petits
     FROM `cmpt` as c
     LEFT JOIN `instr` as i ON c.id_instr=i.id_instr
     ORDER BY nom_cmpt;
  end
+ --AZthemeSelect
+ DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AZthemeSelect`()
+begin
+	SELECT '' as etat,id_theme,nom_theme
+    FROM `theme`
+    ORDER BY id_theme;
+ end$$
+DELIMITER ;
+--AZthemeMaj
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AZthemeMaj`(IN `p_etat` CHAR, IN `p_id_theme` INT, IN `p_nom_theme` VARCHAR(30))
+begin
+	if (p_etat ='U') then
+		update theme set nom_theme=p_nom_theme where id_theme=p_id_theme;
+	elseif (p_etat = 'I') then
+		insert into theme (nom_theme) values (p_nom_theme);
+	elseif (p_etat = 'D') then
+		delete from theme where id_theme=p_id_theme;
+	end if;
+end$$
+DELIMITER ;
+--AZthemeMaj
+begin
+    if(p_id_instr = 0) then
+    	set p_id_instr = NULL;
+    end if;
+	if (p_etat ='U') then
+	update cmpt set nom_cmpt=p_nom_cmpt,id_instr=p_id_instr,id_theme=p_id_theme,grands=p_grands,moyens=p_moyens,petits=p_petits where id_cmpt=p_id_cmpt;
+	elseif (p_etat = 'I') then
+		insert into cmpt (nom_cmpt,id_instr,id_theme,grands,moyens,petits) values (p_nom_cmpt,p_id_instr,p_id_theme,p_grands,p_moyens,p_petits);
+	elseif (p_etat = 'D') then
+		delete from cmpt where id_cmpt=p_id_cmpt;
+	end if;
+end
+
+--AZseance__recherche
+begin
+	select S.id_seance,S.num_seance,S.nom_seance
+	from seance S
+		where 1=1
+			and ((exists (SELECT 1 FROM seance_cmpt as sc WHERE sc.id_seance = S.id_seance and sc.id_cmpt = p_filtre_seance)) or p_filtre_seance is null)
+    	order by num_seance asc;
+end
+--AZseance__recherche_OLD
+begin
+	select S.id_seance,S.num_seance,S.nom_seance
+	from seance S
+		where 1=1
+			and (S.id_seance like p_id_seance or p_id_seance is null)
+    	order by num_seance asc;
+end

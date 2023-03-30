@@ -970,7 +970,10 @@
   .ag-theme-alpine-pm-m .ag-rtl .ag-cell {
     border-left: solid transparent; }
   .ag-theme-alpine-pm-m .ag-ltr .ag-cell {
-    border-right-width: 1px; }
+    border-right-width: 1px;
+    /*vivien*/
+    justify-content: center;
+  }
   .ag-theme-alpine-pm-m .ag-rtl .ag-cell {
     border-left-width: 1px; }
   .ag-theme-alpine-pm-m .ag-cell.ag-cell-first-right-pinned:not(.ag-cell-range-left):not(.ag-cell-range-single-cell) {

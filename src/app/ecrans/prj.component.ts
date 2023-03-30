@@ -32,11 +32,11 @@ export class PrjComponent extends EcranFormulaire
 		this.formOngletPrincipal=this.formBuilder.group({m_nom_prj:'',m_rep_fic:''});
 //		this.m_tab_col_nom_fic=["nom_prs","prenom_prs"];
 		this.m_classe_boutons=new Array(this.m_blocs.length);
-//console.log('fin de constructeur de Prjcomponent');
+console.log('fin de constructeur de Prjcomponent');
 	}
 	ngOnInit(): void
 	{
-//console.log('debut de NgInit de Prjcomponent');
+console.log('debut de NgInit de Prjcomponent');
 		this.Init();
 		this.onRecherche();
 //console.log('fin de NgInit de Prjcomponent');
@@ -51,13 +51,16 @@ export class PrjComponent extends EcranFormulaire
 	onRecherche()
 	{
 		var rep:string=GlobalConstantes.m_rep_fic;
-		if(rep.length==0)
+		console.log("m_rep_fic="+GlobalConstantes.m_rep_fic);
+		super.onBtnRecherche();
+/* 		if(rep.length==0)
 		{
 			super.onBtnRecherche();
+			console.log("rep.length=0");
 		}
 		else
 		{
 			this.formOngletPrincipal.get('m_rep_fic').setValue(rep);
-		}
+		} */
 	}
 }

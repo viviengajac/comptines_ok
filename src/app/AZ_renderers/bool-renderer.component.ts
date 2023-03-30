@@ -6,23 +6,24 @@ import { GlobalConstantes } from '../AZ_common/global_cst';
 @Component({
   selector: 'app-bool-renderer',
   template: `
-<input type="checkbox" [ngModel]="bool_val" (change)="onCliquer($event)">
+<input type="checkbox" #inputBox style="{{modifiable}}" [ngModel]="bool_val" (change)="onCliquer($event)">
     `
 })
-//  <input type="checkbox" [ngModel]="bool_val" (change)="onCliquer($event)">
-
 export class BoolRendererComponent implements ICellRendererAngularComp
 {
 	params:any=null;
 	public bool_val:boolean=false;
+	public modifiable:string='';
 	m_classe_fonte:string='';
 
 	agInit(parametres:any): void
 	{
 //console.log('agInit de BoolRendererComponent');
-//console.log(parametres);
+//console.log(parametres.modifiable);
 		this.params = parametres;
 		this.bool_val=this.params.value;
+		if (parametres.modifiable == false)
+			this.modifiable='pointer-events: none';
 /*
 console.log('agInit de boolRenderer: value=' + parametres.value+', bool_val='+this.bool_val);
 if(this.bool_val)

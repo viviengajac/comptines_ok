@@ -11,12 +11,15 @@ export class DatetimeEditorComponent implements ICellEditorAngularComp,AfterView
 	public ma_date:string='';
 	public params:any=null;
 	public m_classe_fonte:string='';
+	public modifiable:string='';
 @ViewChild('input', { read: ViewContainerRef }) public input: any;
 	agInit(params: any): void
 	{
 //console.log('agInit de btnRenderer: params.onclick='+parametres.onClick+', params.label='+parametres.label);
 		this.params = params;
 		this.m_classe_fonte=params.colDef.cellClass;
+		if (params.modifiable == false)
+			this.modifiable='pointer-events: none';
 //console.log('DataEditorComponent.agInit: params='+params+', params.data='+params.data+', params.data.type='+params.data.type+', params.value='+params.value);
 		/*
 		if(params.value.endsWith(":00")) {

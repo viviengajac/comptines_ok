@@ -1,55 +1,54 @@
 #wrap{
-width: 100%; 
-height: 25px; 
-margin: 0;
-z-index: 99; 
-position: relative;
-background-color: #111111;
+    width: 100%; 
+    height: 25px; 
+    margin: 0;
+    z-index: 99; 
+    position: relative;
+    background-color: #111111;
 }
-
 .navbar{
-height: 22px;
-padding: 0px;
-margin: 0;
-position: absolute; 
+    height: 22px;
+    padding: 0px;
+    margin: 0;
+    position: absolute;
 }
 .navbar > * {
     z-index: 99;
 }
 .navbar li {
-height: auto;
-width: auto;
-float: left;
-text-align: center;
-list-style: none;
-background-color: #444444;
-width: 150px;
+    height: auto;
+    width: auto;
+    float: left;
+    text-align: center;
+    list-style: none;
+    background-color: #444444;
+    width: 150px;
 }
 /*width: 135.8px;*/
 /*font: normal bold 13px/1em Arial, Verdana, Helvetica;  */
 .navbar a{							
 /*border-left: 5px solid #ccc9c9;*/
-text-decoration: none;
-text-align: center;
-color: white; 
-display: block;
+    text-decoration: none;
+    text-align: center;
+    color: white; 
+    display: block;
 }
 .navbar label{
 /*border-left: 5px solid #ccc9c9;*/
-text-decoration: none; 
-color: white; 
-display: block;
-background-color: #111111;
+    text-decoration: none; 
+    color: white; 
+    display: block;
+    background-color: #111111;
 }
 /*padding: 10px 0;	*/
 .navbar li:hover, a:hover {
-background-color: #444444;
+    background-color: #444444;
 }
-.navbar li ul{
-display: none;
-height: auto;
-margin: 0;
-padding: 2px;
+.navbar li ul {
+    display: none;
+    height: auto;
+    margin: 0;
+    padding: 2px;
 }
 .navbar li:hover ul{
 display: block;
@@ -134,4 +133,7 @@ text-align: center;
 font-size:x_large;
 color: #666666;
 padding: 0px;
+}
+.sep {
+    height: 10px !important;
 }

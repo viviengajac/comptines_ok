@@ -30,6 +30,7 @@ export class EcranGrille extends Ecran
 	ngOnInit(): void
 	{
 //console.log('References: début de ngOnInit');
+//console.log("AAAV="+this.m_blocs[0].InitColDefs.length);
 		/*
 		if(!this.m_cbo_initialisee)
 		{
@@ -76,6 +77,8 @@ export class EcranGrille extends Ecran
 			this.m_blocs[i].InitGridApi(params.api,params.columnApi);
 		}
 		this.m_grid_api_initialisee=true;
+//forcer recherche au chargement du composant Références
+		//this.onBtnRecherche();
 		if(GlobalConstantes.m_id_appele>0)
 			this.onBtnRecherche();
 	}
@@ -96,7 +99,16 @@ console.log('EcranGrille.AppelerHref: m_idx_detail='+this.m_idx_detail);
 	*/
 	async ChangementDeGrille(nom_tab:string)
 	{
-//console.log('EcranGrille.ChangementDeGrille: nom_tab='+nom_tab);
+/* 		var chargement: boolean = true;
+console.log('EcranGrille.ChangementDeGrille: nom_tab='+nom_tab);
+console.log(chargement);
+//forcer recherche au changement d'un écran du composant Références, lors d'un changement de table de référence
+		while (!chargement) {
+			await this.delay(500);
+		}
+		chargement = false;
+		console.log(chargement);
+		this.onBtnRecherche(); */
 		var i:number;
 		for(i=0;i<this.m_blocs.length;i++)
 		{
@@ -337,23 +349,36 @@ console.log('EcranGrille.AppelerHref: m_idx_detail='+this.m_idx_detail);
 	}
 	async onCreer()
 	{
-		var id_cle_primaire=this.m_blocs[this.m_num_bloc_actif].CreerUneLigne();
+		console.log("Vivien");
+		console.log(this.m_grid_api_initialisee);
+		if (this.m_grid_api_initialisee == false) {
+			this.MessageErreur("Non");
+		}
+		else {
+//console.log("VVVV"+this.m_blocs[this.m_num_bloc_actif].m_ecran);
+			var id_cle_primaire=this.m_blocs[this.m_num_bloc_actif].CreerUneLigne();
 //console.log('EcranGilleService.onCreer: id_cle_primaire='+id_cle_primaire);
-		var pour_excel:boolean=false;
-		this.AfficherBloc(false,pour_excel);
+			var pour_excel:boolean=false;
+			this.AfficherBloc(false,pour_excel);
+		}
 	}
 	async onSupprimer()
 	{
 		var faire:boolean=true;
 //console.log("nom_onglet_actif="+this.m_num_onglet_actif);
 		const selectedRow = this.gridApi.getSelectedRows()[0];
-		var nom_champ=this.m_blocs[this.m_num_bloc_actif].m_nom_cle_primaire;
-		var id=selectedRow[nom_champ];
-//console.log("nom_champ="+nom_champ);
-		this.m_blocs[this.m_num_bloc_actif].SupprimerUneLigne(id);
-//console.log('OnSupprimer: id_a_supprimer='+id_detail);
-		var pour_excel:boolean=false;
-		this.AfficherBloc(false,pour_excel);
+		if (selectedRow == undefined) {
+			this.MessageErreur("Il faut d'abord sélectionner une ligne à supprimer.");
+		}
+		else {
+			var nom_champ=this.m_blocs[this.m_num_bloc_actif].m_nom_cle_primaire;
+			var id=selectedRow[nom_champ];
+	//console.log("nom_champ="+nom_champ);
+			this.m_blocs[this.m_num_bloc_actif].SupprimerUneLigne(id);
+	//console.log('OnSupprimer: id_a_supprimer='+id_detail);
+			var pour_excel:boolean=false;
+			this.AfficherBloc(false,pour_excel);
+		}
 	}
 	async onSauver()
 	{
@@ -455,7 +480,11 @@ console.log('EcranGrille.AppelerHref: m_idx_detail='+this.m_idx_detail);
 //console.log(selectedRow);
 		var id=selectedRow[this.m_blocs[this.m_num_bloc_actif].m_nom_cle_primaire];
 //console.log('id='+id);
-//console.log('nom_col_cliquee='+this.m_nom_col_cliquee);
+console.log('EG.onRowClick nom_col_cliquee='+this.m_nom_col_cliquee);
+// modif pour éviter une erreur quand on clique dans un cbo avant d'avoir cliqué sur une ligne
+/* 		if(this.m_nom_col_cliquee=='')
+			this.m_blocs[this.m_num_bloc_actif].PersonnaliserCelluleCbo(id,this.m_blocs[this.m_num_bloc_actif].m_nom_cle_primaire);
+		else  */
 		if(this.m_nom_col_cliquee!=undefined)
 			this.m_blocs[this.m_num_bloc_actif].PersonnaliserCelluleCbo(id,this.m_nom_col_cliquee);
 //						this.m_col[num_col]=nouvelle_col;
