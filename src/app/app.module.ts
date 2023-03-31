@@ -11,7 +11,6 @@ import { BtnVoirDocRendererComponent } from './AZ_renderers/btn-voir-doc-rendere
 import { BtnDefDocRendererComponent } from './AZ_renderers/btn-def-doc-renderer.component';
 import { BtnDependancesRendererComponent } from './AZ_renderers/btn-dependances-renderer.component';
 import { BoolRendererComponent } from './AZ_renderers/bool-renderer.component';
-import { BoolRendererNonModifComponent } from './AZ_renderers/bool-renderer-non-modif.component';
 import { DateEditorComponent } from './AZ_renderers/date-editor.component';
 import { DatetimeEditorComponent } from './AZ_renderers/datetime-editor.component';
 import { CboEditorComponent } from './AZ_renderers/cbo-editor.component';
@@ -43,7 +42,6 @@ import { AgChartsAngularModule } from 'ag-charts-angular';
     BtnDefDocRendererComponent,
     BtnDependancesRendererComponent,
     BoolRendererComponent,
-    BoolRendererNonModifComponent,
     DateEditorComponent,
     DatetimeEditorComponent,
 	  CboEditorComponent,

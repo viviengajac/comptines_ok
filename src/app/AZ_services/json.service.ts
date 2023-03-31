@@ -506,7 +506,6 @@ export class AccesJSon
 				val_format=val_col;
 				break;
 			case TypeColEcran.Booleen:
-			case TypeColEcran.BooleenNonModif:
 				val_format=val_col;
 				break;
 			case TypeColEcran.VoirDocDb:

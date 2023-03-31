@@ -43,9 +43,9 @@ export class SeanceComponent extends EcranMaitreDetail
 		//cols[3]=new ColonneEcran("num_cmpt","Numéro",TypeColEcran.Entier,true,ModifCol.Obligatoire,true,true,100);
 		cols[3]=new ColonneEcran("id_cmpt","Comptines de la séance",TypeColEcran.CleEtrangere,true,ModifCol.Obligatoire,false,true,400);
 		cols[4]=new ColonneEcran("id_cmptWITH","id_cmptWITH",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,false,300);
-		cols[5]=new ColonneEcran("grands","Grands",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
-		cols[6]=new ColonneEcran("moyens","Moyens",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
-		cols[7]=new ColonneEcran("petits","Petits",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
+		cols[5]=new ColonneEcran("grands","Grands",TypeColEcran.Booleen,true,ModifCol.NonModifiable,true,true,80);
+		cols[6]=new ColonneEcran("moyens","Moyens",TypeColEcran.Booleen,true,ModifCol.NonModifiable,true,true,80);
+		cols[7]=new ColonneEcran("petits","Petits",TypeColEcran.Booleen,true,ModifCol.NonModifiable,true,true,80);
 		// j'ai commenté la ligne ColonneEcran("num_cmpt", et retiré le paramètre ,@num_cmpt@ de la ligne suivante dans l'exec AZseance__seance_cmptMaj ; num_cmpt ne correspond à aucun champ d'aucune table de la bd, à voir plus tard si besoin
 		// idem pour interv.component.ts
 		this.m_blocs[2]=new Bloc(httpClient,this,"seance_cmpt","comptines","Comptines","G","exec AZseance__seance_cmptSelect @id@","exec AZseance__seance_cmptMaj @etat@,@id_seance_cmpt@,@id_seance@,@id_cmpt@","id_seance_cmpt",cols);

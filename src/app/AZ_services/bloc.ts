@@ -2,7 +2,7 @@ import { AccesBdService } from '../AZ_services/acces_bd';
 import { AccesJSon } from '../AZ_services/json.service';
 import { HttpClient } from '@angular/common/http';
 import { GlobalConstantes } from '../AZ_common/global_cst';
-import { TypeColEcran,TypeColSql,ColDef, ColonneEcran,ColonneSql,Ligne,Cellule,ColumnCbo,ColumnDate,ColumnDateHeure,ColumnVoirDoc,ColumnDefDoc,ColumnDependances,ColumnBool,ColumnSelect,ModifCol, ColumnBoolNonModif } from '../AZ_common/ecran.model';
+import { TypeColEcran,TypeColSql,ColDef, ColonneEcran,ColonneSql,Ligne,Cellule,ColumnCbo,ColumnDate,ColumnDateHeure,ColumnVoirDoc,ColumnDefDoc,ColumnDependances,ColumnBool,ColumnSelect,ModifCol } from '../AZ_common/ecran.model';
 import { Cbo,ItemCbo,ParamsCbo } from '../AZ_common/cbo.model';
 import { Ecran } from './ecran';
 import { MenuComponent } from '../menu/menu.component';
@@ -12,7 +12,6 @@ import { BtnVoirDocRendererComponent } from '../AZ_renderers/btn-voir-doc-render
 import { BtnDefDocRendererComponent } from '../AZ_renderers/btn-def-doc-renderer.component';
 import { BtnDependancesRendererComponent } from '../AZ_renderers/btn-dependances-renderer.component';
 import { BoolRendererComponent } from '../AZ_renderers/bool-renderer.component';
-import { BoolRendererNonModifComponent } from '../AZ_renderers/bool-renderer-non-modif.component';
 import { DateEditorComponent } from '../AZ_renderers/date-editor.component';
 import { DatetimeEditorComponent } from '../AZ_renderers/datetime-editor.component';
 import { CboEditorComponent } from '../AZ_renderers/cbo-editor.component';
@@ -296,16 +295,6 @@ export class Bloc
 						cols[num_col].cellRenderer=BoolRendererComponent;
 						cols[num_col].cellRendererParams={onClick:this.onBoolClick.bind(this),nom_col_cliquee:col.m_nom_col,modifiable:col.EstModifiable()};
 						break;
-					case TypeColEcran.BooleenNonModif:
-						cols[num_col]=new ColumnBoolNonModif(col.m_nom_col,col.m_lib_col,true,false,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
-						cols[num_col].cellRenderer=BoolRendererNonModifComponent;
-						cols[num_col].cellRendererParams={onClick:this.onBoolClick.bind(this)};							
-						break;
-
-					/* case TypeColEcran.BooleenNonModif:
-						cols[num_col]=new ColumnBoolNonModif(col.m_nom_col,col.m_lib_col,true,false,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
-						cols[num_col].cellRenderer=BoolRendererNonModifComponent;
-						cols[num_col].cellRendererParams={onClick:this.onBoolClick.bind(this),nom_col_cliquee:col.m_nom_col}; */
 					default:
 						cols[num_col]=new ColDef(col.m_nom_col,col.m_lib_col,true,true,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header,false);
 						break;

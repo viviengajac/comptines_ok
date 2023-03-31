@@ -46,7 +46,6 @@ export class IntervComponent extends EcranMaitreDetail
 		cols[3]=new ColonneEcran("num_interv","N°",TypeColEcran.Chaine,true,ModifCol.NonModifiable,false,true,60);
 		cols[4]=new ColonneEcran("nom_seance","Séance",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,180);
 		cols[5]=new ColonneEcran("comm_interv","Commentaire",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,450);
-//		cols[6]=new ColonneEcran("fact_interv","Facture",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
 		cols[6]=new ColonneEcran("fact_interv","Facture",TypeColEcran.Booleen,true,ModifCol.NonModifiable,true,true,80);
 		cols[7]=new ColonneEcran("tarif_interv","Tarif",TypeColEcran.Flottant,true,ModifCol.NonModifiable,true,true,100);
 		this.m_blocs[0]=new Bloc(httpClient,this,"interv__recherche","maitre","Maitre","G","exec AZinterv__recherche","", "id_interv",cols);
@@ -69,9 +68,9 @@ export class IntervComponent extends EcranMaitreDetail
 		cols[2]=new ColonneEcran("id_seance","id_seance",TypeColEcran.Entier,false,ModifCol.NonModifiable,false,true,100);
 		cols[3]=new ColonneEcran("id_intervWITH","Intervention Date/Lieu",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,true,100);
 		cols[4]=new ColonneEcran("nom_cmpt","Comptines de la séance",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,400);
-		cols[5]=new ColonneEcran("grands","Grands",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
-		cols[6]=new ColonneEcran("moyens","Moyens",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
-		cols[7]=new ColonneEcran("petits","Petits",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
+		cols[5]=new ColonneEcran("grands","Grands",TypeColEcran.Booleen,true,ModifCol.NonModifiable,true,true,80);
+		cols[6]=new ColonneEcran("moyens","Moyens",TypeColEcran.Booleen,true,ModifCol.NonModifiable,true,true,80);
+		cols[7]=new ColonneEcran("petits","Petits",TypeColEcran.Booleen,true,ModifCol.NonModifiable,true,true,80);
 		//cols[5]=new ColonneEcran("num_cmpt","Numéro",TypeColEcran.Entier,true,ModifCol.Obligatoire,true,true,100);
 		this.m_blocs[2]=new Bloc(httpClient,this,"seance_cmpt","seance_cmpt","Contenu Séance","G","exec AZinterv__seance_cmptSelect @id@","","id_seance_cmpt",cols);
 		cols=new Array(9);
@@ -81,9 +80,9 @@ export class IntervComponent extends EcranMaitreDetail
 		cols[3]=new ColonneEcran("id_intervWITH","Intervention Date/Lieu",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,true,100);
 		cols[4]=new ColonneEcran("id_cmpt","Extra Comptines",TypeColEcran.CleEtrangere,true,ModifCol.Modifiable,false,true,400);
 		cols[5]=new ColonneEcran("id_cmptWITH","Extra Comptines",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,false,400);
-		cols[6]=new ColonneEcran("grands","Grands",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
-		cols[7]=new ColonneEcran("moyens","Moyens",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
-		cols[8]=new ColonneEcran("petits","Petits",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
+		cols[6]=new ColonneEcran("grands","Grands",TypeColEcran.Booleen,true,ModifCol.NonModifiable,true,true,80);
+		cols[7]=new ColonneEcran("moyens","Moyens",TypeColEcran.Booleen,true,ModifCol.NonModifiable,true,true,80);
+		cols[8]=new ColonneEcran("petits","Petits",TypeColEcran.Booleen,true,ModifCol.NonModifiable,true,true,80);
 		//cols[5]=new ColonneEcran("num_cmpt","Numéro",TypeColEcran.Entier,true,ModifCol.Obligatoire,true,true,100);
 		this.m_blocs[3]=new Bloc(httpClient,this,"interv_cmpt","interv_cmpt","Extra Comptines","G","exec AZinterv__interv_cmptSelect @id@","exec AZinterv__interv_cmptMaj @etat@,@id_interv_cmpt@,@id_interv@,@id_cmpt@","id_interv_cmpt",cols);
 		this.formRecherche=this.formBuilder.group({m_filtre_date_interv_mini: '', m_filtre_date_interv_maxi: '', m_filtre_num_interv: '',m_filtre_seance:0,m_filtre_lieu:0});
