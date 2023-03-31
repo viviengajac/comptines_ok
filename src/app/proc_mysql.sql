@@ -102,9 +102,17 @@ begin
 	end if;
 end$$
 DELIMITER ;
---
-
---AZlieuMaj  // pour éviter les erreurs quand lat_lieu et/ou lon_lieu ne sont pas renseignés
+----AZlieuMaj
+begin
+	if (p_etat ='U') then
+		update lieu set nom_lieu=p_nom_lieu,ad_lieu=p_ad_lieu,id_ville=p_id_ville,lat_lieu=p_lat_lieu,lon_lieu=p_lon_lieu,id_type_lieu=p_id_type_lieu where id_lieu=p_id_lieu;
+	elseif (p_etat = 'I') then
+		insert into lieu (nom_lieu,ad_lieu,id_ville,lat_lieu,lon_lieu,id_type_lieu) values (p_nom_lieu,p_ad_lieu,p_id_ville,p_lat_lieu,p_lon_lieu,p_id_type_lieu);
+	elseif (p_etat = 'D') then
+		delete from lieu where id_lieu=p_id_lieu;
+	end if;
+end
+--AZlieuMaj  // pour éviter les erreurs quand lat_lieu et/ou lon_lieu ne sont pas renseignés OLD?
 begin
 	if (p_etat ='U') then
 		update lieu set nom_lieu=p_nom_lieu,ad_lieu=p_ad_lieu,id_ville=p_id_ville,lat_lieu=p_lat_lieu,lon_lieu=p_lon_lieu,id_type_lieu=p_id_type_lieu where id_lieu=p_id_lieu;
@@ -152,7 +160,20 @@ begin
     	order by id_dbdict asc;
 end$$
 DELIMITER ;
---
+--AZcmptMaj
+begin
+    if(p_id_instr = 0) then
+    	set p_id_instr = NULL;
+    end if;
+	if (p_etat ='U') then
+		update cmpt set nom_cmpt=p_nom_cmpt,id_instr=p_id_instr,id_theme=p_id_theme,grands=p_grands,moyens=p_moyens,petits=p_petits where id_cmpt=p_id_cmpt;
+	elseif (p_etat = 'I') then
+		insert into cmpt (nom_cmpt,id_instr,id_theme,grands,moyens,petits) values (p_nom_cmpt,p_id_instr,p_id_theme,p_grands,p_moyens,p_petits);
+	elseif (p_etat = 'D') then
+		delete from cmpt where id_cmpt=p_id_cmpt;
+	end if;
+end
+
 --AZinit_cbo
 begin
 	if (p_nom_tab='prs') then
@@ -183,11 +204,163 @@ begin
 		select id_ville,nom_ville from ville order by 2;
 	elseif (p_nom_tab='theme') then
 		select id_theme,nom_theme from theme order by 2;
+	elseif (p_nom_tab='interv') then
+		select id_interv,num_interv from interv order by 2;
 	elseif (p_nom_tab='dbdicttype') then
 		select id_dbdicttype,lib_dbdicttype from dbdicttype order by 2;
 	end if;
 end
 --
+
+--AZstats
+--
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AZstats`()
+begin
+	select 'Jan',count(*) as nb from interv where month(date_interv)=1 and year(date_interv)=p_annee
+	union select 'Fev',count(*) as nb from interv where month(date_interv)=2 and year(date_interv)=p_annee
+	union select 'Mar',count(*) as nb from interv where month(date_interv)=3 and year(date_interv)=p_annee
+	union select 'Avr',count(*) as nb from interv where month(date_interv)=4 and year(date_interv)=p_annee
+	union select 'Mai',count(*) as nb from interv where month(date_interv)=5 and year(date_interv)=p_annee
+	union select 'Juin',count(*) as nb from interv where month(date_interv)=6 and year(date_interv)=p_annee
+	union select 'Juil',count(*) as nb from interv where month(date_interv)=7 and year(date_interv)=p_annee
+	union select 'Aout',count(*) as nb from interv where month(date_interv)=8 and year(date_interv)=p_annee
+	union select 'Sep',count(*) as nb from interv where month(date_interv)=9 and year(date_interv)=p_annee
+	union select 'Oct',count(*) as nb from interv where month(date_interv)=10 and year(date_interv)=p_annee
+	union select 'Nov',count(*) as nb from interv where month(date_interv)=11 and year(date_interv)=p_annee
+	union select 'Dec',count(*) as nb from interv where month(date_interv)=12 and year(date_interv)=p_annee;
+ end$$
+DELIMITER ;
+--AZstats id=0
+--
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AZstats`()
+begin
+	if (p_annee='') then
+		select concat(year(date_interv),'-',right(concat("0",month(date_interv)),2)) as ym,count(*) as nb from interv group by ym order by ym;
+	else
+		select 'Jan',count(*) as nb from interv where month(date_interv)=1 and year(date_interv)=p_annee
+		union select 'Fev',count(*) as nb from interv where month(date_interv)=2 and year(date_interv)=p_annee
+		union select 'Mar',count(*) as nb from interv where month(date_interv)=3 and year(date_interv)=p_annee
+		union select 'Avr',count(*) as nb from interv where month(date_interv)=4 and year(date_interv)=p_annee
+		union select 'Mai',count(*) as nb from interv where month(date_interv)=5 and year(date_interv)=p_annee
+		union select 'Juin',count(*) as nb from interv where month(date_interv)=6 and year(date_interv)=p_annee
+		union select 'Juil',count(*) as nb from interv where month(date_interv)=7 and year(date_interv)=p_annee
+		union select 'Aout',count(*) as nb from interv where month(date_interv)=8 and year(date_interv)=p_annee
+		union select 'Sep',count(*) as nb from interv where month(date_interv)=9 and year(date_interv)=p_annee
+		union select 'Oct',count(*) as nb from interv where month(date_interv)=10 and year(date_interv)=p_annee
+		union select 'Nov',count(*) as nb from interv where month(date_interv)=11 and year(date_interv)=p_annee
+		union select 'Dec',count(*) as nb from interv where month(date_interv)=12 and year(date_interv)=p_annee;
+	end if;
+ end$$
+DELIMITER ;
+--
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AZstats`()
+begin
+	select 'Jan',count(*) as nb from interv where month(date_interv)=1 and year(date_interv)=2023
+	union select 'Fev',count(*) as nb from interv where month(date_interv)=2 and year(date_interv)=2023
+	union select 'Mar',count(*) as nb from interv where month(date_interv)=3 and year(date_interv)=2023
+	union select 'Avr',count(*) as nb from interv where month(date_interv)=4 and year(date_interv)=2023
+	union select 'Mai',count(*) as nb from interv where month(date_interv)=5 and year(date_interv)=2023
+	union select 'Juin',count(*) as nb from interv where month(date_interv)=6 and year(date_interv)=2023
+	union select 'Juil',count(*) as nb from interv where month(date_interv)=7 and year(date_interv)=2023
+	union select 'Aout',count(*) as nb from interv where month(date_interv)=8 and year(date_interv)=2023
+	union select 'Sep',count(*) as nb from interv where month(date_interv)=9 and year(date_interv)=2023
+	union select 'Oct',count(*) as nb from interv where month(date_interv)=10 and year(date_interv)=2023
+	union select 'Nov',count(*) as nb from interv where month(date_interv)=11 and year(date_interv)=2023
+	union select 'Dec',count(*) as nb from interv where month(date_interv)=12 and year(date_interv)=2023;
+ end$$
+DELIMITER ;
+
+--AZstats_bertrand
+delimiter //
+create procedure AZstats (p_id_prs_login int,p_id_type_stt int,p_id_terr int)
+begin
+-- select top 200 count(*) over() as nb_lig,l.id_loge,l.nom_loge,l.id_obed,o.nom_obed as id_obedWITH,l.id_orient,orient.nom_orient as id_orientWITH,num_loge as Numéro,l.id_type_loge,tl.lib_type_loge as id_type_logeWITH
+    declare v_id_loge_login int;
+    declare v_id_deg_login int;
+    declare v_num_deg_login int;
+    declare v_nivo_lec_login int;
+    declare v_id_terr_login int;
+    declare v_id_type_stt int;
+    select p.id_loge,id_deg_av,nivo_lec,id_terr into v_id_loge_login,v_id_deg_login,v_nivo_lec_login,v_id_terr_login
+        from prs p
+        inner join loge l on p.id_loge=l.id_loge
+        where id_prs=p_id_prs_login;
+    if(v_id_deg_login is null) then
+        set v_num_deg_login=1;
+    else
+        select num_deg into v_num_deg_login from deg where id_deg=v_id_deg_login;
+    end if;
+    if(p_id_terr is null) then
+    /*
+        select nom_terr,id_deg_bl,count(*)
+            from prs p
+            inner join loge l on p.id_loge=l.id_loge
+            inner join terr t on l.id_terr=t.id_terr
+            inner join etat_prs e on p.id_etat_prs=e.id_etat_prs
+            where e.actif=1
+            and ((v_nivo_lec_login=2 and (l.id_loge=v_id_loge_login or l.id_loge in (select id_loge from loge_prs where id_prs=p_id_prs_login))) or (v_nivo_lec_login=3 and l.id_terr=v_id_terr_login) or v_nivo_lec_login=4)
+            group by nom_terr,id_deg_bl
+            order by 1,2;
+    */
+        if(p_id_type_stt=12)then
+            select nom_terr,d.id_deg,AZnb_membres_par_terr_et_deg(t.id_terr,d.id_deg) as nb
+                from terr t
+                inner join deg d on d.avancement=0
+                where 1=1
+--                and ((v_nivo_lec_login=2 and (l.id_loge=v_id_loge_login or l.id_loge in (select id_loge from loge_prs where id_prs=p_id_prs_login))) or (v_nivo_lec_login=3 and l.id_terr=v_id_terr_login) or v_nivo_lec_login=4)
+                group by nom_terr,d.id_deg
+                order by 1,2;
+        else
+            select nom_terr,'F' as nom_genre, AZnb_membres_par_terr_et_genre(id_terr,1) as nb
+                from terr
+            union
+            select nom_terr,'S' as nom_genre,AZnb_membres_par_terr_et_genre(id_terr,0) as nb
+                from terr
+            union
+            select nom_terr,'_Indef' as nom_genre,AZnb_membres_par_terr_et_genre(id_terr,-1) as nb
+                from terr
+            group by nom_terr,nom_genre
+            order by 1,2;
+        end if;
+    else
+        if(p_id_type_stt=12)then
+            select nom_loge,d.id_deg,AZnb_membres_par_loge_et_deg(l.id_loge,d.id_deg) as nb
+                from loge l
+                inner join deg d on d.avancement=0
+                inner join type_loge tl on l.id_type_loge=tl.id_type_loge
+                where l.active=1 and tl.nom_type_loge='Bleue' and l.id_terr=p_id_terr
+                and ((v_nivo_lec_login=2 and (l.id_loge=v_id_loge_login or l.id_loge in (select id_loge from loge_prs where id_prs=p_id_prs_login))) or (v_nivo_lec_login=3 and l.id_terr=v_id_terr_login) or v_nivo_lec_login=4)
+                group by nom_loge,d.id_deg
+                order by 1,2;
+        else
+            select nom_loge,'F' as nom_genre, AZnb_membres_par_loge_et_genre(id_loge,0) as nb
+                from loge l
+                inner join type_loge tl on l.id_type_loge=tl.id_type_loge
+                where l.active=1 and tl.nom_type_loge='Bleue' and l.id_terr=p_id_terr
+                and ((v_nivo_lec_login=2 and (l.id_loge=v_id_loge_login or l.id_loge in (select id_loge from loge_prs where id_prs=p_id_prs_login))) or (v_nivo_lec_login=3 and l.id_terr=v_id_terr_login) or v_nivo_lec_login=4)
+            union
+            select nom_loge,'S' as nom_genre,AZnb_membres_par_loge_et_genre(id_loge,1) as nb
+                from loge l
+                inner join type_loge tl on l.id_type_loge=tl.id_type_loge
+                where l.active=1 and tl.nom_type_loge='Bleue' and l.id_terr=p_id_terr
+                and ((v_nivo_lec_login=2 and (l.id_loge=v_id_loge_login or l.id_loge in (select id_loge from loge_prs where id_prs=p_id_prs_login))) or (v_nivo_lec_login=3 and l.id_terr=v_id_terr_login) or v_nivo_lec_login=4)
+            union
+            select nom_loge,'_Indef' as nom_genre,AZnb_membres_par_loge_et_genre(id_loge,-1) as nb
+                from loge l
+                inner join type_loge tl on l.id_type_loge=tl.id_type_loge
+                where l.active=1 and tl.nom_type_loge='Bleue' and l.id_terr=p_id_terr
+                and ((v_nivo_lec_login=2 and (l.id_loge=v_id_loge_login or l.id_loge in (select id_loge from loge_prs where id_prs=p_id_prs_login))) or (v_nivo_lec_login=3 and l.id_terr=v_id_terr_login) or v_nivo_lec_login=4)
+            group by nom_loge,nom_genre
+            order by 1,2;
+        end if;
+    end if;
+end; //
+delimiter ;
+
+
 --AZdbdict__dbdictSelect
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AZdbdict__dbdictSelect`(IN `p_id_dbdict` INT)
@@ -372,3 +545,105 @@ begin
 			and (S.id_seance like p_id_seance or p_id_seance is null)
     	order by num_seance asc;
 end
+
+
+--liste comptines INSERT
+INSERT INTO `cmpt`(`id_cmpt`, `nom_cmpt`, `id_instr`, `id_theme`, `grands`, `moyens`, `petits`, `doc_db`)
+VALUES
+(NULL,'Araignée Nez',NULL,NULL,0,0,0,''),
+(NULL,'Au secours voilà le loup ! ',NULL,NULL,0,0,0,''),
+(NULL,"Bato sur l'eau la rivière la rivière",NULL,NULL,0,0,0,''),
+(NULL,'Bébette qui monte',NULL,NULL,0,0,0,''),
+(NULL,'Bergère rouli roula',NULL,NULL,0,0,0,''),
+(NULL,'Bertrand le vieux serpent',NULL,NULL,0,0,0,''),
+(NULL,'Boîte tous les animaux',NULL,NULL,0,0,0,''),
+(NULL,'Chaperon rouge (petit chou, petit chou)',NULL,NULL,0,0,0,''),
+(NULL,'Cinq dans le nid',NULL,NULL,0,0,0,''),
+(NULL,'Cinq petits moutons assis sur la barrière',NULL,NULL,0,0,0,''),
+(NULL,'Coccinelle demoiselle',NULL,NULL,0,0,0,''),
+(NULL,'Cubes boum badabra',NULL,NULL,0,0,0,''),
+(NULL,'Dans la forêt lointaine',NULL,NULL,0,0,0,''),
+(NULL,'Dans sa maison un grand cerf',NULL,NULL,0,0,0,''),
+(NULL,'En revenant de St Denis',NULL,NULL,0,0,0,''),
+(NULL,'Escargot Berlingot',NULL,3,0,0,0,''),
+(NULL,'Fourmi main',NULL,NULL,0,0,0,''),
+(NULL,'Goutte goutelette de pluie',NULL,NULL,0,0,0,''),
+(NULL,"Gypsie l'araignée monte l'escalier",NULL,2,0,0,0,''),
+(NULL,"Hugo l'escargot",NULL,3,0,0,0,''),
+(NULL,'Il était une bergère et ri et ron petit patapon',NULL,NULL,0,0,0,''),
+(NULL,"Il était petit homme qui n'avait pas de maison",NULL,NULL,0,0,0,''),
+(NULL,'Il était un petit navire',NULL,NULL,0,0,0,''),
+(NULL,'Il pleut il mouille',NULL,NULL,0,0,0,''),
+(NULL,'Il pleut, il pleut bergère',NULL,NULL,0,0,0,''),
+(NULL,"J'ai pas peur j'ai pas peur",NULL,NULL,0,0,0,''),
+(NULL,"J'aime la galette",NULL,NULL,0,0,0,''),
+(NULL,"Jamais on a vu jamais on n'verra",NULL,NULL,0,0,0,''),
+(NULL,'Je pars en voyage',NULL,NULL,0,0,0,''),
+(NULL,'Je suis la galette la galette la galette',NULL,NULL,0,0,0,''),
+(NULL,'Je te tiens par la barbichette',NULL,NULL,0,0,0,''),
+(NULL,'Jean petit qui danse',NULL,NULL,0,0,0,''),
+(NULL,'La poulette ce matin',NULL,NULL,0,0,0,''),
+(NULL,'La sorcière est une mégère',NULL,NULL,0,0,0,''),
+(NULL,"L'araignée Gypsie",NULL,2,0,0,0,''),
+(NULL,"L'as-tu vu petit bonhomme",NULL,NULL,0,0,0,''),
+(NULL,'Le fermier dans son pré',NULL,NULL,0,0,0,''),
+(NULL,'Le mille pattes',NULL,NULL,0,0,0,''),
+(NULL,"Les petits poissons dans l'eau nagent",NULL,NULL,0,0,0,''),
+(NULL,'Les petits poussins ont bien du chagrin',NULL,NULL,0,0,0,''),
+(NULL,"L'était une p'tite poule grise",NULL,NULL,0,0,0,''),
+(NULL,'Lili la chenille',NULL,NULL,0,0,0,''),
+(NULL,"Maman les p'tits bato qui vont sur l'eau",NULL,NULL,0,0,0,''),
+(NULL,'Mazurkaline',NULL,NULL,0,0,0,''),
+(NULL,'Meunier tu dors ton moulin va trop vite',NULL,NULL,0,0,0,''),
+(NULL,'Mon âne a bien mal à la tête',NULL,NULL,0,0,0,''),
+(NULL,'Mon beau sapin',NULL,NULL,0,0,0,''),
+(NULL,'Mon petit chat pourquoi es-tu si triste',NULL,NULL,0,0,0,''),
+(NULL,'Mon petit lapin a bien du chagrin',NULL,NULL,0,0,0,''),
+(NULL,"Mon petit lapin s'est sauvé dans le jardin",NULL,NULL,0,0,0,''),
+(NULL,'Mon petit oiseau a pris sa volée',NULL,NULL,0,0,0,''),
+(NULL,'Monsieur Pouce',NULL,NULL,0,0,0,''),
+(NULL,'Mouche mouchelette',NULL,NULL,0,0,0,''),
+(NULL,'Neige neige blanche',NULL,NULL,0,0,0,''),
+(NULL,'Noël des animaux',2,NULL,0,0,0,''),
+(NULL,'Oh ! Une tite bulle',NULL,NULL,0,0,0,''),
+(NULL,'Partir train bateau avion ?',NULL,NULL,0,0,0,''),
+(NULL,'Passez pompom les macarons',NULL,NULL,0,0,0,''),
+(NULL,"Petit limaçon n'a pas de maison",NULL,NULL,0,0,0,''),
+(NULL,'Petit renne au nez rouge',NULL,NULL,0,0,0,''),
+(NULL,'Petrouchka ne pleure pas',NULL,NULL,0,0,0,''),
+(NULL,"Pluie, pluie, pluie va-t'en",NULL,NULL,0,0,0,''),
+(NULL,"Pomme de reinette et pomme d'api",NULL,NULL,0,0,0,''),
+(NULL,'Poule en haut poule en bas',NULL,NULL,0,0,0,''),
+(NULL,"Prom'nons nous dans les bois",NULL,NULL,0,0,0,''),
+(NULL,"Petit poisson petit oiseau s'aimaient d'amour",NULL,NULL,0,0,0,''),
+(NULL,"Quand le p'tit bossu va chercher du pain",NULL,NULL,0,0,0,''),
+(NULL,'Quatre canetons',NULL,NULL,0,0,0,''),
+(NULL,'Que fait ma main',NULL,NULL,0,0,0,''),
+(NULL,"Qu'est-ce que c'est un parapluie",NULL,NULL,0,0,0,''),
+(NULL,'Qui craint le grand méchant loup',NULL,NULL,0,0,0,''),
+(NULL,'Qui étais-tu allé voir avant ?',NULL,NULL,0,0,0,''),
+(NULL,"Rock'n'roll des galinacés",NULL,NULL,0,0,0,''),
+(NULL,'Savez-vous planter les choux',NULL,NULL,0,0,0,''),
+(NULL,"Sur le pont d'Avignon",NULL,NULL,0,0,0,''),
+(NULL,'Tape tape petite main',NULL,NULL,0,0,0,''),
+(NULL,'Tombe, tombe, tombe la pluie',NULL,NULL,0,0,0,''),
+(NULL,'Torpedo',NULL,NULL,0,0,0,''),
+(NULL,'Trois parapluies, un petit, un moyen, un gros',NULL,NULL,0,0,0,''),
+(NULL,'Trois petits renards',NULL,NULL,0,0,0,''),
+(NULL,'Trois poules vont au champ',2,NULL,0,0,0,''),
+(NULL,"Trois p'tits minous",NULL,NULL,0,0,0,''),
+(NULL,"Un beau matin le p'tit escargot",NULL,3,0,0,0,''),
+(NULL,'Un éléphant qui se balançait',NULL,NULL,0,0,0,''),
+(NULL,"Un escargot qui s'en allait à la foire",NULL,3,0,0,0,''),
+(NULL,'Un jour dans sa cabane un tout petit bonhomme',2,NULL,0,0,0,''),
+(NULL,"Un poisson au fond d'un étang",NULL,NULL,0,0,0,''),
+(NULL,"Un p'tit canard au bord de l'eau il est si beau",NULL,NULL,0,0,0,''),
+(NULL,"Un p'tit soleil tout chaud tout rond",NULL,NULL,0,0,0,''),
+(NULL,'Un tout petit papillon vole vole',NULL,NULL,0,0,0,''),
+(NULL,"Une petite coccinelle s'est posée",NULL,NULL,0,0,0,''),
+(NULL,'Une poule sur un mur',NULL,NULL,0,0,0,''),
+(NULL,'Une souris blanche, rose, brune, noire',NULL,1,0,0,0,''),
+(NULL,'Une souris verte',NULL,1,0,0,0,''),
+(NULL,'Vague vague vaguelo',NULL,NULL,0,0,0,''),
+(NULL,"Vive le vent d'hiver",NULL,NULL,0,0,0,''),
+(NULL,'Vole vole vole papillon au dessus de...',NULL,NULL,0,0,0,'')

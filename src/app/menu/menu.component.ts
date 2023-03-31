@@ -57,10 +57,15 @@ export class MenuComponent // implements OnInit
 		else
 		{
 			this.m_phase_connexion=true;
-			this.formConnexion=this.formBuilder.group({m_cbo_prs:0, m_mdp: '',m_cbo_fonte:1});
+			this.formConnexion=this.formBuilder.group({m_cbo_prs:0, m_mdp: '',m_cbo_fonte:2});
 //		this.accesBdService=new AccesBdService(httpClient);
 			this.m_cbo_fonte=new Cbo(this.httpClient,'fontes');
 			this.m_cbo_fonte.InitialiserListe(this.m_tailles_fontes);
+			let z:number;
+			for (z=0;z<3;z++) {
+                console.log("CBO_id="+this.m_cbo_fonte.m_liste_items[z].m_id);
+                console.log("CBO_lib="+this.m_cbo_fonte.m_liste_items[z].m_lib);
+            }
 			this.m_cbo_prs=new Cbo(this.httpClient,'prs_login');
 			this.DefServeur();
 		}		
@@ -191,7 +196,7 @@ export class MenuComponent // implements OnInit
 		if(id_prs>0)
 		{
 			var mdp=this.formConnexion.get('m_mdp').value;
-			var id_fonte=this.formConnexion.get('m_cbo_fonte').value;
+			var id_fonte=(this.formConnexion.get('m_cbo_fonte').value)-1;
 //console.log('8');
 			var classe_fonte=this.m_tailles_fontes[id_fonte];
 			GlobalConstantes.m_id_prs_login=id_prs;

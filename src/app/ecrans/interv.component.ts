@@ -68,7 +68,7 @@ export class IntervComponent extends EcranMaitreDetail
 		cols[1]=new ColonneEcran("id_seance_cmpt","id_seance_cmpt",TypeColEcran.ClePrimaire,false,ModifCol.NonModifiable,false,true,100);
 		cols[2]=new ColonneEcran("id_seance","id_seance",TypeColEcran.Entier,false,ModifCol.NonModifiable,false,true,100);
 		cols[3]=new ColonneEcran("id_intervWITH","Intervention Date/Lieu",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,true,100);
-		cols[4]=new ColonneEcran("nom_cmpt","Comptines de la séance",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,300);
+		cols[4]=new ColonneEcran("nom_cmpt","Comptines de la séance",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,400);
 		cols[5]=new ColonneEcran("grands","Grands",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
 		cols[6]=new ColonneEcran("moyens","Moyens",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
 		cols[7]=new ColonneEcran("petits","Petits",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
@@ -79,8 +79,8 @@ export class IntervComponent extends EcranMaitreDetail
 		cols[1]=new ColonneEcran("id_interv_cmpt","id_interv_cmpt",TypeColEcran.ClePrimaire,false,ModifCol.NonModifiable,false,true,100);
 		cols[2]=new ColonneEcran("id_interv","id_interv",TypeColEcran.Entier,false,ModifCol.NonModifiable,false,true,100);
 		cols[3]=new ColonneEcran("id_intervWITH","Intervention Date/Lieu",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,true,100);
-		cols[4]=new ColonneEcran("id_cmpt","Comptines hors séance",TypeColEcran.CleEtrangere,true,ModifCol.Modifiable,false,true,300);
-		cols[5]=new ColonneEcran("id_cmptWITH","Comptines hors séance",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,false,300);
+		cols[4]=new ColonneEcran("id_cmpt","Extra Comptines",TypeColEcran.CleEtrangere,true,ModifCol.Modifiable,false,true,400);
+		cols[5]=new ColonneEcran("id_cmptWITH","Extra Comptines",TypeColEcran.Chaine,false,ModifCol.NonModifiable,true,false,400);
 		cols[6]=new ColonneEcran("grands","Grands",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
 		cols[7]=new ColonneEcran("moyens","Moyens",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);
 		cols[8]=new ColonneEcran("petits","Petits",TypeColEcran.BooleenNonModif,true,ModifCol.NonModifiable,true,true,80);

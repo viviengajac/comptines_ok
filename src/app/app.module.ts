@@ -30,6 +30,9 @@ import { DependancesComponent } from './AZ_dependances/dependances.component';
 import { CarteComponent } from './carte/carte.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { PrjComponent } from './ecrans/prj.component';
+import { SttComponent } from './ecrans/stt.component';
+import { AgChartsAngular } from 'ag-charts-angular';
+import { AgChartsAngularModule } from 'ag-charts-angular';
 
 //import { CboGridEditor } from './cbo-grid-editor/cbo-grid.editor';
 @NgModule({
@@ -53,7 +56,8 @@ import { PrjComponent } from './ecrans/prj.component';
     DependancesComponent,
     CarteComponent,
     DBDictComponent,
-    PrjComponent
+    PrjComponent,
+    SttComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +71,8 @@ import { PrjComponent } from './ecrans/prj.component';
     MatInputModule,
     ModalModule,
     AgGridModule,
-    LeafletModule
+    LeafletModule,
+    AgChartsAngularModule
     //AgGridModule.withComponents([BtnVoirDocRendererComponent,BtnDefDocRendererComponent,BtnDependancesRendererComponent,BoolRendererComponent,DateEditorComponent,DatetimeEditorComponent,CboEditorComponent])
   ],
   providers: [],

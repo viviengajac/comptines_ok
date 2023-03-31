@@ -7,19 +7,19 @@
 		</div>
 	</form-->
 	<form [formGroup]="formConnexion">
-		<div class="form-group">
-			<label style="width: 50px;" for="lblnom_prs">Nom: </label>
+		<div class="form-group form-connexion">
+			<label style="width: 50px;" for="lblnom_prs"> Nom: </label>
 			<select formControlName="m_cbo_prs" id="m_cbo_prs" class="{{m_classe_fonte}}">
 				<option *ngFor="let item of m_cbo_prs.m_liste_items; let i = index" [value]="m_cbo_prs.m_liste_items[i].m_id">{{m_cbo_prs.m_liste_items[i].m_lib}}</option>
 			</select>
 			<label style="width: 50px;" for="lblmdp"> Mot de passe: </label>
 			<input style="width: 50px;" type="password" id="m_mdp" class="form-control" class="{{m_classe_fonte}}" name="m_mdp" formControlName="m_mdp" autocomplete="on" >
-			<label style="width: 50px;" for="lblnom_prs">Taille des textes: </label>
+			<label style="width: 50px;" for="lblnom_prs"> Taille des textes: </label>
 			<select formControlName="m_cbo_fonte" id="m_cbo_fonte" class="{{m_classe_fonte}}">
 				<option *ngFor="let item of m_cbo_fonte.m_liste_items; let i = index" [value]="m_cbo_fonte.m_liste_items[i].m_id">{{m_cbo_fonte.m_liste_items[i].m_lib}}</option>
 			</select>
 			<!--button (click)="onConnexion()">Connexion</button-->
-			<button (click)="onConnexion()"><label class="{{m_classe_fonte}}">Connexion</label></button>
+			<button (click)="onConnexion()" class="connexion-bouton"><label class="{{m_classe_fonte}}">Connexion</label></button>
 			<label>{{m_msg_err}}</label>
 		</div>
 	</form>
@@ -39,9 +39,9 @@
 			<ul>
 				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','cmpt']">Comptines</a></li>
 				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','instr']">Instruments</a></li>
+				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','theme']">Thèmes</a></li>
 				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','lieu']">Lieux</a></li>
 				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','ville']">Villes</a></li>
-				<li class="{{m_classe_fonte}}"><a [routerLink]="['references','theme']">Thèmes</a></li>
 			</ul>
 		</li>
 		<!--li>__</li-->
@@ -55,10 +55,11 @@
 				<!-- <li class="{{m_classe_fonte}}"><a routerLink="prj">PRJ</a></li>
 				<li class="{{m_classe_fonte}}"><a routerLink="req">SQL</a></li> -->
 				<li class="{{m_classe_fonte}}"><a routerLink="carte">Carte</a></li>
+				<li class="{{m_classe_fonte}}"><a routerLink="stt">Stats</a></li>
 			</ul>
 		</li>
 		<!--label class="{{m_classe_fonte}}">{{m_compteur}}</label-->
-		<button (click)="onDeConnexion()"><label class="{{m_classe_fonte}}">Déconnexion</label></button>
+		<button (click)="onDeConnexion()" class="deconnexion-bouton"><label class="{{m_classe_fonte}}">Déconnexion</label></button>
 		<!--label class="[[m_classe_compteur}}">{{m_compteur}}</label-->
 		<label class="compteur">{{m_compteur}}</label>
 	</ul>

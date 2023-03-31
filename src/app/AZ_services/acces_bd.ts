@@ -586,8 +586,8 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 		let promise = new Promise((resolve, reject) =>
 		{
 			var url_req: string=url+this.ecrire_table+sql;
-//console.log('EcrireTable: url_req='+url_req);
-//console.log('EcrireTable: contenu=[[['+contenu+']]]');
+console.log('EcrireTable: url_req='+url_req);
+console.log('EcrireTable: contenu=[[['+contenu+']]]');
 			this.httpClient.post(url_req, contenu , {responseType: 'text'})
 			.toPromise()
 			.then

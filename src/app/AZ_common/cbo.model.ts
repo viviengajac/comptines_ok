@@ -80,6 +80,7 @@ export class Cbo
 	}
 	InitialiserListe(liste_items: string[])
 	{
+		console.log("Init="+liste_items[0]);
 		var nb_lig=liste_items.length;
 		this.m_liste_items=new Array(nb_lig+1);
 		var tc: ItemCbo = new ItemCbo(0,'');
@@ -87,7 +88,10 @@ export class Cbo
 		var i;
 		for(i=0;i<nb_lig;i++)
 		{
-			var id=i;
+			var id=i+1;
+			//commencer l'id des items de la liste à 1, 0 étant réservé à la ligne blanche d'initialisation
+			//if (liste_items[0]=='2019')
+			//	id=i+1;
 			var lib=liste_items[i];
 			var tc: ItemCbo = new ItemCbo(id,lib);
 			this.m_liste_items[i+1]=new ItemCbo(id,lib);

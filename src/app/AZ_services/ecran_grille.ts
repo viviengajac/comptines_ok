@@ -364,6 +364,7 @@ console.log(chargement);
 	}
 	async onSupprimer()
 	{
+		console.log("Suppr");
 		var faire:boolean=true;
 //console.log("nom_onglet_actif="+this.m_num_onglet_actif);
 		const selectedRow = this.gridApi.getSelectedRows()[0];
@@ -371,6 +372,7 @@ console.log(chargement);
 			this.MessageErreur("Il faut d'abord sélectionner une ligne à supprimer.");
 		}
 		else {
+			console.log("Suppr1");
 			var nom_champ=this.m_blocs[this.m_num_bloc_actif].m_nom_cle_primaire;
 			var id=selectedRow[nom_champ];
 	//console.log("nom_champ="+nom_champ);

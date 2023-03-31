@@ -893,9 +893,15 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 	}
 	SupprimerUneLigne(id_cle_primaire:number)
 	{
+		console.log("Suppr2");
 		var num_lig:number=this.NumLig(id_cle_primaire);
 		var num_col:number=this.NumeroColonneSql("etat");
+		//var nb:number=this.NumeroColonneSql("nb");
+		//console.log(this.m_nom_table);
+		//if (this.m_nom_table=='cmpt' && nb>0)
+		//	this.m_ecran.MessageErreur('La comptine est utilisée dans une séance ou une intervention.');			
 		var etat:string=this.ValCelluleParNum(num_lig,num_col);
+		console.log(etat);
 		if(etat==="I")
 		{
 			this.m_lignes.splice(num_lig,1);
@@ -904,8 +910,9 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 			for(i=0;i<this.m_lignes.length;i++)
 			{
 				etat=this.ValCelluleParNum(i,num_col);
-				if(etat=="U"|| etat=="D"||etat=="I")
+				if(etat=="U"|| etat=="D"|| etat=="I")
 					modif=true;
+					console.log(modif);
 			}
 			this.m_modif=modif;
 		}
@@ -919,7 +926,9 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 			else
 			{
 //console.log('BlocService.SupprimerUneLigne: appel de EcrireVal('+num_lig+','+num_col+',D)');
+		console.log("Suppr3");
 				this.EcrireVal(num_lig,num_col,"D");
+				console.log("suppr4");
 				this.m_modif=true;
 			}
 		}
@@ -1081,7 +1090,7 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 		if(this.m_colonnes_sql===undefined)
 		{
 //console.log('appel de MessageErreur depuis bloc: 15');
-			this.m_ecran.MessageErreur("Il faut d'abord initialiser l'�cran en faisant une recherche");
+			this.m_ecran.MessageErreur("Il faut d'abord initialiser l'écran en faisant une recherche");
 		}
 		else
 		{
