@@ -1,0 +1,35 @@
+<div class="row" style="width: 100%; height: calc(100% - 50px);" flex class="{{ m_classe_fonte }} ">
+    <jw-modal id="erreur">
+        <h4>Erreur</h4>
+        <h4>{{m_msg_err}}</h4>
+        <button (click)="closeModal('erreur');">OK</button>
+    </jw-modal>
+    <jw-modal id="info">
+        <h4>Message</h4>
+        <h4>{{m_msg_info}}</h4>
+        <button (click)="closeModalbis('info','OK');">OK</button>
+        <button (click)="closeModalbis('info','Cancel');">Cancel</button>
+    </jw-modal>
+    <div>
+        <form [formGroup]="formRecherche">
+            <div class="form-group">
+<!--                 <label style="width: 50px;" for="lblid_type_stt"> Type: </label>
+                <select formControlName="m_filtre_type_stt" id="m_filtre_type_stt" class=" {{ m_classe_fonte }} ">
+                    <option *ngFor="let item of m_cbo_type_stt.m_liste_items; let i = index" [value]="m_cbo_type_stt.m_liste_items[i].m_id">{{m_cbo_type_stt.m_liste_items[i].m_lib}}</option>
+                </select> -->
+                <label style="width: 50px;" for="lblnom_prs"> Année: </label>
+                <select formControlName="m_cbo_annee" id="m_cbo_annee" class="{{m_classe_fonte}}">
+                    <option *ngFor="let item of m_cbo_annee.m_liste_items; let i = index" [value]="m_cbo_annee.m_liste_items[i].m_id">{{m_cbo_annee.m_liste_items[i].m_lib}}</option>
+                </select>
+<!--                 <label style="width: 50px;" for="lblid_terr"> Territoire: </label>
+                <select formControlName="m_filtre_terr" id="m_filtre_terr" class=" {{ m_classe_fonte }} ">
+                    <option *ngFor="let item of m_cbo_terr.m_liste_items; let i = index" [value]="m_cbo_terr.m_liste_items[i].m_id">{{m_cbo_terr.m_liste_items[i].m_lib}}</option>
+                </select> -->
+            </div>            
+           <button (click)="onAfficherStt()" class=" {{ m_classe_fonte }} ">Rechercher</button>
+        </form>
+    </div>
+    <div id="stt" style="height: 100%; z-index: 98;" >
+        <ag-charts-angular style="height: 100%;" [options]="options_stt" ></ag-charts-angular>
+    </div>
+</div>

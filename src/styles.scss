@@ -145,6 +145,9 @@ label
   justify-content: left; /* align horizontal */
   align-items: center;
 }
+.ag-header-cell-label {
+    justify-content: center;
+}
 /*
 .ag-theme-alpine .ag-cell {
     border: 1px solid transparent;
