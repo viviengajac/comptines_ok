@@ -6,7 +6,7 @@ import { Ecran } from '../AZ_services/ecran';
 import { UntypedFormBuilder } from '@angular/forms';
 import { ModalService } from '../AZ_modal/modal.service';
 import { Cbo } from '../AZ_common/cbo.model';
-import { AgChartOptions, AgAreaSeriesOptions } from 'ag-charts-community';
+import { AgChartOptions, AgAreaSeriesOptions, AgCartesianSeriesTooltipRendererParams } from 'ag-charts-community';
 @Component({
     selector: 'my-app',
     templateUrl: './stt.component.html'
@@ -15,31 +15,11 @@ export class SttComponent extends Ecran
 {
     public options_stt: any=null;    // AgChartOptions;
     m_cbo_type_stt: any=null;    // Cbo;
-    //m_cbo_terr: any=null;    // Cbo;
-    //nb_grp:number=0;
-    nb_mois:number=0;
-    //nb_type_grp:number=0;
+    nb_ligne:number=0;
     tab_nom_grp:string[]=new Array(0);
     nom_type_stt:string='';
     tab_donnees:DonneesStt[]=new Array(0);
-/*     tab_donnees = [
-        {
-            quarter: 'Q1',
-            spending: 450,
-        },
-        {
-            quarter: 'Q2',
-            spending: 560,
-        },
-        {
-            quarter: 'Q3',
-            spending: 600,
-        },
-        {
-            quarter: 'Q4',
-            spending: 700,
-        },
-    ]; */
+
     tab_series:SerieStt[]=new Array(0);
     id_type_stt:number=0;
 	m_cbo_annee: any=null;	//	Cbo;
@@ -61,21 +41,19 @@ export class SttComponent extends Ecran
             series: [{
                 type: 'column',
                 xKey: 'nom_grp',
-                yKey: 'nb',
-             }],
-/*             series:
-            [
-                { type: 'column', xKey: 'nom_grp', yKey: 'nb_s', stacked: true },
-                { type: 'column', xKey: 'nom_grp', yKey: 'nb_f', stacked: true },
-            ] */
+                yKey: 'nb',                
+                yName: "Interventions",
+                tooltip: { renderer: renderer },
+            }],
         };
 //console.log('options_stt');
 //console.log(this.options_stt);
 //console.log('SttComponent.constructor: fin');
     }
+    
     ngOnInit(): void
     {
-console.log('SttComponent.ngOnInit: debut');
+//console.log('SttComponent.ngOnInit: debut');
         let annee_base:number=2020;
         let date_actuelle:Date=new Date();
         let date_actuelle_string:string=date_actuelle.toLocaleString();
@@ -86,13 +64,11 @@ console.log('SttComponent.ngOnInit: debut');
             this.m_liste_annees.push(this.annee_string);
             annee_base++;
         }
-        console.log("liste="+this.m_liste_annees);
+        //console.log("liste="+this.m_liste_annees);
         this.m_cbo_type_stt=new Cbo(this.httpClient,'type_stt');
         this.m_cbo_type_stt.GenererListeStd().then((res:string)=>{},(err:string)=>{this.MessageErreur(err);});
         this.m_cbo_annee=new Cbo(this.httpClient,'annees');
         this.m_cbo_annee.InitialiserListe(this.m_liste_annees);
-        //this.m_cbo_terr=new Cbo(this.httpClient,'terr');
-        //this.m_cbo_terr.GenererListeStd().then((res:string)=>{},(err:string)=>{this.MessageErreur(err);});
         this.Init();
 //console.log('SttComponent.ngOnInit: debut');
     }
@@ -103,22 +79,24 @@ console.log('SttComponent.ngOnInit: debut');
             var ab=new AccesBdService(this.httpClient);
 //console.log('Debut de TracerStats');
 //console.log(this.formRecherche.get('m_filtre_type_stt'));
-            var sql:string="exec AZstats @id_prs_login@,@annee@";           
+            var sql:string="exec AZstats @id_prs_login@,@annee@";
             var val_annee: any;
             var annee: any;
             val_annee=this.formRecherche.get('m_cbo_annee').value;
-            let z:number;
-            for (z=0;z<5;z++) {
-                console.log("CBO_id="+this.m_cbo_annee.m_liste_items[z].m_id);
-                console.log("CBO_lib="+this.m_cbo_annee.m_liste_items[z].m_lib);
-            }
             if (val_annee==0) {
                 annee='0';
                 this.options_stt =
                 {
                     data: this.tab_donnees,
                     title:{ text: "Nombre d'interventions", },
-                    subtitle:{ text: 'Par mois travaillés depuis 2020', }
+                    subtitle:{ text: 'Par mois travaillés depuis 2020', },
+                    series: [{
+                        type: 'column',
+                        xKey: 'nom_grp',
+                        yKey: 'nb',
+                        yName: "Interventions",
+                        tooltip: { renderer: renderer },
+                    }],
                 };
             }
             else {
@@ -127,14 +105,16 @@ console.log('SttComponent.ngOnInit: debut');
                 {
                     data: this.tab_donnees,
                     title:{ text: "Nombre d'interventions", },
-                    subtitle:{ text: "Pour l'année "+annee, }
+                    subtitle:{ text: "Pour l'année "+annee, },
+                    yName: "Interventions",
+                    tooltip: { renderer: renderer },
                 };
             }
-            console.log("val_annee="+val_annee);
-            console.log("annee="+annee);
+//console.log("val_annee="+val_annee);
+//console.log("annee="+annee);
             var req=sql.replace('@annee@',''+annee).replace('@id_prs_login@',''+GlobalConstantes.m_id_prs_login);
             //var req=sql.replace('@id_type_stt@',''+id_type_stt).replace('@id_terr@',''+id_terr).replace('@id_prs_login@',''+GlobalConstantes.m_id_prs_login);
-console.log('req='+req);
+//console.log('req='+req);
             ab.LireTable(req)
             .then(
             (res) =>
@@ -148,36 +128,24 @@ console.log('req='+req);
                     var i:number;
                     var j:number;
 //console.log('id_type_ss='+num_id_type_stt);                    
-                    this.nb_mois=ab.m_lignes.length;
-                    this.tab_donnees=new Array(this.nb_mois);
-                    for(i=0;i<this.nb_mois;i++)
+                    this.nb_ligne=ab.m_lignes.length;
+                    this.tab_donnees=new Array(this.nb_ligne);
+                    for(i=0;i<this.nb_ligne;i++)
                     {
-console.log("ligne"+i+"="+ab.m_lignes[i]);
+//console.log("ligne"+i+"="+ab.m_lignes[i]);
                         var nom_mois:string=ab.m_lignes[i].RecupererVal(0);
                         var val:number=ab.m_lignes[i].RecupererVal(1);          
                         this.tab_donnees[i]=new DonneesSttInterv(nom_mois,val);
-console.log(this.tab_donnees[i]);
+//console.log(this.tab_donnees[i]);
 //console.log('id_type_stt='+id_type_stt);
 //console.log(val);
-/*                             switch(num_id_type_stt)
-                            {
-                                case 12:
-//console.log('deuxième par degré');
-                                    this.tab_donnees[i]=new DonneesSttDegre(nom_grp,val[0],val[1],val[2],val[3]);
-                                    break;
-                                    case 14:
-//console.log('deuxième par genre');
-                                    this.tab_donnees[i]=new DonneesSttGenre(nom_grp,val[0],val[1],val[2]);
-                                    break;
-                            } */
                     }
                     const options= { ...this.options_stt };
                     options.data=this.tab_donnees;
 //                        options.series=this.series_deg;
                     this.options_stt=options;
 //console.log('options_stt');
-//console.log(this.options_stt);
-                    
+//console.log(this.options_stt);                    
                 }
             },
             (error) =>
@@ -196,8 +164,6 @@ console.log(this.tab_donnees[i]);
     }
     onAfficherStt()
     {
-        //if (this.formRecherche.get('m_cbo_annee').value==0)
-        //    this.MessageErreur("Il faut d'abord sélectionner une année");
         //console.log();
         this.TracerStats();
     }
@@ -214,6 +180,17 @@ class DonneesSttInterv extends DonneesStt
     {
         super(n);
         this.nb=+a;
+    }
+}
+class DonneesSttIntervStacked extends DonneesStt
+{
+    public nb:number=0;
+    public lieu:string;
+    constructor(n:string,a:number,l:string)
+    {
+        super(n);
+        this.nb=+a;
+        this.lieu=l;
     }
 }
 class DonneesSttDegre extends DonneesStt
@@ -260,3 +237,9 @@ class OptionStt
     series:SerieStt[]=[];
     constructor(d:DonneesStt[],s:string,ser:SerieStt[]){this.data=d;this.subtitle=s;this.series=ser;}
 }
+function renderer(params: AgCartesianSeriesTooltipRendererParams) {
+    return {
+      title: params.xValue,
+      content: params.yValue.toFixed(0),
+    };
+  }

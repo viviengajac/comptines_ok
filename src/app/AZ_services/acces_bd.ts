@@ -596,6 +596,7 @@ console.log('EcrireTable: contenu=[[['+contenu+']]]');
 				{
 //console.log('EcrireTable: retour de http='+res);
 					var str_res:string=""+res;
+console.log('EcrireTable: retour de http='+str_res);
 					if(!str_res.startsWith('Erreur'))
 					{
 						resolve('OK');
@@ -608,6 +609,7 @@ console.log('EcrireTable: contenu=[[['+contenu+']]]');
 				(error) =>
 				{
 					var msg_err:string='Erreur: ' + error.message;
+console.log('Erreur='+msg_err);
 					reject(msg_err);
 				}
 			)

@@ -231,12 +231,12 @@ begin
 	union select 'Dec',count(*) as nb from interv where month(date_interv)=12 and year(date_interv)=p_annee;
  end$$
 DELIMITER ;
---AZstats id=0
+--AZstats id=0 _OK
 --
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AZstats`()
 begin
-	if (p_annee='') then
+	if (p_annee='0') then
 		select concat(year(date_interv),'-',right(concat("0",month(date_interv)),2)) as ym,count(*) as nb from interv group by ym order by ym;
 	else
 		select 'Jan',count(*) as nb from interv where month(date_interv)=1 and year(date_interv)=p_annee
@@ -254,7 +254,61 @@ begin
 	end if;
  end$$
 DELIMITER ;
+--STACKED
+begin
+	if (p_annee='0') then
+		select concat(year(date_interv),'-',right(concat("0",month(date_interv)),2)) as ym,count(*) as nb from interv group by ym order by ym;
+	else
+		select 'Jan',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=1 and year(i.date_interv)=p_annee group by nom_lieu
+		union
+		select 'Fev',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=2 and year(i.date_interv)=p_annee group by nom_lieu
+		union
+		select 'Mar',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=3 and year(i.date_interv)=p_annee group by nom_lieu
+		union
+		select 'Avr',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=4 and year(i.date_interv)=p_annee group by nom_lieu
+		union
+		select 'Mai',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=5 and year(i.date_interv)=p_annee group by nom_lieu
+		union
+		select 'Juin',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=6 and year(i.date_interv)=p_annee group by nom_lieu
+		union
+		select 'Juil',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=7 and year(i.date_interv)=p_annee group by nom_lieu
+		union
+		select 'Août',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=8 and year(i.date_interv)=p_annee group by nom_lieu
+		union
+		select 'Sep',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=9 and year(i.date_interv)=p_annee group by nom_lieu
+		union
+		select 'Oct',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=10 and year(i.date_interv)=p_annee group by nom_lieu
+		union
+		select 'Nov',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=11 and year(i.date_interv)=p_annee group by nom_lieu
+		union
+		select 'Dec',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=12 and year(i.date_interv)=p_annee group by nom_lieu;
+	end if;
+--tests
+		select 'Jan',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=1 and year(i.date_interv)=2021 group by nom_lieu
+		union
+		select 'Fev',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=2 and year(i.date_interv)=2021 group by nom_lieu
+		union
+		select 'Mar',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=3 and year(i.date_interv)=2021 group by nom_lieu
+		union
+		select 'Avr',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=4 and year(i.date_interv)=2021 group by nom_lieu
+		union
+		select 'Mai',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=5 and year(i.date_interv)=2021 group by nom_lieu
+		union
+		select 'Juin',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=6 and year(i.date_interv)=2021 group by nom_lieu
+		union
+		select 'Juil',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=7 and year(i.date_interv)=2021 group by nom_lieu
+		union
+		select 'Août',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=8 and year(i.date_interv)=2021 group by nom_lieu
+		union
+		select 'Sep',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=9 and year(i.date_interv)=2021 group by nom_lieu
+		union
+		select 'Oct',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=10 and year(i.date_interv)=2021 group by nom_lieu
+		union
+		select 'Nov',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=11 and year(i.date_interv)=2021 group by nom_lieu
+		union
+		select 'Dec',count(*) as nb,l.nom_lieu from interv i left join lieu l on l.id_lieu=i.id_lieu where month(i.date_interv)=12 and year(i.date_interv)=2021 group by nom_lieu;
 --
+
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AZstats`()
 begin

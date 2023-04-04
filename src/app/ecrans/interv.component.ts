@@ -45,7 +45,7 @@ export class IntervComponent extends EcranMaitreDetail
 		cols[2]=new ColonneEcran("nom_lieu","Lieu",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,180);
 		cols[3]=new ColonneEcran("num_interv","N°",TypeColEcran.Chaine,true,ModifCol.NonModifiable,false,true,60);
 		cols[4]=new ColonneEcran("nom_seance","Séance",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,180);
-		cols[5]=new ColonneEcran("comm_interv","Commentaire",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,450);
+		cols[5]=new ColonneEcran("comm_interv","Commentaire",TypeColEcran.Chaine,true,ModifCol.NonModifiable,true,true,460);
 		cols[6]=new ColonneEcran("fact_interv","Facture",TypeColEcran.Booleen,true,ModifCol.NonModifiable,true,true,80);
 		cols[7]=new ColonneEcran("tarif_interv","Tarif",TypeColEcran.Flottant,true,ModifCol.NonModifiable,true,true,100);
 		this.m_blocs[0]=new Bloc(httpClient,this,"interv__recherche","maitre","Maitre","G","exec AZinterv__recherche","", "id_interv",cols);

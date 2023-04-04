@@ -18,11 +18,11 @@
 		<div class="form-group" style="display: flex; align-items: center; gap: 5px;">
 			<label class=" {{m_classe_entete}} "> Les interventions:</label>
 			<label > Date mini: </label>
-			<input style="width: 100px;" type="date" id="m_filtre_date_interv_mini" name="m_filtre_date_interv_mini" formControlName="m_filtre_date_interv_mini" class=" {{ m_classe_fonte }} ">
+			<input style="width: 120px;" type="date" id="m_filtre_date_interv_mini" name="m_filtre_date_interv_mini" formControlName="m_filtre_date_interv_mini" class=" {{ m_classe_fonte }} ">
 			<label > Date maxi: </label>
-			<!-- <input style="width: 100px;" type="date" id="m_filtre_date_interv_maxi" name="m_filtre_date_interv_maxi" formControlName="m_filtre_date_interv_maxi" class=" {{ m_classe_fonte }} ">
-			<label> Numéro: </label> -->
-			<input style="width: 50px;" type="text" id="m_filtre_num_interv" name="m_filtre_num_interv" formControlName="m_filtre_num_interv" class=" {{ m_classe_fonte }} " readonly>
+			<input style="width: 120px;" type="date" id="m_filtre_date_interv_maxi" name="m_filtre_date_interv_maxi" formControlName="m_filtre_date_interv_maxi" class=" {{ m_classe_fonte }} ">
+			<!-- <label> Numéro: </label>
+			<input style="width: 50px;" type="text" id="m_filtre_num_interv" name="m_filtre_num_interv" formControlName="m_filtre_num_interv" class=" {{ m_classe_fonte }} " readonly> -->
 			<label> Séance: </label>
 			<select formControlName="m_filtre_seance" id="m_filtre_seance" name="m_filtre_seance" class=" {{ m_classe_fonte }} ">
 				<option *ngFor="let item of m_cbo_seance.m_liste_items; let i = index" [value]="m_cbo_seance.m_liste_items[i].m_id">{{m_cbo_seance.m_liste_items[i].m_lib}}</option>

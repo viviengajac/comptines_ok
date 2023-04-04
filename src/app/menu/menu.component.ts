@@ -61,11 +61,11 @@ export class MenuComponent // implements OnInit
 //		this.accesBdService=new AccesBdService(httpClient);
 			this.m_cbo_fonte=new Cbo(this.httpClient,'fontes');
 			this.m_cbo_fonte.InitialiserListe(this.m_tailles_fontes);
-			let z:number;
+/* 			let z:number;
 			for (z=0;z<3;z++) {
                 console.log("CBO_id="+this.m_cbo_fonte.m_liste_items[z].m_id);
                 console.log("CBO_lib="+this.m_cbo_fonte.m_liste_items[z].m_lib);
-            }
+            } */
 			this.m_cbo_prs=new Cbo(this.httpClient,'prs_login');
 			this.DefServeur();
 		}		

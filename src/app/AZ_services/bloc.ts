@@ -1217,7 +1217,7 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 				ab.EcrireTable(this.m_sql_update,string_json)
 				.then(res =>
 				{
-//console.log('apres then: nom_bloc='+this.m_nom_bloc+', res='+res);
+console.log('apres then: nom_bloc='+this.m_nom_bloc+', res='+res);
 					var str_res:string=""+res;
 					if(str_res.startsWith('Erreur'))
 					{

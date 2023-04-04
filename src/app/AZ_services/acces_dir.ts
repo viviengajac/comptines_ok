@@ -139,7 +139,7 @@ export class AccesDir
 				res =>
 				{
 					var str_res:string=""+res;
-console.log('str_res='+str_res);
+//console.log('str_res='+str_res);
 					if(str_res.startsWith('Erreur'))
 					{
 						reject(str_res);
