@@ -207,7 +207,10 @@ export class AccesJSon
 				fini=1;
 			else
 			{
-				val_prop+=this.m_tampon_bd[this.m_ind];
+				if (this.m_tampon_bd[this.m_ind] == "\t")
+					val_prop+= " ";
+				else
+					val_prop+=this.m_tampon_bd[this.m_ind];
 				this.m_ind++;
 			}
 		}
@@ -261,7 +264,7 @@ export class AccesJSon
 		var num_col: number;
 		var nb_lig: number;
 		var ind_lig: number;
-//console.log("JSON.Debut de DecoderTableJSon("+donnees+")");
+console.log("JSON.Debut de DecoderTableJSon("+donnees+")");
 //			this.m_tab_nom_col=new Array(0);
 		this.m_nb_val=0;
 		this.m_tab_val=new Array(0);

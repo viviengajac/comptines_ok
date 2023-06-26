@@ -972,7 +972,8 @@
   .ag-theme-alpine-pm-m .ag-ltr .ag-cell {
     border-right-width: 1px;
     /*vivien*/
-    justify-content: center;
+    justify-content: flex-start;
+    padding: 0 5px !important;
   }
   .ag-theme-alpine-pm-m .ag-rtl .ag-cell {
     border-left-width: 1px; }

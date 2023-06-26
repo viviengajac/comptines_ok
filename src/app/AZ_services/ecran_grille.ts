@@ -487,7 +487,8 @@ console.log('EG.onRowClick nom_col_cliquee='+this.m_nom_col_cliquee);
 /* 		if(this.m_nom_col_cliquee=='')
 			this.m_blocs[this.m_num_bloc_actif].PersonnaliserCelluleCbo(id,this.m_blocs[this.m_num_bloc_actif].m_nom_cle_primaire);
 		else  */
-		if(this.m_nom_col_cliquee!=undefined)
+		//if(this.m_nom_col_cliquee!=undefined)
+		if(this.m_nom_col_cliquee=="dep")
 			this.m_blocs[this.m_num_bloc_actif].PersonnaliserCelluleCbo(id,this.m_nom_col_cliquee);
 //						this.m_col[num_col]=nouvelle_col;
 //console.log(this.gridColumnApi.constructor.name);

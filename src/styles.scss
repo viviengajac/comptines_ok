@@ -252,3 +252,26 @@ label
 .entete_moyenne {padding-left: 10px;font-style: italic;font-weight: bold;display: inline-block; width: 150px;border:none !important;}
 .entete_grande {padding-left: 10px;font-style: italic;font-weight: bold;display: inline-block; width: 150px;border:none !important;}
 .entete_tres_grande {padding-left: 10px;font-style: italic;font-weight: bold;display: inline-block; width: 150px;border:none !important;}
+
+/* .deroule {
+    position: absolute;
+    width: 75%;
+    height: 75%;
+    border: 1px solid black;
+} */
+
+#commentaire-input {
+    height: auto;
+}
+.leaflet-popup-content {
+    width: 160px !important;
+}
+.interv-list {
+    height: auto;
+    padding: 0 10px;
+    max-height: 100px;
+    overflow-y: auto;
+}
+textarea {
+    font-family: Roboto, Helvetica Neue, sans-serif;
+}

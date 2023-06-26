@@ -1,4 +1,4 @@
-<div class="row" style="width: 100%; height: 100%;" flex class="{{ m_classe_fonte }} ">
+<div class="row" style="width: 100%; height: 100%;display: flex;flex-direction: column; justify-content: flex-start;" flex class="{{ m_classe_fonte }} ">
 <div style="border:2px solid #000;width: 100%;height: 50%; box-sizing: border-box;overflow: auto;padding: 2px; min-height: 80px;resize:vertical;">
 	<jw-modal id="erreur">
 		<h4>Erreur</h4>
@@ -39,11 +39,11 @@
 	<button (click)="onExcelMaitre()" class=" {{ m_classe_fonte }} " [disabled]="m_interdit_exp">Excel</button>
 	<ag-grid-angular style="width: 100%; height: calc(100% - 52px);" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options_maitre" rowSelection='single' enableColResize (gridReady)="onGridMaitreReady($event)" (rowClicked)="onRowClickMaitre($event)" (columnResized)="onColumnMaitreResized($event)" [headerHeight]="m_hauteur_entete"></ag-grid-angular>
 </div>
-<div style="border:2px solid #000;width: 100%; height: 50%; box-sizing: border-box; overflow: auto;padding: 2px;">
+<div style="border:2px solid #000;width: 100%;height: auto;flex-grow: 1; box-sizing: border-box; overflow: auto;padding: 2px;">
 	<!--div class="resizer" id="splitter_prs" style="width:100%;height:10px;border:1px solid #000;"></div-->
 	<button class="{{m_classe_boutons[1]}}" (click)="onBtnDetail('interv')" >{{m_blocs[1].m_lib_bloc}}</button>
 	<button class="{{m_classe_boutons[2]}}" (click)="onBtnDetail('seance_cmpt')" >{{m_blocs[2].m_lib_bloc}}</button>
-	<button class="{{m_classe_boutons[3]}}" (click)="onBtnDetail('interv_cmpt')" >{{m_blocs[3].m_lib_bloc}}</button>
+	<!-- <button class="{{m_classe_boutons[3]}}" (click)="onBtnDetail('interv_cmpt')" >{{m_blocs[3].m_lib_bloc}}</button> -->
 	<label style="width: 50px;" > / </label>
 	<button class=" {{ m_classe_fonte }} " (click)="onExcelDetails()" [disabled]="m_interdit_exp">Excel</button>
 	<button class=" {{ m_classe_fonte }} " (click)="onCreer()" id="btnCreer" [disabled]="m_interdit_ecr">Créer</button>
@@ -77,7 +77,7 @@
 					</div>
 					<div class="row">
 						<label class=" {{m_classe_label_onglet_principal}} ">Commentaire: </label>
-						<input type="text" formControlName="m_comm_interv" name="comm_interv" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}} " style=" {{m_style_champs_onglet_principal}} ">
+						<textarea type="text" formControlName="m_comm_interv" maxlength="150" name="comm_interv" (change)="onModifValFormulaire($event)" class=" {{m_classe_fonte}}" id="commentaire-input" style=" {{m_style_champs_onglet_principal}} "></textarea>
 					</div>
 					<div class="row">
 						<label class=" {{m_classe_label_onglet_principal}} ">Facturé: </label>

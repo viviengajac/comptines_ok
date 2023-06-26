@@ -277,7 +277,7 @@ export class MenuComponent // implements OnInit
 	{
 		var num_ecran:string='';
 		var i:number;
-		var	tab_bloc_ref:string[]=['cmpt','instr','lieu','ville'];
+		var	tab_bloc_ref:string[]=['cmpt','publics','instr','lieu','ville'];
 		switch (nom_ecran)
 		{
 			case 'seance':
@@ -290,12 +290,35 @@ export class MenuComponent // implements OnInit
 				num_ecran='2|1';
 				break;
 			default:
+			if(nom_ecran.startsWith('dependances'))
+			{
+				for(i=0;i<MenuComponent.tab_nom_tab_pour_dependances.length;i++)
+				{
+					if (nom_ecran=='dependances/'+MenuComponent.tab_nom_tab_pour_dependances[i])
+						num_ecran='2|'+i;
+				}
+			}
+			else
+			{
+				for(i=0;i<MenuComponent.tab_bloc_adm_ref.length;i++)
+				{
+					if(nom_ecran==MenuComponent.tab_bloc_adm_ref[i])
+						num_ecran='0|'+i;
+				}
+				for(i=0;i<MenuComponent.tab_bloc_ref.length;i++)
+				{
+					if(nom_ecran==MenuComponent.tab_bloc_ref[i])
+						num_ecran='1|'+i;
+				}
+			}
+			break;
+			/* default:
 				for(i=0;i<tab_bloc_ref.length;i++)
 				{
 					if(nom_ecran==tab_bloc_ref[i])
 						num_ecran='0|'+i;
 				}
-				break;
+				break; */
 		}
 //console.log('MenuComponent.NumEcran('+nom_ecran+')='+num_ecran);
 		return num_ecran;
@@ -309,19 +332,30 @@ export class MenuComponent // implements OnInit
 			var num_fonte=GlobalConstantes.NumClasseFonte(GlobalConstantes.m_classe_fonte);
 			var params_url:string='?p='+GlobalConstantes.m_id_prs_login+'|'+num_ecran+'|'+id+'|'+num_fonte;
 			var url:string=GlobalConstantes.m_url+params_url;
-//console.log('MenuComponent.AppelerHref: url='+url);
+console.log('MenuComponent.AppelerHref: url='+url);	//here
 			window.open(url,'_blank');
 		}
 	}
-	tab_ecrans:string[]=['references','seance','interv'];
-	tab_bloc_ref:string[]=['cmpt','instr','lieu','ville'];
+	
+	//private static tab_ecrans:string[]=['adm_references','references','dependances','loges','prs','adm_blocs'];
+	private static tab_bloc_adm_ref:string[]=['type_bloc','type_champ','type_ecr','adm_ecrs'];
+	//private static tab_bloc_ref:string[]=['cerem','deg','etat_prs','obed','orient','rite','temple','terr','type_doc','type_ech','type_fic','type_loge','type_off','type_tenue','type_stt','ville'];
+	private static tab_ecrans:string[]=['adm_references','references','dependances','seance','interv','adm_blocs'];
+	private static tab_bloc_ref:string[]=['cmpt','publics','instr','lieu','ville'];
+
 	UrlEcran(num_ecran:number,num_bloc:number):string
 	{
-		var url_ecran:string=this.tab_ecrans[num_ecran];
-		if(num_ecran==0)url_ecran+='/'+this.tab_bloc_ref[num_bloc];
+		//var url_ecran:string=this.tab_ecrans[num_ecran];
+		//if(num_ecran==0)url_ecran+='/'+this.tab_bloc_ref[num_bloc];
+		//return url_ecran;
+		var url_ecran:string=MenuComponent.tab_ecrans[num_ecran];
+		if(num_ecran==0)url_ecran+='/'+MenuComponent.tab_bloc_adm_ref[num_bloc];
+		if(num_ecran==1)url_ecran+='/'+MenuComponent.tab_bloc_ref[num_bloc];
+		if(num_ecran==3)url_ecran+='/'+MenuComponent.tab_ecrans[4];
+console.log(url_ecran);
 		return url_ecran;
 	}
-	private static tab_nom_tab_pour_dependances:string[]=['cerem','deg','etat_prs','obed','orient','rite','temple','terr','type_doc','type_fic','type_loge','type_off','type_tenue','ville'];
+	private static tab_nom_tab_pour_dependances:string[]=['cmpt','publics','instr','lieu','ville','interv'];
 	public static NomTablePourDependances(num_bloc:number):string
 	{
 		return MenuComponent.tab_nom_tab_pour_dependances[num_bloc];

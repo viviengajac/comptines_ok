@@ -682,7 +682,7 @@ console.log('id_maitre='+this.m_id_maitre);
 				},
 				erreur=>
 				{
-//console.log('appel de MessageErreur depuis EcranMaitreDetail: 5');
+console.log('AAA appel de MessageErreur depuis EcranMaitreDetail: 5');
 					this.MessageErreur(erreur);
 				});
 			}
@@ -1254,6 +1254,67 @@ for(i=0;i<this.m_col_maitre.length;i++)
 //console.log('appel de MessageErreur depuis EcranMaitreDetail: 12');
 			this.MessageErreur(msg_complet);
 		}
+	}
+	async onGenererDeroule() {
+		console.log("debut de onGenererDeroule : ");
+		console.log(this.m_blocs);
+		let nom_seance = this.m_blocs[1].m_lignes[0].m_cellules[1].m_val;
+		console.log(nom_seance);
+		let ind_seq: number;
+		let ind_cmpt: number;
+		let ind_inter: number;
+		for (let i = 0; i < this.m_blocs[2].m_colonnes_sql.length; i++) {
+			switch(this.m_blocs[2].m_colonnes_sql[i].m_nom_col) {
+				case "seq":
+					ind_seq = i;
+				break;
+				case "id_cmptWITH":
+					ind_cmpt = i;
+				break;
+				case "intermede":
+					ind_inter = i;
+				break;
+			}
+		}
+
+		let deroule = "<b>Séance : "+ nom_seance + "</b><br><table><tr><td>";
+		for (let i = 0; i < this.m_blocs[2].m_lignes.length; i++) {
+			let nom_comptine = "";
+			let nom_intermede = "";
+			let num_sequence = 0;
+			for (let j = 0; j < this.m_blocs[2].m_lignes[i].m_cellules.length; j++) {
+				if (this.m_blocs[2].m_lignes[i].m_cellules[j].m_num_col == ind_cmpt) {
+					nom_comptine = this.m_blocs[2].m_lignes[i].m_cellules[j].m_val;
+					//console.log("nom_comptine= "+nom_comptine);
+				}
+				if (this.m_blocs[2].m_lignes[i].m_cellules[j].m_num_col == ind_inter) {
+					nom_intermede = this.m_blocs[2].m_lignes[i].m_cellules[j].m_val;
+					//console.log("nom_intermede= "+nom_intermede);
+				}
+				if (this.m_blocs[2].m_lignes[i].m_cellules[j].m_num_col == ind_seq) {
+					num_sequence = this.m_blocs[2].m_lignes[i].m_cellules[j].m_val;
+					//console.log("nom_intermede= "+nom_intermede);
+				}
+			}
+			if (num_sequence > 0) {
+				deroule += "</td></tr>\n<tr><td><b>" + num_sequence + "</b>";
+				num_sequence = 0;
+			}
+			deroule += "<u> "+ nom_comptine + "</u> - " + nom_intermede + "";
+		//lignes[i] = this.m_blocs[2].m_lignes[i];
+		}
+		deroule += "</td></tr></table>";
+		console.log(deroule);
+		this.AfficherDeroule(deroule);
+	}
+	async AfficherDeroule(deroule: string) {
+		//let div = document.createElement("div");
+		//div.classList.add("deroule");
+		//div.textContent = deroule;
+		//document.body.appendChild(div);
+		let nouvel_onglet = window.open();
+		nouvel_onglet.document.write(deroule);
+		nouvel_onglet.document.close();
 	}
 	/*
 	ModifValeurChamp(num_bloc:number,nom_col_modifiee:string,id_cle_primaire:number,val_col_new: any)

@@ -163,7 +163,7 @@ console.log('AAA avant init map');
 						type_lieu=ab.m_lignes[i].RecupererVal(6);
 						liste_interv=ab.m_lignes[i].RecupererVal(7);
 //console.log('lieu: '+nom_lieu+','+lat_t+','+lon_t+','+lat_v+','+lon_v+','+type_lieu+','+liste_interv);
-						var vignette=nom_lieu+'<br>'+lat+':'+lon+'<br>Interventions:';
+						var vignette='Lieu: <b>'+nom_lieu+'</b><br>Coord: <b>'+lat+', '+lon+'</b><br>Interventions:<div class="interv-list">';
 						if(liste_interv===undefined)
 						{
 						}
@@ -171,6 +171,7 @@ console.log('AAA avant init map');
 						{
 							var tab_interv:string[]=liste_interv.split('§')
 							var nb_interv:number=tab_interv.length;
+							var debut:string;
 							for(j=0;j<nb_interv;j++)
 							{
 //console.log("VVV tab_interv[j]"+tab_interv[j]);
@@ -182,11 +183,22 @@ console.log('AAA avant init map');
 								var test_url:string=GlobalConstantes.m_base_url;
 								test_url.replace('localhost:4200','localhost');
 console.log('WWW interv['+j+']: vignette '+vignette+" date_interv="+date_interv+" date_fr="+date_interv_fr);
-								vignette+='<br><span style="font-weight: bold">N°'+(j+1)+' - '+date_interv_fr+'</span>';
+
+								var num_fonte=GlobalConstantes.NumClasseFonte(GlobalConstantes.m_classe_fonte);
+								var params_url:string='?p='+GlobalConstantes.m_id_prs_login+'|4|1|'+id_interv+'|'+num_fonte;
+								var url:string=GlobalConstantes.m_url+params_url;
+								//console.log('CarteComponent.AppelerHref: url='+url);
+								//window.open(url,'_blank');
+								if (j>0)
+									debut = '<br>';
+								else
+									debut = '';
+								vignette+=debut+'<a target="_blank" href="'+ url +'" style="font-weight: bold">N°'+(j+1)+' - '+date_interv_fr+'</a>';
 								//vignette+='<br><a href="'+GlobalConstantes.m_base_url+'?p='+GlobalConstantes.m_id_prs+'|2|1|'+id_interv+'|'+GlobalConstantes.m_classe_fonte+'" target="_blank">'+date_interv_fr+'</a>';
 								//vignette+='<br><a href="'+GlobalConstantes.m_base_url+'/interv?serveur_bd='+GlobalConstantes.m_id_prs+'|2|1|'+id_interv+'|'+GlobalConstantes.m_classe_fonte+'" target="_blank">'+date_interv_fr+'</a>';
 //console.log('vignette='+vignette);
 							}
+							vignette+='</div>';
 						}
 //console.log('avant insertion marqueur: lat='+lat+', lon='+lon+', vignette='+vignette);
 		// avant modifs: var temple=L.icon({iconUrl:'assets/'+nom_terr+'.jpg',shadowUrl:'assets/'+nom_terr+'.jpg',iconSize:[16, 16],shadowSize:[16, 16],iconAnchor:[8, 8],shadowAnchor: [8, 8],popupAnchor:  [0, -10]});

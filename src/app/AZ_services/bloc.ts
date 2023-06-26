@@ -288,6 +288,7 @@ export class Bloc
 						cols[num_col]=new ColumnDependances(col.m_nom_col,col.m_lib_col,true,false,!col.m_visible,true,col.EstModifiable(),largeur,classe_cellule,classes_header);
 						cols[num_col].cellRenderer=BtnDependancesRendererComponent;
 						cols[num_col].cellRendererParams={onClick:this.onBtnDependancesClick.bind(this),label:'Dépendances'};
+//console.log('colonne Dependances:'+col.m_nom_col);
 						break;
 					case TypeColEcran.Booleen:
 //console.log('colonne ColumnBool:'+col.m_nom_col);
@@ -614,9 +615,10 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 */
 	onBtnDependancesClick(e:any)
 	{
-//console.log('debut de onBtnDefDocClick');
+console.log('debut de onBtnDefDocClick');
 //		var nom_table=this.m_nom_table;
 		var id=e.ligne_cliquee[this.m_nom_cle_primaire];
+		console.log("id= "+id+" m_nom_table= "+this.m_nom_table);
 		MenuComponent.AppelerHref('dependances/'+this.m_nom_table,id);
 		return 'OK';
 	}
