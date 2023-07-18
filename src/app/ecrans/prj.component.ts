@@ -53,7 +53,7 @@ console.log('debut de NgInit de Prjcomponent');
 		var rep:string=GlobalConstantes.m_rep_fic;
 		console.log("m_rep_fic="+GlobalConstantes.m_rep_fic);
 		super.onBtnRecherche();
-/* 		if(rep.length==0)
+		if(rep.length==0)
 		{
 			super.onBtnRecherche();
 			console.log("rep.length=0");
@@ -61,6 +61,6 @@ console.log('debut de NgInit de Prjcomponent');
 		else
 		{
 			this.formOngletPrincipal.get('m_rep_fic').setValue(rep);
-		} */
+		}
 	}
 }
