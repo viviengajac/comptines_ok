@@ -416,11 +416,11 @@ console.log('10');
 		})
 	}
 	*/
-	onAugmenterTaille()
+	onAugmenterTailleGrilleMaitre()
 	{
 		this.DefinirHauteurGrilleMaitre(this.m_hauteur_grille_maitre+10);
 	}
-	onDiminuerTaille()
+	onDiminuerTailleGrilleMaitre()
 	{
 		this.DefinirHauteurGrilleMaitre(this.m_hauteur_grille_maitre-10);
 	}
@@ -431,6 +431,7 @@ console.log('10');
 		this.m_style_grille_maitre="width: 100%; height: "+h+"px;";
 		this.m_style_bloc_maitre="border:2px solid #000;width: 100%; height: "+h+"px; overflow: auto;padding: 2px; min-height: 80px;resize:vertical; box-sizing: border-box;";
 	}
+	/*
 	onColumnMaitreResized(event:any)
 	{
 //console.log('resetRowHeights');
@@ -440,6 +441,7 @@ console.log('10');
 	{
 		this.gridDetailApi.resetRowHeights();
 	}
+	*/
 	onGridMaitreReady(params:any)
 	{
 //console.log('EcranMaitreDetail.onGridMaitreReady');
@@ -447,6 +449,7 @@ console.log('10');
 		this.gridMaitreApi = params.api;
 		this.gridMaitreColumnApi = params.columnApi;
 		this.m_blocs[0].InitGridApi(params.api,params.columnApi);
+		this.m_blocs[0].m_grille_ok=true;
 //console.log('EcranMaitreDetail.onGridMaitreReady: m_id_appele='+GlobalConstantes.m_id_appele);
 		if(GlobalConstantes.m_id_appele>0)
 		{
@@ -459,7 +462,7 @@ console.log('10');
 	}
 	async onRowClickMaitre(event:any)
 	{
-console.log('onRowClickMaitre: m_row_index_maitre='+this.m_row_index_maitre+', nouvel index='+event.rowIndex);
+//console.log('onRowClickMaitre: m_row_index_maitre='+this.m_row_index_maitre+', nouvel index='+event.rowIndex);
 		var i:number;
 		var modif: boolean=false;
 		for(i=0;i<this.m_blocs.length;i++)
@@ -486,10 +489,10 @@ console.log('onRowClickMaitre: m_row_index_maitre='+this.m_row_index_maitre+', n
 		{
 			this.RestaurerCboSpecifiques();
 			const selectedRow = this.gridMaitreApi.getSelectedRows()[0];
-console.log('selectedRow, nom_cle_maitre='+this.m_nom_cle_maitre);
-console.log(selectedRow);
+//console.log('selectedRow, nom_cle_maitre='+this.m_nom_cle_maitre);
+//console.log(selectedRow);
 			this.m_id_maitre=selectedRow[this.m_nom_cle_maitre];
-console.log('id_maitre='+this.m_id_maitre);
+//console.log('id_maitre='+this.m_id_maitre);
 			this.ChargerDetails(false,false);
 			this.ReinitialiserCompteur();
 			this.m_row_index_maitre=event.rowIndex;
@@ -519,29 +522,36 @@ console.log('id_maitre='+this.m_id_maitre);
 					if(str_res.startsWith('Erreur'))
 					{
 //console.log('appel de MessageErreur depuis EcranMaitreDetail: 1');
-						this.MessageErreur(str_res);
+						this.MessageErreur(str_res+'§'+req+'§§EcranMaitreDetail.AppelerHref('+id_maitre+','+num_bloc+')');
 					}
 					else
 					{
 //console.log('EcranMaitreDetail.AppelerHref: res='+res);
 						var id:number= +str_res;
 						id_maitre = id;
+						if(id<0)
+						{
+							this.MessageErreur('Erreur: procédure AZtrouver_id_maitre mal paramétrée§'+req+'§§EcranMaitreDetail.AppelerHref('+id+','+num_bloc+')');
+						}
+						else
+						{
 //console.log('EcranMaitreDetail.AppelerHref: id_maitre='+id_maitre);
-						this.m_id_maitre=id_maitre;
-						this.m_num_bloc_actif=num_bloc;
+							this.m_id_maitre=id_maitre;
+							this.m_num_bloc_actif=num_bloc;
 //console.log('EcranMaitreDetail.AppelerHref: m_id_maitre='+this.m_id_maitre);
-						this.ChargerDetails(false,false);
+							this.ChargerDetails(false,false);
 						/*
 						var idx:number=this.m_blocs[num_bloc].NumLig(id);
 console.log('EcranMaitreDetail.AppelerHref: idx='+idx);
 						this.gridDetailApi.forEachNode(node=> {if(node.rowIndex == idx)node.setSelected(true)})
 						*/
+						}
 					}
 				},
 				err =>
 				{
 //console.log('appel de MessageErreur depuis EcranMaitreDetail: 2');
-					this.MessageErreur(err);
+					this.MessageErreur(err+'§'+req+'§§EcranMaitreDetail.AppelerHref('+id+','+num_bloc+')');
 				}
 			);
 		}
@@ -635,12 +645,12 @@ console.log('EcranMaitreDetail.AppelerHref: idx='+idx);
 	}
 	async ChargerDetails(supp_col_invisibles: boolean,remplacer_nom_col_par_header:boolean)
 	{
-console.log('ChargerDetails');
-console.log('id_maitre='+this.m_id_maitre);
+//console.log('EcranMaitreDetail.ChargerDetails');
+//console.log('id_maitre='+this.m_id_maitre);
 		this.m_idx_detail-1;
 		if(this.m_id_maitre > 0)
 		{
-console.log('id_maitre='+this.m_id_maitre);
+//console.log('id_maitre='+this.m_id_maitre);
 			var nb_blocs:number=this.m_blocs.length-1;
 			var i: number;
 			var num_bloc:number=1;
@@ -668,7 +678,7 @@ console.log('id_maitre='+this.m_id_maitre);
 					if(str_res.startsWith('Erreur'))
 					{
 //console.log('appel de MessageErreur depuis EcranMaitreDetail: 4');
-						this.MessageErreur(str_res);
+						this.MessageErreur(str_res+'§'+sql+'§§EcranMaitreDetail.ChargerDetails.ChargerBloc');
 					}
 //console.log('EcranMaitreDetail.ChargerDetails: id_appele='+GlobalConstantes.m_id_appele+', num_bloc_appele='+GlobalConstantes.m_num_bloc_appele+', num_bloc='+num_bloc);
 					if(GlobalConstantes.m_id_appele>0 && GlobalConstantes.m_num_bloc_appele==num_bloc)
@@ -682,8 +692,8 @@ console.log('id_maitre='+this.m_id_maitre);
 				},
 				erreur=>
 				{
-console.log('AAA appel de MessageErreur depuis EcranMaitreDetail: 5');
-					this.MessageErreur(erreur);
+//console.log('appel de MessageErreur depuis EcranMaitreDetail: 5');
+					this.MessageErreur(erreur+'§'+sql+'§§EcranMaitreDetail.ChargerDetails.ChargerBloc');
 				});
 			}
 //console.log('EcranMaitreDetail.ChargerDetails: fin de la boucle sur les blocs');
@@ -701,7 +711,7 @@ console.log('AAA appel de MessageErreur depuis EcranMaitreDetail: 5');
 	}
 	onBtnDetail(nom_btn: string)
 	{
-//console.log('onBtnDetail('+nom_btn+') id_maitre='+this.m_id_maitre);
+//console.log('EcranMaitreDetail.onBtnDetail('+nom_btn+') id_maitre='+this.m_id_maitre);
 		if(this.m_id_maitre>0)
 		{
 //console.log('id_maitre='+this.m_id_maitre);
@@ -718,7 +728,7 @@ console.log('AAA appel de MessageErreur depuis EcranMaitreDetail: 5');
 					this.m_num_bloc_actif=i;
 				}
 			}
-//console.log('onBtnDetail: num_onglet_actif='+this.m_num_onglet_actif);
+//console.log('onBtnDetail: num_bloc_actif='+this.m_num_bloc_actif);
 //			this.m_col_detail=this.m_onglets[this.m_num_onglet_actif].m_coldefs;
 //			this.m_grid_options_detail.columnDefs=this.m_col_detail;
 			var remplacer_nom_col_par_header:boolean=false;
@@ -767,7 +777,7 @@ console.log('AAA appel de MessageErreur depuis EcranMaitreDetail: 5');
 	}
 	async AfficherBloc(num_bloc: number,RemplacerNomColParHeader:boolean, PourExcel:boolean )
 	{
-//console.log('AfficherBloc('+num_bloc+')');
+//console.log('EcranMaitreDetail.AfficherBloc('+num_bloc+')');
 		if(num_bloc==1&& PourExcel==false)
 		{
 			if(this.m_id_maitre>0)
@@ -775,6 +785,7 @@ console.log('AAA appel de MessageErreur depuis EcranMaitreDetail: 5');
 				// onglet principal
 				this.m_onglet_principal=true;
 //				this.AfficherOngletDetailPrincipal();
+				await this.delay(300);
 				this.AfficherOngletFormulaire(num_bloc);
 			}
 		}
@@ -783,8 +794,9 @@ console.log('AAA appel de MessageErreur depuis EcranMaitreDetail: 5');
 			var MaitreOuDetail:string = num_bloc==0?"M":"D";
 			var FormulaireOuGrille=this.m_blocs[num_bloc].m_type_bloc;
 			this.m_onglet_principal=num_bloc==1;
+//console.log('EcranMaitreDetail.AfficherBloc avant PreparerAffichageBloc');
 			var string_json:string=this.m_blocs[num_bloc].PreparerAffichageBloc(RemplacerNomColParHeader,PourExcel);
-//console.log('AfficherBloc: num_onglet='+num_onglet+', string_json='+string_json);
+//console.log('AfficherBloc: apres PreparerAffichageBloc string_json='+string_json);
 			if(num_bloc == 0)
 			{
 				this.m_json_maitre=JSON.parse(string_json);
@@ -829,6 +841,7 @@ for(i=0;i<this.m_col_maitre.length;i++)
 //console.log('this.m_col_detail');
 //console.log(this.m_col_detail);
 //				this.gridDetailApi.setColumnDefs(this.m_col_detail);
+//console.log('EcranMaitreDetail.AfficherBloc: string_json=['+string_json+']');
 				this.m_json_detail=JSON.parse(string_json);
 				if(PourExcel==false && this.m_num_bloc_actif>=0)
 				{
@@ -1130,7 +1143,7 @@ for(i=0;i<this.m_col_maitre.length;i++)
 	}
 	async onSauver()
 	{
-		console.log("AA EMD.Sauver");
+//console.log("AA EMD.Sauver");
 		try
 		{
 			var en_cours: boolean=false;
@@ -1168,17 +1181,17 @@ for(i=0;i<this.m_col_maitre.length;i++)
 //console.log('attente (i='+i+')');
 					await this.delay(10);
 				}
-//console.log('sauver: onglet='+onglet.m_nom_onglet);
+//console.log('sauver: num_bloc='+num_bloc);
 				en_cours=true;
 				this.m_blocs[num_bloc].Sauver()
 				.then(res =>
 				{
-//console.log('apres then: num_onglet='+this.m_num_onglet_actif+', res='+res);
+//console.log('apres then: num_bloc='+num_bloc+', res='+res);
 					var str_res:string=""+res;
 					if(str_res.startsWith('Erreur'))
 					{
 //console.log('appel de MessageErreur depuis EcranMaitreDetail: 8');
-						this.MessageErreur(str_res);
+						this.MessageErreur(str_res+'§§num_bloc='+num_bloc+'§EcranMaitreDetail.onSauver: retour de Bloc.Sauver');
 					}
 					else
 					{
@@ -1190,7 +1203,7 @@ for(i=0;i<this.m_col_maitre.length;i++)
 				err =>
 				{
 //console.log('appel de MessageErreur depuis EcranMaitreDetail: 9');
-						this.MessageErreur(err);					
+						this.MessageErreur(err+'§§num_bloc='+num_bloc+'§EcranMaitreDetail.onSauver: appel de Bloc.Sauver');
 				});
 			}
 			while(en_cours===true)
@@ -1215,7 +1228,7 @@ for(i=0;i<this.m_col_maitre.length;i++)
 							if(str_res.startsWith('Erreur'))
 							{
 //console.log('appel de MessageErreur depuis EcranMaitreDetail: 10');
-								this.MessageErreur(str_res);
+								this.MessageErreur(str_res+'§'+sql+'§§EcranMaitreDetail.onSauver: appel de RequetePourRecupererIdOngletPrincipal');
 							}
 							else if(str_res.length>0)
 							{
@@ -1223,12 +1236,11 @@ for(i=0;i<this.m_col_maitre.length;i++)
 //console.log('id_maitre='+this.m_id_maitre);
 							this.ChargerDetails(false,false);
 							}
-//console.log('contenu='+contenu);
 						},
 						err =>
 						{
 //console.log('appel de MessageErreur depuis EcranMaitreDetail: 11');
-							this.MessageErreur(err);
+							this.MessageErreur(err+'§'+sql+'§§EcranMaitreDetail.onSauver: appel de RequetePourRecupererIdOngletPrincipal');
 						}
 					);
 				}
@@ -1254,67 +1266,6 @@ for(i=0;i<this.m_col_maitre.length;i++)
 //console.log('appel de MessageErreur depuis EcranMaitreDetail: 12');
 			this.MessageErreur(msg_complet);
 		}
-	}
-	async onGenererDeroule() {
-		console.log("debut de onGenererDeroule : ");
-		console.log(this.m_blocs);
-		let nom_seance = this.m_blocs[1].m_lignes[0].m_cellules[1].m_val;
-		console.log(nom_seance);
-		let ind_seq: number;
-		let ind_cmpt: number;
-		let ind_inter: number;
-		for (let i = 0; i < this.m_blocs[2].m_colonnes_sql.length; i++) {
-			switch(this.m_blocs[2].m_colonnes_sql[i].m_nom_col) {
-				case "seq":
-					ind_seq = i;
-				break;
-				case "id_cmptWITH":
-					ind_cmpt = i;
-				break;
-				case "intermede":
-					ind_inter = i;
-				break;
-			}
-		}
-
-		let deroule = "<b>Séance : "+ nom_seance + "</b><br><table><tr><td>";
-		for (let i = 0; i < this.m_blocs[2].m_lignes.length; i++) {
-			let nom_comptine = "";
-			let nom_intermede = "";
-			let num_sequence = 0;
-			for (let j = 0; j < this.m_blocs[2].m_lignes[i].m_cellules.length; j++) {
-				if (this.m_blocs[2].m_lignes[i].m_cellules[j].m_num_col == ind_cmpt) {
-					nom_comptine = this.m_blocs[2].m_lignes[i].m_cellules[j].m_val;
-					//console.log("nom_comptine= "+nom_comptine);
-				}
-				if (this.m_blocs[2].m_lignes[i].m_cellules[j].m_num_col == ind_inter) {
-					nom_intermede = this.m_blocs[2].m_lignes[i].m_cellules[j].m_val;
-					//console.log("nom_intermede= "+nom_intermede);
-				}
-				if (this.m_blocs[2].m_lignes[i].m_cellules[j].m_num_col == ind_seq) {
-					num_sequence = this.m_blocs[2].m_lignes[i].m_cellules[j].m_val;
-					//console.log("nom_intermede= "+nom_intermede);
-				}
-			}
-			if (num_sequence > 0) {
-				deroule += "</td></tr>\n<tr><td><b>" + num_sequence + "</b>";
-				num_sequence = 0;
-			}
-			deroule += "<u> "+ nom_comptine + "</u> - " + nom_intermede + "";
-		//lignes[i] = this.m_blocs[2].m_lignes[i];
-		}
-		deroule += "</td></tr></table>";
-		console.log(deroule);
-		this.AfficherDeroule(deroule);
-	}
-	async AfficherDeroule(deroule: string) {
-		//let div = document.createElement("div");
-		//div.classList.add("deroule");
-		//div.textContent = deroule;
-		//document.body.appendChild(div);
-		let nouvel_onglet = window.open();
-		nouvel_onglet.document.write(deroule);
-		nouvel_onglet.document.close();
 	}
 	/*
 	ModifValeurChamp(num_bloc:number,nom_col_modifiee:string,id_cle_primaire:number,val_col_new: any)
@@ -1344,6 +1295,7 @@ for(i=0;i<this.m_col_maitre.length;i++)
 		try
 		{
 //console.log('EcranMaitreDetail.onCellValueChanged');
+//console.log(event);
 			var val_col_new=""+event.newValue;
 			var val_col_old=""+event.oldValue;
 			if(event.newValue===undefined)
@@ -1411,9 +1363,9 @@ for(i=0;i<this.m_col_maitre.length;i++)
 				}
 				if(faire)
 				{
-console.log('avant appel de ModifValeurChamp('+nom_col_modifiee+','+id_cle_primaire+','+val_col_new+')');
+//console.log('avant appel de ModifValeurChamp('+nom_col_modifiee+','+id_cle_primaire+','+val_col_new+')');
 					this.ModifValeurChamp(nom_col_modifiee,id_cle_primaire,val_col_new);
-console.log('apres appel de ModifValeurChamp');
+//console.log('apres appel de ModifValeurChamp');
 					this.ApresModifValeurChamp(num_lig_ecran_modifiee,this.m_blocs[num_bloc].m_nom_bloc,id_cle_primaire,nom_col_modifiee,val_col_new);
 				}
 			}
@@ -1421,9 +1373,16 @@ console.log('apres appel de ModifValeurChamp');
 		catch(e)
 		{
 //console.log('appel de MessageErreur depuis EcranMaitreDetail: 14');
-			this.MessageErreur("Erreur: "+(e as Error).message+"\n"+(e as Error).stack);
+			this.MessageErreur("Erreur: "+(e as Error).message+"§§§"+(e as Error).stack);
 		}
 	}
+	/*
+	onCellDetailEditingStarted(event:any)
+	{
+//console.log('EcranMaitreDetail: onCellDetailEditingStarted');
+//console.log(event);
+	}
+	*/
 	onRowClickDetail(event:any)	//	appele apres un click sur une cellule d'une grille
 	{
 //console.log('onRowClickDetail: nouvel index='+event.rowIndex);
@@ -1544,7 +1503,7 @@ console.log('apres appel de ModifValeurChamp');
 			if(str_res.startsWith('Erreur'))
 			{
 //console.log('appel de MessageErreur depuis EcranMaitreDetail: 16');
-				this.MessageErreur(str_res);
+				this.MessageErreur(str_res+'§'+sql+'§§EcranMaitreDetail.RafraichierEcran');
 			}
 			else
 			{

@@ -20,5 +20,5 @@
 	<button class=" {{ m_classe_fonte }} " (click)="onCreer()" [disabled]="m_interdit_ecr">Créer</button>
 	<button class=" {{ m_classe_fonte }} " (click)="onSupprimer()" [disabled]="m_interdit_ecr">Supprimer</button>
 	<button class=" {{ m_classe_fonte }} " (click)="onSauver()" [disabled]="m_interdit_ecr">Sauver</button>
-	<ag-grid-angular style="width: 100%; height: calc(100% - 25px);" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options" rowSelection='single' enableColResize (gridReady)="onGridReady($event)" (cellValueChanged)="onCellValueChanged($event)" (focusin)="onFocusIn($event)" (rowClicked)="onRowClick($event)" (columnResized)="onColumnResized($event)" [headerHeight]="m_hauteur_entete"></ag-grid-angular>
+	<ag-grid-angular style="width: 100%; height: calc(100% - 25px);" class=" {{m_classe_grille}} " [gridOptions]="m_grid_options" rowSelection='single' enableColResize (gridReady)="onGridReady($event)" (cellValueChanged)="onCellValueChanged($event)" (focusin)="onFocusIn($event)" (rowClicked)="onRowClick($event)" [headerHeight]="m_hauteur_entete"></ag-grid-angular>
 </div>

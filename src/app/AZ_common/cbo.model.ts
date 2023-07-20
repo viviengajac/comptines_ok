@@ -80,7 +80,7 @@ export class Cbo
 	}
 	InitialiserListe(liste_items: string[])
 	{
-		//console.log("Init="+liste_items[0]);
+//console.log("Init="+liste_items[0]);
 		var nb_lig=liste_items.length;
 		this.m_liste_items=new Array(nb_lig+1);
 		var tc: ItemCbo = new ItemCbo(0,'');

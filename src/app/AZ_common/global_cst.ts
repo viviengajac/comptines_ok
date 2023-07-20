@@ -1,10 +1,11 @@
-import { AppComponent } from '../app.component';
+//import { AppComponent } from '../app.component';
 //import { MenuComponent } from '../menu/menu.component';
+import { DefEcran } from '../AZ_services/ecran';
 export class GlobalConstantes
 {
 //	public static apiURL: string = "https://bertrandgajac.hopto.org:9003/";
 	public static m_base_url:string=window.location.origin;
-	public static m_url:string=window.location.href;
+	public static m_url:string='';
     public static m_id_prs_login: number=-1;
     public static m_compteur=0;
 	public static m_compteur_initialise=false;
@@ -25,6 +26,32 @@ export class GlobalConstantes
 	public static m_nb_max_lig_creees:number=1111;
 	public static m_rep_fic:string='';
 	public static m_nom_col_select_id='SelectId';
+	public static m_def_ecrans:Array<DefEcran>=new Array();
+	public static InitUrl()
+	{
+//console.log('GlobalConstantes.InitUrl: début');
+		var url=window.location.href;
+		var href_menu='/menu';
+		if(url.endsWith(href_menu))
+			url=url.substring(0,url.length-href_menu.length);
+//console.log('premiere url='+url);
+		var i=url.indexOf('?p=');
+//console.log('i='+i);
+		if (i>0)
+		{
+			url=url.substring(0,i);
+		}
+//console.log('derniere url='+url);
+		this.m_url=url;
+	}
+	public static DonnerUrl()
+	{
+//console.log('GlobalConstantes.DonnerUrl: début: url.length='+this.m_url.length);
+		if(this.m_url.length==0)
+			this.InitUrl();
+//console.log('GlobalConstantes.DonnerUrl: fin: url='+this.m_url);
+		return this.m_url;
+	}
 	public static NumClasseFonte(classe_fonte:string):number
 	{
 		var num_classe_fonte:number=2;
@@ -82,9 +109,20 @@ export class GlobalConstantes
 		if(url.endsWith('localhost:4200')) url=url.replace('localhost:4200','localhost');
 //console.log('GlobalConstantes.FaireUrl: url='+url);
 		if(!url.endsWith('/'))url+='/';
-		url+=GlobalConstantes.m_serveur_bd;
-		if(!url.endsWith('/'))url+='/';
 //console.log('GlobalConstantes:FaireUrl final='+url);
 		return url;
+	}
+	public static FaireUrlPourPhp():string
+	{
+		var url:string = GlobalConstantes.FaireUrl();
+		if(!url.endsWith('/'))url+='/';
+		url+=GlobalConstantes.m_serveur_bd;
+		if(!url.endsWith('/'))url+='/';
+		url+='std/';
+		return url;
+	}
+	public static LireDefEcrans(def_ecrans:Array<DefEcran>)
+	{
+		this.m_def_ecrans=def_ecrans;
 	}
 }

@@ -30,7 +30,6 @@ export class EcranGrille extends Ecran
 	ngOnInit(): void
 	{
 //console.log('References: début de ngOnInit');
-//console.log("AAAV="+this.m_blocs[0].InitColDefs.length);
 		/*
 		if(!this.m_cbo_initialisee)
 		{
@@ -48,24 +47,26 @@ export class EcranGrille extends Ecran
 		this.activatedRoute.params.forEach(params =>
 		{
 //            let userId = params["userId"];
-//console.log('AdmReference.ngOnInit');
+//console.log('References.ngOnInit');
 //console.log(this);
 //console.log(this.activatedRoute);
 //console.log(this.activatedRoute.params);
 			var nom_tab:string=''+this.activatedRoute.snapshot.paramMap.get("nom_ecran");
 //console.log('Appel de ChangementDeGrille('+nom_tab+')');
 			this.ChangementDeGrille(nom_tab);
-//console.log('references.ngOnInit: m_nom_tab='+this.m_nom_tab+', avant appel de InitColDefs');
+//console.log('references.ngOnInit: m_nom_tab='+nom_tab+', avant appel de InitColDefs');
 			this.InitColDefs();
 //console.log('apres InitColDefs');
 			this.Init();
 //console.log('apres Init');
         })
-	}	
+	}
+	/*
 	onColumnResized(event:any)
 	{
 		this.gridApi.resetRowHeights();
 	}
+	*/
 	onGridReady(params:any)
 	{
 //console.log('ecran_grille.onGridReady');
@@ -77,8 +78,7 @@ export class EcranGrille extends Ecran
 			this.m_blocs[i].InitGridApi(params.api,params.columnApi);
 		}
 		this.m_grid_api_initialisee=true;
-//forcer recherche au chargement du composant Références
-		//this.onBtnRecherche();
+//console.log('m_id_appele='+GlobalConstantes.m_id_appele);
 		if(GlobalConstantes.m_id_appele>0)
 			this.onBtnRecherche();
 	}
@@ -99,16 +99,7 @@ console.log('EcranGrille.AppelerHref: m_idx_detail='+this.m_idx_detail);
 	*/
 	async ChangementDeGrille(nom_tab:string)
 	{
-/* 		var chargement: boolean = true;
-console.log('EcranGrille.ChangementDeGrille: nom_tab='+nom_tab);
-console.log(chargement);
-//forcer recherche au changement d'un écran du composant Références, lors d'un changement de table de référence
-		while (!chargement) {
-			await this.delay(500);
-		}
-		chargement = false;
-		console.log(chargement);
-		this.onBtnRecherche(); */
+//console.log('EcranGrille.ChangementDeGrille: nom_tab='+nom_tab);
 		var i:number;
 		for(i=0;i<this.m_blocs.length;i++)
 		{
@@ -151,12 +142,12 @@ console.log(chargement);
 		.then
 		(res=>
 		{
-//console.log('avant AfficherBloc');
+//console.log('EcranGrille.AfficherApresRecherche: m_id_appele='+GlobalConstantes.m_id_appele);
 			if(GlobalConstantes.m_id_appele>0)
 			{
 //console.log('EcranGrille.onBtnRecherche: avant appel de NumLig');
 				this.m_idx_detail=this.m_blocs[this.m_num_bloc_actif].NumLig(GlobalConstantes.m_id_appele);
-//console.log('EcranGrille.onBtnRecherche: m_idx_detail='+this.m_idx_detail);
+//console.log('EcranGrille.AfficherApresRecherche: m_idx_detail='+this.m_idx_detail);
 			}
 			this.AfficherBloc(false,false);
 			/*
@@ -299,7 +290,15 @@ console.log(chargement);
 //console.log('fin de Afficherbloc');
 //		return promise;
 */
+//console.log('EcranGrille.AfficherBloc');
+//console.log('A1');
+			await this.delay(300);
+//console.log('B1');
 		this.m_blocs[this.m_num_bloc_actif].AfficherBloc(RemplacerNomColParHeader,PourExcel);
+//console.log('A2');
+//			await this.delay(900);
+//console.log('B2');
+//console.log('EcranGrille.AfficherBloc: après appel');
 		/*
 		var classe_bouton:string=this.m_blocs[this.m_num_bloc_actif].m_modif?"btn_onglet_actif_modif":"btn_onglet_actif";
 		classe_bouton+="_"+GlobalConstantes.m_classe_fonte;
@@ -308,17 +307,62 @@ console.log(chargement);
 		*/
 		this.ToucherBlocActif();
 		this.m_nb_lignes=this.m_blocs[this.m_num_bloc_actif].m_lignes.length;
+//console.log('EcranGrille.AfficherBloc: this.m_nb_lignes='+this.m_nb_lignes);
+//console.log('EcranGrille.AfficherBloc: this.m_idx_detail='+this.m_idx_detail);
 		if(this.m_idx_detail>=0)
 		{
+//console.log('A');
+			await this.delay(300);
+//console.log('B');
+/*
+			this.delay(300)
+			.then
+			(res=>
+			{
+console.log('AA');
+				this.gridApi.forEachNode((rowNode:any, index:number) =>
+				{
+//console.log('node');
+//console.log(rowNode);
+//console.log(index);
+					if(index == this.m_idx_detail)rowNode.setSelected(true);
+				});
+console.log('AB');
+				this.gridApi.ensureIndexVisible(this.m_idx_detail);
+console.log('AC');
+				this.m_idx_detail=-1;
+			},
+			err=>
+			{
+				this.MessageErreur(err+'§sql§data§EcranGrilleService.onBtnRecherche: retour de PreparerBloc');
+			});
+*/
+//console.log('EcranGrille.AfficherBloc: m_idx_detail='+this.m_idx_detail);
+//console.log(this.gridApi);
+//console.log(this.gridApi.getDisplayedRowCount());
+/*
 			this.gridApi.forEachNode
 			((node: { rowIndex: number; setSelected: (arg0: boolean) => void; })=>
 				{
-//					console.log('node.rowIndex='+node.rowIndex);
+console.log('node.rowIndex='+node.rowIndex);
 					if(node.rowIndex == this.m_idx_detail)node.setSelected(true)
 				}
 			)
+*/
+
+//console.log('AA');
+			this.gridApi.forEachNode((rowNode:any, index:number) =>
+			{
+//console.log('node');
+//console.log(rowNode);
+//console.log(index);
+				if(index == this.m_idx_detail)rowNode.setSelected(true);
+			});
+//console.log('AB');
 			this.gridApi.ensureIndexVisible(this.m_idx_detail);
+//console.log('AC');
 			this.m_idx_detail=-1;
+
 		}
 	}
 	/*
@@ -349,12 +393,14 @@ console.log(chargement);
 	}
 	async onCreer()
 	{
-		console.log("Vivien");
-		console.log(this.m_grid_api_initialisee);
-		if (this.m_grid_api_initialisee == false) {
-			this.MessageErreur("Non");
+//console.log("Vivien");
+//console.log(this.m_grid_api_initialisee);
+		if (this.m_grid_api_initialisee == false)
+		{
+			this.MessageErreur("Grille non initialisée");
 		}
-		else {
+		else
+		{
 //console.log("VVVV"+this.m_blocs[this.m_num_bloc_actif].m_ecran);
 			var id_cle_primaire=this.m_blocs[this.m_num_bloc_actif].CreerUneLigne();
 //console.log('EcranGilleService.onCreer: id_cle_primaire='+id_cle_primaire);
@@ -364,20 +410,22 @@ console.log(chargement);
 	}
 	async onSupprimer()
 	{
-		console.log("Suppr");
+//console.log("Suppr");
 		var faire:boolean=true;
 //console.log("nom_onglet_actif="+this.m_num_onglet_actif);
 		const selectedRow = this.gridApi.getSelectedRows()[0];
-		if (selectedRow == undefined) {
+		if (selectedRow == undefined)
+		{
 			this.MessageErreur("Il faut d'abord sélectionner une ligne à supprimer.");
 		}
-		else {
-			console.log("Suppr1");
+		else
+		{
+//console.log("Suppr1");
 			var nom_champ=this.m_blocs[this.m_num_bloc_actif].m_nom_cle_primaire;
 			var id=selectedRow[nom_champ];
-	//console.log("nom_champ="+nom_champ);
+//console.log("nom_champ="+nom_champ);
 			this.m_blocs[this.m_num_bloc_actif].SupprimerUneLigne(id);
-	//console.log('OnSupprimer: id_a_supprimer='+id_detail);
+//console.log('OnSupprimer: id_a_supprimer='+id_detail);
 			var pour_excel:boolean=false;
 			this.AfficherBloc(false,pour_excel);
 		}
@@ -482,13 +530,8 @@ console.log(chargement);
 //console.log(selectedRow);
 		var id=selectedRow[this.m_blocs[this.m_num_bloc_actif].m_nom_cle_primaire];
 //console.log('id='+id);
-console.log('EG.onRowClick nom_col_cliquee='+this.m_nom_col_cliquee);
-// modif pour éviter une erreur quand on clique dans un cbo avant d'avoir cliqué sur une ligne
-/* 		if(this.m_nom_col_cliquee=='')
-			this.m_blocs[this.m_num_bloc_actif].PersonnaliserCelluleCbo(id,this.m_blocs[this.m_num_bloc_actif].m_nom_cle_primaire);
-		else  */
-		//if(this.m_nom_col_cliquee!=undefined)
-		if(this.m_nom_col_cliquee=="dep")
+//console.log('nom_col_cliquee='+this.m_nom_col_cliquee);
+		if(this.m_nom_col_cliquee!=undefined && this.m_nom_col_cliquee.length>0)
 			this.m_blocs[this.m_num_bloc_actif].PersonnaliserCelluleCbo(id,this.m_nom_col_cliquee);
 //						this.m_col[num_col]=nouvelle_col;
 //console.log(this.gridColumnApi.constructor.name);

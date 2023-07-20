@@ -10,7 +10,7 @@ import { DatetimeEditorComponent } from '../AZ_renderers/datetime-editor.compone
 import { CboEditorComponent } from '../AZ_renderers/cbo-editor.component';
 import { GlobalConstantes } from '../AZ_common/global_cst';
 import { ModalService } from '../AZ_modal/modal.service';
-import { Bloc } from '../AZ_services/bloc';
+import { Bloc,DefBloc } from '../AZ_services/bloc';
 import { Cbo} from '../AZ_common/cbo.model';
 import { AccesBdService } from '../AZ_services/acces_bd';
 import { Cellule,TypeColEcran,ColonneEcran,ModifCol } from '../AZ_common/ecran.model';
@@ -112,13 +112,13 @@ export class Ecran // implements OnInit
 			if(authStatus)
 			{
 				ecran.style.visibility='visible';
-				this.ReinitialiserCompteur();
 			}
 			else
 			{
 				ecran.style.visibility='hidden';
 			}
 		}
+		this.ReinitialiserCompteur();
 //		this.m_grid_options_maitre=new OptionsGrille(this);
 	}
 	InitColDefs()
@@ -141,11 +141,11 @@ export class Ecran // implements OnInit
 	{
 		var promise = new Promise((resolve, reject) =>
 		{
-console.log('Ecran.LancerUneRecherche');
+//console.log('Ecran.LancerUneRecherche');
 //console.log(this.m_blocs[num_bloc]);
 			this.ReinitialiserCompteur();
 			var req_sql=this.RequeteRecherche().replace('@id_prs_login@',''+GlobalConstantes.m_id_prs_login);
-console.log('apres appel de RequeteRecherche: req_sql='+req_sql);
+//console.log('apres appel de RequeteRecherche: req_sql='+req_sql);
 			this.m_blocs[num_bloc].ChargerBloc(req_sql,false, false)
 			.then
 			(res=>
@@ -183,7 +183,7 @@ console.log('apres appel de RequeteRecherche: req_sql='+req_sql);
 	}
 	async onBtnRecherche()
 	{
-//console.log('onBtnRecherche');
+//console.log('Ecran.onBtnRecherche');
 		var modif: boolean=false;
 		var i:number;
 		for(i=0;i<this.m_blocs.length;i++)
@@ -219,17 +219,20 @@ console.log('apres appel de RequeteRecherche: req_sql='+req_sql);
 			(res=>
 			{
 //				this.m_json_detail='';
+//console.log('Ecran.onBtnRecherche: avant AfficherApresRecherche');
 				this.AfficherApresRecherche();
+//console.log('Ecran.onBtnRecherche: apres AfficherApresRecherche');
 			},
 			err=>
 			{
 //console.log('appel de MessageErreur depuis EcranMaitreDetail: 3');
-				this.MessageErreur(err);
+				this.MessageErreur(err+'§§num_bloc='+num_bloc+'§Ecran.onBtnRecherche.LancerUneRecherche');
 			});
 		}
 	}
 	delay(ms: number)
 	{
+//console.log('appel de delay('+ms+')');
 		return new Promise( resolve => setTimeout(resolve, ms) );
 	}
 	/*
@@ -282,7 +285,7 @@ console.log('hauteur_avant='+hauteur_avant_modif+', apres='+hauteur);
 			case "moyenne":
 				hauteur_ligne=35;
 				break;
-§			case "grande":
+			case "grande":
 				hauteur_ligne=40;
 				break;
 			case "tres_grande":
@@ -299,8 +302,9 @@ console.log('hauteur_avant='+hauteur_avant_modif+', apres='+hauteur);
 	}
 	MessageErreur(msg:string)
 	{
-//console.log('EcranService.MessageErreur('+msg+')');
-		var tab=msg.split('§');
+		var msg_tmp=''+msg;
+// console.log('EcranService.MessageErreur('+msg+')');
+		var tab=msg_tmp.split('§');
 		this.m_msg_err=tab[0];
 		this.m_sql_err=tab[1];
 		this.m_data_err=tab[2];
@@ -474,7 +478,7 @@ console.log('hauteur_avant='+hauteur_avant_modif+', apres='+hauteur);
 	}
 	AfficherOngletFormulaire(num_bloc:number)
 	{
-//console.log('Ecran.AfficherOngletformulaire');
+//console.log('Ecran.AfficherOngletformulaire: d?but');
 		var i:number;
 		var bloc:Bloc=this.m_blocs[num_bloc];
 //console.log(bloc);
@@ -485,7 +489,7 @@ console.log('hauteur_avant='+hauteur_avant_modif+', apres='+hauteur);
 			{
 				var nom_champ=bloc.m_colonnes_ecran[i].m_nom_col;
 				var nom_champ_ts:string="m_"+nom_champ;
-//console.log('AfficherOngletDetailPrincipal: avant nom_champ='+nom_champ);
+//console.log('Ecran.AfficherOngletFormulaire: avant nom_champ='+nom_champ);
 				var val:any;
 				var v_vrai:boolean=true;
 				var v_faux:boolean=false;
@@ -499,19 +503,18 @@ console.log('hauteur_avant='+hauteur_avant_modif+', apres='+hauteur);
 						else if (val==1)
 							val=v_vrai;
 					}
-//console.log('AfficherOngletDetailPrincipal: val='+val);
+//console.log('Ecran.AfficherOngletFormulaire: val='+val);
 				}
 				else
 				{
 					val=undefined;
 				}
-//console.log('AfficherOngletDetailPrincipal: nom_champ='+nom_champ_ts+', val='+val);
-//console.log(this.formOngletPrincipal);
-//console.log(this.formOngletPrincipal.get(nom_champ_ts));
+//console.log('Ecran.AfficherOngletFormulaire: nom_champ_ts='+nom_champ_ts+', val='+val);
 				this.formOngletPrincipal.get(nom_champ_ts).setValue(val);
-//console.log('AfficherOngletDetailPrincipal: apres SetValue');
+//console.log('Ecran.AfficherOngletformulaire: apres SetValue');
 			}
 		}
+//console.log('Ecran.AfficherOngletformulaire: fin');
 	}
 	TransfererOngletFormulaire(num_bloc:number)
 	{
@@ -552,7 +555,8 @@ console.log('hauteur_avant='+hauteur_avant_modif+', apres='+hauteur);
 		if(num_col_sql_modifiee<0)
 		{
 //console.log('appel de MessageErreur depuis EcranMaitreDetail: 15');
-			this.MessageErreur("Element inconnu: "+nom_elem);
+			var msg_err:string='Champ inconnu dans la BD'+'§§champ=('+nom_elem+')§pile=(Ecran.onModifValFormulaire)�';
+			this.MessageErreur(msg_err);
 		}
 		else
 		{
@@ -562,55 +566,6 @@ console.log('hauteur_avant='+hauteur_avant_modif+', apres='+hauteur);
 //console.log('appel de onChangeEvent: nom_elem='+nom_elem+', num_col_sql_modifiee='+num_col_sql_modifiee+', val='+val+', id_cle_primaire='+id_cle_primaire);
 			this.ModifValeurChamp(nom_elem,id_cle_primaire,val);
 		}
-	}
-	onAdressesMail()
-	{
-		var liste_adresses:string='';
-		var i:number;
-		var bloc:Bloc=this.m_blocs[0];
-		var num_col_selectid:number=-1;
-		var num_col_nom_prs:number=-1;
-		var num_col_prenom_prs:number=-1;
-		var num_col_ad_elec:number=-1;
-		var msg:string='';
-		for(i=0;i<bloc.m_colonnes_ecran.length;i++)
-		{
-			switch(bloc.m_colonnes_ecran[i].m_nom_col)
-			{
-				case GlobalConstantes.m_nom_col_select_id:
-					num_col_selectid=i;
-					break;
-				case 'nom_prs':
-					num_col_nom_prs=i;
-					break;
-				case 'prenom_prs':
-					num_col_prenom_prs=i;
-					break;
-				case 'ad_elec':
-					num_col_ad_elec=i;
-					break;
-			}
-		}
-		if(num_col_selectid>=0 && num_col_nom_prs>=0 && num_col_prenom_prs>=0 && num_col_ad_elec>=0)
-		{
-			for(i=0;i<bloc.m_lignes.length;i++)
-			{
-				if(bloc.m_lignes[i].m_cellules[num_col_selectid].m_val=="1")
-				{
-					var nom_prs:string=bloc.m_lignes[i].m_cellules[num_col_nom_prs].m_val;
-					var prenom_prs:string=bloc.m_lignes[i].m_cellules[num_col_prenom_prs].m_val;
-					var ad_elec:string=bloc.m_lignes[i].m_cellules[num_col_ad_elec].m_val;
-					liste_adresses+=nom_prs+' '+prenom_prs+'<'+ad_elec+'>;';
-				}
-			}
-			msg=liste_adresses;
-		}
-		else
-		{
-			msg="La requ?te ne permet pas de g?n?rer une liste d'adresses mail";
-		}
-		this.MessageBox(msg);
-		this.ReinitialiserCompteur();
 	}
 	InitBlocs()
 	{
@@ -629,9 +584,9 @@ console.log('hauteur_avant='+hauteur_avant_modif+', apres='+hauteur);
 					var str_res:string=""+res;
 					if(!str_res.startsWith("Erreur"))
 					{
-console.log('requete executee: nb_cols='+ab.m_colonnes_sql.length);
+//console.log('requete executee: nb_cols='+ab.m_colonnes_sql.length);
 //						this.InitialiserColonnesSql(ab.m_colonnes_sql);
-console.log("nb_lignes="+ab.m_lignes.length);
+//console.log("nb_lignes="+ab.m_lignes.length);
 						var max_num_bloc:number=0;
 						var num_bloc:number=0;
 						for(i=0;i<ab.m_lignes.length;i++)
@@ -644,7 +599,7 @@ console.log("nb_lignes="+ab.m_lignes.length);
 						}
 						var nb_blocs:number=max_num_bloc+1;
 						this.m_blocs=new Array(nb_blocs);
-console.log("max_num_bloc="+max_num_bloc);
+//console.log("max_num_bloc="+max_num_bloc);
 						for(num_bloc=0;num_bloc<nb_blocs;num_bloc++)
 						{
 							var max_num_ch:number=0;
@@ -663,7 +618,7 @@ console.log("max_num_bloc="+max_num_bloc);
 								}
 							}
 							var nb_ch:number=max_num_ch+1;
-console.log("bloc numero "+num_bloc+": max_num_champs="+max_num_ch);
+//console.log("bloc numero "+num_bloc+": max_num_champs="+max_num_ch);
 							var tab_ch:ColonneEcran[]=new Array(nb_ch);
 							var code_type_bloc:string='';
 							var nom_bloc:string='';
@@ -677,8 +632,8 @@ console.log("bloc numero "+num_bloc+": max_num_champs="+max_num_ch);
 								var num_bloc_tmp=ab.ValCelluleParNom(i,'num_bloc');
 								if(num_bloc_tmp == num_bloc)
 								{
-console.log('ligne numero '+i);
-console.log(ab.m_lignes[i]);
+//console.log('ligne numero '+i);
+//console.log(ab.m_lignes[i]);
 									if(code_type_bloc=='')
 									{
 										code_type_bloc=ab.ValCelluleParNom(i,'code_type_bloc');
@@ -694,7 +649,7 @@ console.log(ab.m_lignes[i]);
 									var lib_ch=ab.ValCelluleParNom(i,'lib_champ');
 									var code_type_ch=ab.ValCelluleParNom(i,'code_type_champ');
 									var visible:boolean=ab.ValCelluleParNom(i,'visible');
-console.log('nom_ch='+nom_ch+', visible='+visible);
+//console.log('nom_ch='+nom_ch+', visible='+visible);
 									var code_type_modif_ch=ab.ValCelluleParNom(i,'code_type_modif_champ');
 									var inser_excel=ab.ValCelluleParNom(i,'inser_excel');
 									var inser_ecran=ab.ValCelluleParNom(i,'inser_ecran');
@@ -757,7 +712,7 @@ console.log('nom_ch='+nom_ch+', visible='+visible);
 									}
 									var ce:ColonneEcran=new ColonneEcran(nom_ch,lib_ch,type_ch,visible,mc,inser_excel,inser_ecran,lg_ch);
 									tab_ch[num_ch]=ce;
-console.log("bloc "+num_bloc+": champ "+num_ch+"="+nom_ch);
+//console.log("bloc "+num_bloc+": champ "+num_ch+"="+nom_ch);
 								}
 //console.log("bloc: InitialiserLignes: fin pour num_ligne="+i);
 //			this.m_lignes_org[i]=lignes[i];
@@ -773,7 +728,7 @@ console.log("bloc "+num_bloc+": champ "+num_ch+"="+nom_ch);
 					}
 					else
 					{
-console.log('requete mal executee: nb_cols='+ab.m_colonnes_sql.length);
+//console.log('requete mal executee: nb_cols='+ab.m_colonnes_sql.length);
 						reject(str_res);
 					}
 				},
@@ -781,17 +736,25 @@ console.log('requete mal executee: nb_cols='+ab.m_colonnes_sql.length);
 				{
 					var str_err:string=error;
 					reject(str_err);
-console.log('erreur dans AZlire_config_ecr:'+str_err);
+//console.log('erreur dans AZlire_config_ecr:'+str_err);
 				})
 			}
 			catch(e)
 			{
 //console.log('appel de MessageErreur depuis bloc: 14');
-				this.MessageErreur("Erreur: "+(e as Error).message+"\n"+(e as Error).stack);
+				this.MessageErreur("Erreur: "+(e as Error).message+"§§§"+(e as Error).stack);
 				reject('KO');
 			}
 		});
 //console.log('Bloc.ChargerBloc:fin de ChargerBloc');
 		return promise;
 	}
+}
+export class DefEcran
+{
+	private m_nom_type_ecran:string='';
+	private m_code_ecr:string='';
+	private m_nom_ecr:string='';
+	private m_lib_ecr:string='';
+	private m_blocs:Array<DefBloc>=new Array();
 }

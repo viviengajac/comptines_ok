@@ -80,7 +80,7 @@ export class LecDirComponent extends Ecran
 //console.log('Lecdir.ngOnInit:fin: rep_fic='+GlobalConstantes.m_rep_fic);
 			this.TesterRep();
 		}
-//console.log('fin de NgInit de Prjcomponent');
+//console.log('fin de NgInit de Lecdir');
 	}
 	TesterRep()
 	{

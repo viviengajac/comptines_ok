@@ -32,11 +32,11 @@ export class PrjComponent extends EcranFormulaire
 		this.formOngletPrincipal=this.formBuilder.group({m_nom_prj:'',m_rep_fic:''});
 //		this.m_tab_col_nom_fic=["nom_prs","prenom_prs"];
 		this.m_classe_boutons=new Array(this.m_blocs.length);
-console.log('fin de constructeur de Prjcomponent');
+//console.log('fin de constructeur de Prjcomponent');
 	}
 	ngOnInit(): void
 	{
-console.log('debut de NgInit de Prjcomponent');
+//console.log('debut de NgInit de Prjcomponent');
 		this.Init();
 		this.onRecherche();
 //console.log('fin de NgInit de Prjcomponent');

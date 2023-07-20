@@ -44,7 +44,7 @@ export class AccesBdService
 	LireValeur(req:string)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_url_bd+GlobalConstantes.m_serveur_bd;
-		const url=GlobalConstantes.FaireUrl();
+		const url=GlobalConstantes.FaireUrlPourPhp();
 		let promise = new Promise((resolve, reject) =>
 		{
 			var url_req: string=url+this.lire_une_valeur+req;
@@ -71,7 +71,7 @@ export class AccesBdService
 	LireTable(req:string)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
-		const url=GlobalConstantes.FaireUrl();
+		const url=GlobalConstantes.FaireUrlPourPhp();
 //console.log('acces_bd.LireTable: url='+url);
 		let promise = new Promise((resolve, reject) =>
 		{
@@ -135,7 +135,7 @@ export class AccesBdService
 	LireTailleBlob(db_ou_fs:string,nom_table:string,id_doc:number,type_fic:string)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
-		const url=GlobalConstantes.FaireUrl();
+		const url=GlobalConstantes.FaireUrlPourPhp();
 		let promise = new Promise((resolve, reject) =>
 		{
 			var sep:string="|";
@@ -172,7 +172,7 @@ export class AccesBdService
 	LirePartielBlob(db_ou_fs:string,nom_table:string,id_doc:number,type_fic:string,octet_debut:number,taille_bloc:number)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
-		const url=GlobalConstantes.FaireUrl();
+		const url=GlobalConstantes.FaireUrlPourPhp();
 		let promise = new Promise((resolve, reject) =>
 		{
 			var sep:string="|";
@@ -206,7 +206,7 @@ export class AccesBdService
 	async LireBlob(db_ou_fs:string,nom_table:string,id_doc:number,type_fic:string)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
-		const url=GlobalConstantes.FaireUrl();
+		const url=GlobalConstantes.FaireUrlPourPhp();
 		let promise = new Promise((resolve, reject) =>
 		{
 			var sep:string="|";
@@ -279,7 +279,7 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 	LireBlob(db_ou_fs:string,nom_table:string,id_doc:number,type_fic:string)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
-		const url=GlobalConstantes.FaireUrl();
+		const url=GlobalConstantes.FaireUrlPourPhp();
 		let promise = new Promise((resolve, reject) =>
 		{
 			var sep:string="|";
@@ -308,7 +308,7 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 	async LireBlob(db_ou_fs:string,nom_table:string,id_doc:number,type_fic:string)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
-		const url=GlobalConstantes.FaireUrl();
+		const url=GlobalConstantes.FaireUrlPourPhp();
 		var sep:string="|";
 		var params=db_ou_fs+sep+nom_table+sep+id_doc+sep+type_fic;
 		var url_req: string=url+'LireTailleBlob.php?params='+params;
@@ -380,7 +380,7 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 	LireTailleFic(nom_fic:string)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
-		const url=GlobalConstantes.FaireUrl();
+		const url=GlobalConstantes.FaireUrlPourPhp();
 		let promise = new Promise((resolve, reject) =>
 		{
 			var sep:string="|";
@@ -418,7 +418,7 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 	LireFic(nom_fic:string)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
-		const url=GlobalConstantes.FaireUrl();
+		const url=GlobalConstantes.FaireUrlPourPhp();
 		let promise = new Promise((resolve, reject) =>
 		{
 			var sep:string="|";
@@ -447,7 +447,7 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 	LirePartielFic(nom_fic:string,octet_debut:number,taille_bloc:number)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
-		const url=GlobalConstantes.FaireUrl();
+		const url=GlobalConstantes.FaireUrlPourPhp();
 		let promise = new Promise((resolve, reject) =>
 		{
 			var sep:string="|";
@@ -476,7 +476,7 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 	async LireFic(nom_fic:string)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
-		const url=GlobalConstantes.FaireUrl();
+		const url=GlobalConstantes.FaireUrlPourPhp();
 		var sep:string="|";
 		var params=nom_fic;
 //		var url_req: string=url+'LireTailleFic.php?params='+params;
@@ -550,7 +550,7 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 	EcrireBlob(db_ou_fs:string,nom_table:string,id_doc:number,type_fic:string, contenu: string |ArrayBuffer)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
-		const url=GlobalConstantes.FaireUrl();
+		const url=GlobalConstantes.FaireUrlPourPhp();
 		let promise = new Promise((resolve, reject) =>
 		{
 			var sep:string="|";
@@ -582,12 +582,12 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 	EcrireTable(sql:string, contenu: string)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
-		const url=GlobalConstantes.FaireUrl();
+		const url=GlobalConstantes.FaireUrlPourPhp();
 		let promise = new Promise((resolve, reject) =>
 		{
 			var url_req: string=url+this.ecrire_table+sql;
-console.log('EcrireTable: url_req='+url_req);
-console.log('EcrireTable: contenu=[[['+contenu+']]]');
+//console.log('EcrireTable: url_req='+url_req);
+//console.log('EcrireTable: contenu=[[['+contenu+']]]');
 			this.httpClient.post(url_req, contenu , {responseType: 'text'})
 			.toPromise()
 			.then
@@ -596,7 +596,6 @@ console.log('EcrireTable: contenu=[[['+contenu+']]]');
 				{
 //console.log('EcrireTable: retour de http='+res);
 					var str_res:string=""+res;
-console.log('EcrireTable: retour de http='+str_res);
 					if(!str_res.startsWith('Erreur'))
 					{
 						resolve('OK');
@@ -609,7 +608,6 @@ console.log('EcrireTable: retour de http='+str_res);
 				(error) =>
 				{
 					var msg_err:string='Erreur: ' + error.message;
-console.log('Erreur='+msg_err);
 					reject(msg_err);
 				}
 			)
@@ -619,7 +617,7 @@ console.log('Erreur='+msg_err);
 	ExecSql(sql:string)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
-		const url=GlobalConstantes.FaireUrl();
+		const url=GlobalConstantes.FaireUrlPourPhp();
 		let promise = new Promise((resolve, reject) =>
 		{
 			var url_req: string=url+this.exec_sql+sql;
@@ -685,6 +683,9 @@ console.log('Erreur='+msg_err);
 				break;
 			case '.pdf':
 				type_mime="application/pdf";
+				break;
+			case '.png':
+				type_mime="image/png";
 				break;
 			case '.txt':
 				type_mime="text/txt";

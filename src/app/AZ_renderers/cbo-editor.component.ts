@@ -1,7 +1,7 @@
 import { Component,ViewChild,ViewContainerRef,AfterViewInit } from '@angular/core';
 import { ICellEditorAngularComp } from 'ag-grid-angular';
 //import { ICellEditorParams } from 'ag-grid-community';
-import { Cbo,ItemCbo, ParamsCbo } from '../AZ_common/cbo.model';
+import { Cbo,ItemCbo } from '../AZ_common/cbo.model';
 //import { GlobalConstantes } from '../AZ_common/global_cst';
 import { MenuComponent } from '../menu/menu.component';
 
@@ -12,7 +12,7 @@ import { MenuComponent } from '../menu/menu.component';
 	<option *ngFor="let item of m_vals" value="{{item.m_id}}" class="{{m_classe_fonte}}" [selected]="item.m_selected==true">{{item.m_lib}}</option>
 </select><button (click)="onCliquerHREF($event)" class="{{m_classe_fonte}}">?</button>`
 })
-export class CboEditorComponent implements ICellEditorAngularComp,AfterViewInit
+export class CboEditorComponent implements ICellEditorAngularComp //,AfterViewInit
 {
 	public m_id:number=0;
 //	public m_options:ItemCbo[];
@@ -26,6 +26,7 @@ export class CboEditorComponent implements ICellEditorAngularComp,AfterViewInit
 		this.params = params;
 		this.m_classe_fonte=params.colDef.cellClass;
 //console.log('CboEditorcomponent: m_classe_fonte='+this.m_classe_fonte);
+//console.log(params);
 		this.m_nom_table=params.colDef.cellEditorParams.m_nom_table;
 		this.m_id=params.value;
 		var nb_items=params.colDef.cellEditorParams.m_liste_items.length;
@@ -118,10 +119,9 @@ console.log(this.m_vals);
 	{
 //console.log('changeEvent de cboeditorcomponent: voir event');
 //console.log(event);
-		if (this.params.onClick instanceof Function)
+		if (this.params.colDef.cellRendererParams.onClick instanceof Function)
 		{
-//console.log('changeEvent de cboeditorcomponent: voir event');
-//console.log(event);
+//console.log('changeEvent de cboeditorcomponent: onClick est une fonction');
 			var t:HTMLInputElement=event.target;
 //console.log(t);
 			var nom_elem=t.name;
@@ -135,11 +135,11 @@ console.log(this.m_vals);
 				event: event,
 				id:this.m_id,
 				ligne_cliquee: this.params.node.data,
-				nom_col_cliquee: this.params.nom_col_cliquee
+				nom_col_cliquee: this.params.colDef.cellRendererParams.nom_col_cliquee
 				// ...something
 			}
 //console.log('avant appel');
-			this.params.onClick(parametres);
+			this.params.colDef.cellRendererParams.onClick(parametres);
 //console.log('apres appel');
 		}
 	}
@@ -151,12 +151,14 @@ console.log(this.m_vals);
 	{
 		return false;
 	}
+	/*
 	ngAfterViewInit()
 	{
     // window.setTimeout(() => {
     //   this.input.element.nativeElement.focus();
     // });
 	}
+	*/
 	onCliquerHREF($event:any)
 	{
 //console.log('onCliquer HREF ('+this.m_nom_table+','+this.m_id+')');
