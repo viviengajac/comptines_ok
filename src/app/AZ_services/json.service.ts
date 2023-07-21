@@ -75,7 +75,9 @@ export class AccesJSon
 	}
 	TranscrireEnJSonUneTable(cols: ColonneSql[],ligs:Ligne[])
 	{
-//Tracer("debut objet liste de tables");
+//console.log("debut de TranscrireEnJSonUneTable");
+//console.log(cols);
+//console.log(ligs);
 		this.m_tampon="";
 		this.WriteStartObject();
 //Tracer("propriete tables");
@@ -87,19 +89,19 @@ export class AccesJSon
 		var j:number;
 		for(num_table=0;num_table<1;num_table++)
 		{
-//Tracer("debut objet table");
+//console.log("debut objet table");
 			this.WriteStartObject();
-//Tracer("propriete colonnes");
+//console.log("propriete colonnes");
 //T(")debut tableau colonnes(");
 			var nb_col:number=cols.length;
 			this.WritePropertyName("c");
 			this.WriteValue(""+nb_col);
 //				$this->WriteValue($nb_col);
 			this.WriteStartArray();
-//Tracer("nb_col=$nb_col");
+//console.log('nb_col='+nb_col);
 			for (i=0;i<nb_col;i++)
 			{
-//T(")debut objet colonne(");
+//T("debut objet colonne(");
 				this.WriteStartObject();
 //T(")propriete nom de colonne(");
 				this.WritePropertyName(cols[i].m_nom_col);
@@ -119,51 +121,68 @@ export class AccesJSon
 			this.WriteValue(""+nb_lig);
 //				$this->WriteValue($nb_lig);
 			this.WriteStartArray();
-//Tracer("nb_lig=($nb_lig)");
+//console.log('nb_lig='+nb_lig);
 			for(i=0;i<ligs.length;i++)
 			{
+//console.log('ligne numero '+i);
+//console.log(ligs[i]);
 //T(")debut objet ligne(");
 				this.WriteStartObject();
 //T(")propriete statut(");
 				this.WritePropertyName("v");
 				this.WriteValue(""+ligs[i].m_cellules.length);
+//console.log('nb cellules='+ligs[i].m_cellules.length);
 //T(")debut tableau des valeurs(");
 //						$this->WritePropertyByName("v","%nb_cel%");
 				this.WriteStartArray();
 				for(j=0;j<ligs[i].m_cellules.length;j++)
 				{
+//console.log('cellule numéro '+j);
 					this.WriteStartObject();
+//console.log('1');
 					this.WritePropertyName(""+ligs[i].m_cellules[j].m_num_col);
+//console.log('1');
 					var val=ligs[i].m_cellules[j].m_val;
+//console.log('val brute='+val);
+//console.log('colonne numéro '+ligs[i].m_cellules[j].m_num_col);
+//console.log('type_col='+cols[ligs[i].m_cellules[j].m_num_col].m_type_col);
 					var val_format=val;
-					// formatage de la cellule
-					switch(cols[ligs[i].m_cellules[j].m_num_col].m_type_col)
+					if(val!=null)
 					{
-						case 3:
+					// formatage de la cellule
+						switch(cols[ligs[i].m_cellules[j].m_num_col].m_type_col)
+						{
+							case 3:
 //console.log('cellule date: val avant format='+val);
-							if(val.length==10)
-								val_format=val.substring(0,4)+val.substring(5,7)+val.substring(8);
-							else if (val.length==19)	//cas date heure (AAAA-MM-DDThh:mm:ss)
-								val_format=val.substring(0,4)+val.substring(5,7)+val.substring(8,10)+val.substring(11,13)+val.substring(14,16)+val.substring(17,19);
-							else	//cas où la cellule n'a pas été éditée; val reste déjà formaté 
-								val_format=val;								
+								if (val.length==10)
+									val_format=val.substring(0,4)+val.substring(5,7)+val.substring(8);
+								else if (val.length==19)	//cas date heure (AAAA-MM-DDThh:mm:ss)
+									val_format=val.substring(0,4)+val.substring(5,7)+val.substring(8,10)+val.substring(11,13)+val.substring(14,16)+val.substring(17,19);
+								else	//cas où la cellule n'a pas été éditée; val reste déjà formaté 
+									val_format=val;								
 //console.log('MMMM2= cellule date: val apres format='+val_format);
-							break;
+								break;
+						}
 					}
+					else
+						val_format='';
+//console.log('val='+val_format);
 					this.WriteValue(val_format);
 //console.log('TranscrireEnJSonUneTable: écriture cellule: numero de colonne='+ligs[i].m_cellules[j].m_num_col+', valeur='+val_format);
 					this.WriteEndObject();
+//console.log('fin cellule numéro '+j);
 				}
 //T(")fin tableau des valeurs(");
 				this.WriteEndArray();
-//T(")fin objet ligne(");
+//console.log('fin objet ligne');
 				this.WriteEndObject();
 			}
-//T(")fin tableau des lignes(");
+//console.log('fin tableau des lignes');
 			this.WriteEndArray();
-//T(")fin objet table(");
+//console.log('fin objet table');
 			this.WriteEndObject();
 		}
+//console.log('fin');
 		this.WriteEndArray();
 		this.WriteEndObject();
 		return this.m_tampon;
@@ -207,10 +226,13 @@ export class AccesJSon
 				fini=1;
 			else
 			{
+				/*
 				if (this.m_tampon_bd[this.m_ind] == "\t")
 					val_prop+= " ";
 				else
 					val_prop+=this.m_tampon_bd[this.m_ind];
+				*/
+				val_prop+=this.m_tampon_bd[this.m_ind];
 				this.m_ind++;
 			}
 		}
@@ -264,7 +286,7 @@ export class AccesJSon
 		var num_col: number;
 		var nb_lig: number;
 		var ind_lig: number;
-console.log("JSON.Debut de DecoderTableJSon("+donnees+")");
+//console.log("JSON.Debut de DecoderTableJSon("+donnees+")");
 //			this.m_tab_nom_col=new Array(0);
 		this.m_nb_val=0;
 		this.m_tab_val=new Array(0);
@@ -462,6 +484,7 @@ console.log("JSON.Debut de DecoderTableJSon("+donnees+")");
 				val_format=val_col;
 				break;
 			case TypeColEcran.Chaine:
+			case TypeColEcran.Image:
 //console.log('nom_col_ecran='+nom_col_ecran+', val_col='+val_col);
 				val_format='"'+val_col.replace(/"/g,"\\\"")+'"';
 				break;
@@ -470,6 +493,7 @@ console.log("JSON.Debut de DecoderTableJSon("+donnees+")");
 				val_format=val_col;
 				break;
 			case TypeColEcran.CleEtrangere:
+			case TypeColEcran.Select:
 				val_format=val_col;
 				break;
 			case TypeColEcran.Date:

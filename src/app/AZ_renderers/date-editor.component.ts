@@ -6,7 +6,7 @@ import { ICellEditorAngularComp } from 'ag-grid-angular';
 	<input type="date" style="{{modifiable}}" (change)="changeEvent($event)" value="{{ma_date}}" class="{{m_classe_fonte}}">
     `
 })
-export class DateEditorComponent implements ICellEditorAngularComp,AfterViewInit
+export class DateEditorComponent implements ICellEditorAngularComp //,AfterViewInit
 {
 	public ma_date:string='';
 	public params:any=null;
@@ -67,7 +67,9 @@ export class DateEditorComponent implements ICellEditorAngularComp,AfterViewInit
 	{
 		return false;
 	}
+	/*
 	ngAfterViewInit()
 	{
 	}
+	*/
 }

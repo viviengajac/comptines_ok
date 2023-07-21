@@ -15,6 +15,7 @@ export class ExcelService
 //console.log('debut de exportAsExcelFile');
 		var i:number;
 //console.log('1');
+
 		var classeur: XLSX.WorkBook=XLSX.utils.book_new();
 //console.log('2');
 		var feuilles: XLSX.WorkSheet[];
@@ -41,6 +42,7 @@ export class ExcelService
 //console.log('nom_fic='+nom_fic);
 //		this.saveAsExcelFile(excelBuffer, nom_fic);
 		XLSX.writeFile(classeur,nom_fic);
+
 	}
 	/*
 	private saveAsExcelFile(buffer: any, fileName: string): void

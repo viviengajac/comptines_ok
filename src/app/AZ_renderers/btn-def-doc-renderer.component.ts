@@ -2,13 +2,15 @@ import { Component } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams, IAfterGuiAttachedParams } from 'ag-grid-community';
 import { GlobalConstantes } from '../AZ_common/global_cst';
-
+// voir https://www.quirksmode.org/dom/inputfile.html
 @Component({
   selector: 'app-btn-def-doc-renderer',
   template: `
-<!--input type="file" (change)="onCliquer($event)" [disabled]="inactif" class=" {{ m_classe_fonte }} "-->
-<input type="file" id="selectedFile" style="display: none;" (change)="onCliquer($event)" />
-<input type="button" value="Définir" onclick="document.getElementById('selectedFile').click();" [disabled]="inactif" class=" {{ m_classe_fonte }} " />    `
+<input type="file" id="DefDocRenderer" (change)="onCliquer($event)" [disabled]="inactif" class=" {{ m_classe_fonte }} ">
+<!--input type="file" id="DefDocRenderer" (change)="onCliquer($event)" [disabled]="inactif" class="hidden">
+<label for="DefDocRenderer" class=" {{ m_classe_fonte }} ">Définir</label-->
+<!--input type="file" id="selectedFile" style="display: none;" (change)="onCliquer($event)" />
+<input type="button" value="Définir" onclick="document.getElementById('selectedFile').click();" [disabled]="inactif" class=" {{ m_classe_fonte }} " /-->`
 })
 //<input type="file" (change)="onCliquer($event,$event.target.files)" [disabled]="inactif" class=" {{m_classe_fonte }} ">
 export class BtnDefDocRendererComponent implements ICellRendererAngularComp

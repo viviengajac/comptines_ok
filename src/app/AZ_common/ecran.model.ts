@@ -1,7 +1,7 @@
 import { ItemCbo } from '../AZ_common/cbo.model';
 import { Ecran } from '../AZ_services/ecran';
 
-export enum TypeColEcran { ClePrimaire=1,Chaine=2,Entier=3,CleEtrangere=4,Date=5,Booleen=6,VoirDocDb=7,DefDocDb=8,VoirDocFs=9,DefDocFs=10,Flottant=11,DateHeure=12,Dependances=13,Select=14 }
+export enum TypeColEcran { ClePrimaire=1,Chaine=2,Entier=3,CleEtrangere=4,Date=5,Booleen=6,VoirDocDb=7,DefDocDb=8,VoirDocFs=9,DefDocFs=10,Flottant=11,DateHeure=12,Dependances=13,Select=14, Detail=15,Image=16 }
 export enum ModifCol { NonModifiable=1, Modifiable=2, Obligatoire=3 }
 export class ColonneEcran
 {
@@ -72,7 +72,7 @@ export class ColumnCbo extends ColDef
 		this.editable = false;
 	}
 	public valueFormatter: any;
-	cellEditor: string='cboEditor';
+	cellEditor: string='';
 	cellEditorParams:any=null;
 }
 export class ColumnSelect extends ColDef
@@ -94,7 +94,8 @@ export class ColumnDate extends ColDef
 		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass,false);
 		this.editable = false;
 	}
-	cellEditor: string='dateEditor';
+//	cellEditor: string='dateEditor';
+	cellEditor: string='';
 }
 export class ColumnDateHeure extends ColDef
 {
@@ -104,7 +105,8 @@ export class ColumnDateHeure extends ColDef
 		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass,false);
 		this.editable = false;
 	}
-	cellEditor: string='datetimeEditor';
+//	cellEditor: string='datetimeEditor';
+	cellEditor: string='';
 }
 export class ColumnVoirDoc extends ColDef
 {
@@ -140,6 +142,18 @@ export class ColumnDependances extends ColDef
 	public cellRenderer: string;
 	public cellRendererParams:any;
 }
+export class ColumnDetail extends ColDef
+{
+	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean, width:number,public override cellClass:string,public override headerClass:string[])
+	{
+//		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
+		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass,false);
+		this.cellRenderer='btnDetailRenderer';
+		this.editable = false;
+	}
+	public cellRenderer: string;
+	public cellRendererParams:any;
+}
 export class ColumnBool extends ColDef
 {
 	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean, width:number,public override cellClass:string,public override headerClass:string[])
@@ -151,4 +165,27 @@ export class ColumnBool extends ColDef
 	}
 	public cellRenderer: string;
 	public cellRendererParams:any;
+}
+export class ColumnImg extends ColDef
+{
+	constructor(public override field: string, public override headerName: string, public override sortable: boolean, public override filter: any, public override hide: boolean,public override resizable:boolean,public override editable:boolean, width:number,public override cellClass:string,public override headerClass:string[])
+	{
+//		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass);
+		super(field,headerName,sortable,filter,hide,resizable,editable,width,cellClass,headerClass,false);
+		this.cellRenderer='ImgRenderer';
+	}
+	public cellRenderer: string;
+	public cellRendererParams:any;
+}
+export class DefChamp
+{
+	private m_num_champ:number=0;
+	private m_nom_champ:string='';
+	private m_lib_champ:string='';
+	private m_code_type_champ:string='';
+	private m_visible:boolean=true;
+	private m_code_type_modif_champ:string='';
+	private m_inser_excel:boolean=false;
+	private m_inser_ecran:boolean=true;
+	private m_lg_champ:number=0;
 }

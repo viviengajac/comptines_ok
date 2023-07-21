@@ -23,7 +23,7 @@ export class SttComponent extends Ecran
     tab_series:SerieStt[]=new Array(0);
     id_type_stt:number=0;
 	m_cbo_annee: any=null;	//	Cbo;
-    annee_string:string;
+    annee_string:string='';
     m_liste_annees:string[]=new Array(0);
     constructor(public override httpClient: HttpClient, public override formBuilder:UntypedFormBuilder,public override modalService:ModalService)
     {
