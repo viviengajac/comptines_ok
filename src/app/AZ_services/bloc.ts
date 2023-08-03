@@ -352,14 +352,16 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 //console.log('nom_doc='+nom_doc);
 		var	nom_fic: string=this.ValCelluleParNom(num_lig,'id_type_docWITH');
 		var nom_fic_complet:string=nom_fic_base+'_'+nom_fic;
-		if(!(nom_doc === undefined) && nom_doc.length>0)
-		{
+		if(!(nom_doc === undefined) && nom_doc != null && nom_doc.length>0)
+		{			
 			nom_fic_complet+='_'+nom_doc;
 		}
 //console.log('type_fic='+type_fic+', nom_fic='+nom_fic+', nom_fic_base='+nom_fic_base);
 //console.log('nom_fic_complet='+nom_fic_complet+', type_fic='+type_fic+', nom_fic='+nom_fic+', nom_fic_base='+nom_fic_base);
 		var ab=new AccesBdService(this.httpClient);
+		ab.SpecifierEcran(this.m_ecran);
 		var type_mime:string=ab.DonnerTypeMime(type_fic);
+//console.log('type_mime='+type_mime);
 		if(type_mime.length==0)
 		{
 //console.log('appel de MessageErreur depuis bloc: 3');
@@ -367,13 +369,13 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 		}
 		else
 		{
-//console.log('retour_brut='+ab.m_retour_brut);
+//console.log('type_mime non vide');
+
 			ab.LireTailleBlob(db_ou_fs,this.m_nom_table,id_doc,type_fic)
 			.then
 			(
 				res =>
 				{
-					ab.SpecifierEcran(this.m_ecran);
 					var str_res:string=""+res;
 					if(str_res.startsWith('Erreur'))
 					{
@@ -382,7 +384,7 @@ console.log('bloc.InitColDefs: erreur:'+(e as Error).message);
 					}
 					else
 					{
-//console.log('LireBlob: retour='+ab.m_retour_brut);
+//console.log('LireBlob: retour de LireTailleBlob='+ab.m_taille_blob);
 /*
 						const byteArray = new Uint8Array(atob(ab.m_retour_brut).split('').map(char => char.charCodeAt(0)));
 						const data: Blob = new Blob([byteArray], {type: type_mime});

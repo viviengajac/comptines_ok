@@ -129,7 +129,7 @@ export class AccesDir
 			var sep:string="|";
 			var params=nom_dir;
 //			var url_req: string=this.url+this.lire_dir+params;
-			var url_req: string=GlobalConstantes.FaireUrl()+this.lire_dir+params;
+			var url_req: string=GlobalConstantes.FaireUrlPourPhp()+this.lire_dir+params;
 //console.log('lireDir: url_req='+url_req);
 //console.log('url_req='+url_req);
 			this.httpClient.get(url_req, {responseType: 'text'} )

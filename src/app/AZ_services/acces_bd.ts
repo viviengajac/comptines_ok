@@ -27,7 +27,7 @@ export class AccesBdService
 //	url: string='localhost/AccesBdPm/';
 	lire_ensemble_de_tables='LireEnsembleDeTables.php?sql=';
 	lire_blob='LireBlob.php?params=';
-	lire_partiel_blob='LirePartielBlob.php?params=';
+//	lire_partiel_blob='LirePartielBlob.php?params=';
 	lire_taille_blob='LireTailleBlob.php?params=';
 	lire_une_valeur='LireUneValeur.php?sql=';
 	ecrire_blob='EcrireBlob.php?params=';
@@ -132,6 +132,7 @@ export class AccesBdService
 		});	
 		return promise;
 	}
+	
 	LireTailleBlob(db_ou_fs:string,nom_table:string,id_doc:number,type_fic:string)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
@@ -169,6 +170,7 @@ export class AccesBdService
 		});
 		return promise;
 	}
+	/*
 	LirePartielBlob(db_ou_fs:string,nom_table:string,id_doc:number,type_fic:string,octet_debut:number,taille_bloc:number)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
@@ -198,6 +200,7 @@ export class AccesBdService
 		});
 		return promise;
 	}
+	*/
 	delay(ms: number)
 	{
 		return new Promise( resolve => setTimeout(resolve, ms) );
@@ -342,27 +345,39 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 					if(this.m_retour_brut!=undefined)
 					{
 						var retour_brut:string=this.m_retour_brut;
-//console.log('LireBlob: lire partiel fait 1');
-						const byteArrayTmp = new Uint8Array(atob(retour_brut).split('').map(char => char.charCodeAt(0)));
-//console.log('LireBlob: lire partiel fait 2');
-						this.m_buffer_blob.set(byteArrayTmp,this.m_octet_debut);
-//console.log('LireBlob: lire partiel fait 3');
-						this.m_octet_debut+=byteArrayTmp.length;
-						this.m_pourcent_telechargement=100.0*this.m_octet_debut/this.m_taille_blob;
-//console.log('pourcent telechargement='+this.m_pourcent_telechargement);
-//console.log(this.m_ecran);
-						if(this.m_ecran!=null)
+						if(retour_brut.startsWith("<br />"))
 						{
-							this.m_ecran.m_pourcent_telechargement=this.m_pourcent_telechargement;
-						}
-//console.log('LireBlob: octet_debut='+this.m_octet_debut+', talle_blob='+this.m_taille_blob);
-						if(this.m_octet_debut>=this.m_taille_blob)
-						{
-							fini=true;
-							this.m_fin_telechargement=true;
 							if(this.m_ecran!=null)
 							{
-								this.m_ecran.m_fin_telechargement=true;
+								this.m_ecran.MessageErreur('Erreur ouverture du fichier: '+retour_brut+'§§'+url_req2+'§AccesBd.LireBlob');
+							}
+							fini=true;
+						}
+						else
+						{
+//console.log('LireBlob: lire partiel fait 1');
+							const byteArrayTmp = new Uint8Array(atob(retour_brut).split('').map(char => char.charCodeAt(0)));
+//console.log('LireBlob: lire partiel fait 2');
+							this.m_buffer_blob.set(byteArrayTmp,this.m_octet_debut);
+//console.log('LireBlob: lire partiel fait 3');
+							this.m_octet_debut+=byteArrayTmp.length;
+							this.m_pourcent_telechargement=100.0*this.m_octet_debut/this.m_taille_blob;
+//console.log('pourcent telechargement='+this.m_pourcent_telechargement);
+//console.log(this.m_ecran);
+							if(this.m_ecran!=null)
+							{
+								this.m_ecran.m_pourcent_telechargement=this.m_pourcent_telechargement;
+							}
+//console.log('LireBlob: octet_debut='+this.m_octet_debut+', taille_blob='+this.m_taille_blob);
+							if(this.m_octet_debut>=this.m_taille_blob)
+							{
+//console.log('LireBlob: fin');
+								fini=true;
+								this.m_fin_telechargement=true;
+								if(this.m_ecran!=null)
+								{
+									this.m_ecran.m_fin_telechargement=true;
+								}
 							}
 						}
 					}
@@ -371,6 +386,10 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 				{
 //console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 					var msg_err:string='Erreur: ' + error.message;
+					if(this.m_ecran!=null)
+					{
+						this.m_ecran.MessageErreur(msg_err+'§sql§'+url_req2+'§AccesBd.LireBlob');
+					}
 					fini=true;
 //						reject(msg_err);
 				}
@@ -443,7 +462,7 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 		});
 		return promise;
 	}
-	*/
+	
 	LirePartielFic(nom_fic:string,octet_debut:number,taille_bloc:number)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
@@ -473,6 +492,7 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 		});
 		return promise;
 	}
+	*/
 	async LireFic(nom_fic:string)
 	{
 //		if(GlobalConstantes.m_serveur_bd.length>0)this.url=GlobalConstantes.m_serveur_bd;
@@ -486,66 +506,70 @@ console.log('LireBlob: erreur sur LirePartielBlob'+error.message);
 		this.m_taille_lue=0;
 		this.m_octet_debut=0;
 		this.m_pourcent_telechargement=0;
-		this.m_fin_telechargement=false;
-		var fini:boolean=false;
-		var etape_finie:boolean=true;
-		while(!fini)
-		{
-			while(!etape_finie)
+//		let promise = new Promise((resolve, reject) =>
+//		{
+			this.m_fin_telechargement=false;
+			var fini:boolean=false;
+			var etape_finie:boolean=true;
+			while(!fini)
 			{
-				await this.delay(10);
-			}
-			etape_finie=false;
-			var url_req2:string=url+'LirePartielFic.php?params='+params+sep+this.m_octet_debut+sep+this.m_taille_bloc;
-//console.log('LireFic:url_req2='+url_req2);
-			this.httpClient.get(url_req2, {responseType: 'text'} )
-			.toPromise()
-			.then
-			(
-				res =>
+				while(!etape_finie)
 				{
+					await this.delay(10);
+				}
+				etape_finie=false;
+				var url_req2:string=url+'LirePartielFic.php?params='+params+sep+this.m_octet_debut+sep+this.m_taille_bloc;
+//console.log('LireFic:url_req2='+url_req2);
+				this.httpClient.get(url_req2, {responseType: 'text'} )
+				.toPromise()
+				.then
+				(
+					res =>
+					{
 //console.log('LireFic: lire partiel fait');
-					etape_finie=true;
-					this.m_retour_brut=res;
+						etape_finie=true;
+						this.m_retour_brut=res;
 //console.log('LireFic: lire partiel fait 1');
 //console.log(this.m_retour_brut);
-					if(this.m_retour_brut!=undefined)
-					{
-						var retour_brut:string=this.m_retour_brut;
-						const byteArrayTmp = new Uint8Array(atob(retour_brut).split('').map(char => char.charCodeAt(0)));
+						if(this.m_retour_brut!=undefined)
+						{
+							var retour_brut:string=this.m_retour_brut;
+							const byteArrayTmp = new Uint8Array(atob(retour_brut).split('').map(char => char.charCodeAt(0)));
 //console.log('LireFic: lire partiel fait 2');
-						this.m_buffer_blob.set(byteArrayTmp,this.m_octet_debut);
+							this.m_buffer_blob.set(byteArrayTmp,this.m_octet_debut);
 //console.log('LireFic: lire partiel fait 3');
-						this.m_octet_debut+=byteArrayTmp.length;
+							this.m_octet_debut+=byteArrayTmp.length;
 //console.log('LireFic: lire partiel fait 4');
-						this.m_pourcent_telechargement=100.0*this.m_octet_debut/this.m_taille_blob;
+							this.m_pourcent_telechargement=100.0*this.m_octet_debut/this.m_taille_blob;
 //console.log('pourcent telechargement='+this.m_pourcent_telechargement);
 //console.log(this.m_ecran);
-						if(this.m_ecran!=null)
-						{
-							this.m_ecran.m_pourcent_telechargement=this.m_pourcent_telechargement;
-						}
-//console.log('LireFic: octet_debut='+this.m_octet_debut+', talle_blob='+this.m_taille_blob);
-						if(this.m_octet_debut>=this.m_taille_blob)
-						{
-							fini=true;
-							this.m_fin_telechargement=true;
 							if(this.m_ecran!=null)
 							{
-								this.m_ecran.m_fin_telechargement=true;
+								this.m_ecran.m_pourcent_telechargement=this.m_pourcent_telechargement;
+							}
+//console.log('LireFic: octet_debut='+this.m_octet_debut+', talle_blob='+this.m_taille_blob);
+							if(this.m_octet_debut>=this.m_taille_blob)
+							{
+								fini=true;
+								this.m_fin_telechargement=true;
+								if(this.m_ecran!=null)
+								{
+									this.m_ecran.m_fin_telechargement=true;
+								}
 							}
 						}
-					}
-				},
-				(error) =>
-				{
+					},
+					(error) =>
+					{
 //console.log('LireFic: erreur sur LirePartielFic'+error.message);
-					var msg_err:string='Erreur: ' + error.message;
-					fini=true;
+						var msg_err:string='Erreur: ' + error.message;
+						fini=true;
 //						reject(msg_err);
-				}
-			)
-		}
+					}
+				)
+			}
+//		});
+//		return promise;
 	}
 	EcrireBlob(db_ou_fs:string,nom_table:string,id_doc:number,type_fic:string, contenu: string |ArrayBuffer)
 	{
